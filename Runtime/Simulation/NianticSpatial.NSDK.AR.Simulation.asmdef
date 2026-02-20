@@ -1,0 +1,32 @@
+{
+    "name": "NianticSpatial.NSDK.AR.Simulation",
+    "rootNamespace": "NianticSpatial.NSDK.AR.Simulation",
+    "references": [
+        "Unity.XR.ARSubsystems",
+        "Unity.XR.Management",
+        "Unity.XR.CoreUtils",
+        "Unity.XR.ARFoundation",
+        "Unity.XR.ARCore",
+        "Unity.XR.ARKit",
+        "Unity.InputSystem",
+        "NianticSpatial.NSDK.AR",
+        "Unity.XR.Simulation"
+    ],
+    "includePlatforms": [
+        "Editor",
+        "macOSStandalone",
+        "WindowsStandalone64"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Niantic.Platform.Analytics.NATelemetry.dll",
+        "Niantic.Protobuf.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

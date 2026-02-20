@@ -1,0 +1,653 @@
+// Copyright 2022-2026 Niantic Spatial.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using NianticSpatial.NSDK.AR.Loader;
+using NianticSpatial.NSDK.AR.PersistentAnchors.Spaces;
+using NianticSpatial.NSDK.AR.Utilities;
+using NianticSpatial.NSDK.AR.Utilities.Http;
+using Protogen;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.XR.ARSubsystems;
+using Vector3 = UnityEngine.Vector3;
+
+namespace NianticSpatial.NSDK.AR.Subsystems
+{
+    // Static APIs for downloading meshes from the meshing service
+    internal static class MeshDownloadHelper
+    {
+        // Hardcode default if NsdkUnityContext is not available
+        private static string prodVpsEndpoint = "https://vps-frontend.nianticspatial.com/web";
+        private static string configEndpointFormatter = "{0}/vps_frontend.protogen.Localizer/{1}";
+        private static string meshingMethod = "GetMeshUrl";
+        private static string graphMethod = "GetGraph";
+        private static string replacedNodeMethod = "GetReplacedNodes";
+        private static string spaceDataMethod = "GetSpaceData";
+        private const string DataLayerMethod = "GetDataLayer";
+        private const string DataLayerName = "global_pose";
+        private const int KB = 1024;
+
+        // Downloads a mesh from a signed url
+        // The resulting byte[] can be fed into a draco mesh loader
+        public static async Task<byte[]> DownloadMeshFromSignedUrl
+        (
+            string url
+        )
+        {
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return null;
+            }
+
+            using var request = UnityWebRequest.Get(url);
+            await request.SendWebRequest();
+            if (request.result == UnityWebRequest.Result.Success)
+            {
+                return request.downloadHandler.data;
+            }
+            else
+            {
+                // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                Debug.LogError("Failed to download mesh");
+                return null;
+            }
+        }
+
+        // Returns a list of nodes to load, with mesh urls populated
+        // If maxDownloadSizeKb is set, the total download size will be checked before downloading any meshes,
+        //  and no download will be started if the total download size exceeds maxDownloadSizeKb
+        // Method summary:
+        // 1. Get nodes in space as a List<NodeToLoad>
+        // 2. Get mesh urls for nodes as a Dictionary<string, string>, where the key is the nodeId and the value is the mesh url
+        // 3. Populate the mesh urls in the List<NodeToLoad> from 1
+        // 4. If maxDownloadSizeKb is set, check the total download size of the meshes
+        // 5. Return the List<NodeToLoad> with node transforms and mesh urls
+        public static async Task<List<NodeToLoad>> GetMeshUrlsForNode
+        (
+            string nodeId,
+            ulong maxDownloadSizeKb = 0,
+            MeshDownloadRequestResponse.MeshAlgorithm meshFormat =
+                MeshDownloadRequestResponse.MeshAlgorithm.VERTEX_COLORED,
+            CancellationToken cancellationToken = default
+        )
+        {
+            var authHeaderDict = SetupAuthHeaderDict();
+            if (authHeaderDict == null)
+            {
+                return null;
+            }
+
+            // Get all of the nodes in the space of the target node
+            // This will populate all of the nodes' transforms relative to the space
+            var nodesToLoad = await GetNodesInSpace(nodeId, authHeaderDict);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                Debug.Log("Mesh Download cancelled after getting nodes in space");
+                return null;
+            }
+
+            if (nodesToLoad == null)
+            {
+                // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                Debug.LogError("Failed to get nodes to load");
+                return null;
+            }
+
+            // Temporary list of nodeIds to get mesh urls for
+            var nodeIdList = new List<string>();
+            foreach (var node in nodesToLoad)
+            {
+                if (!string.IsNullOrWhiteSpace(node.nodeId))
+                {
+                    nodeIdList.Add(node.nodeId);
+                }
+            }
+
+            // Get the mesh urls for the nodes in the space
+            var meshUrls = await GetMeshUrlsForNodes(nodeIdList, authHeaderDict, meshFormat);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                Debug.Log("Mesh Download cancelled after getting mesh urls");
+                return null;
+            }
+
+            if (meshUrls == null)
+            {
+                return null;
+            }
+
+            var listOfNodesWithMeshes = new List<NodeToLoad>();
+            // Populate the mesh urls in the nodes to load
+            foreach (var node in nodesToLoad)
+            {
+                if (meshUrls.TryGetValue(node.nodeId, out NodeToLoad nodeUrls))
+                {
+                    node.meshUrl = nodeUrls.meshUrl;
+                    node.textureUrl = nodeUrls.textureUrl;
+                    listOfNodesWithMeshes.Add(node);
+                }
+            }
+
+            // Check the total download size of the meshes
+            // If maxDownloadSizeKb is set, the total download size will be checked before downloading any meshes,
+            //  and no download will be started if the total download size exceeds maxDownloadSizeKb
+
+            if (maxDownloadSizeKb != 0)
+            {
+                var totalDownloadSize = await GetTotalDownloadSize(listOfNodesWithMeshes);
+                if (totalDownloadSize > maxDownloadSizeKb * KB)
+                {
+                    // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                    Debug.LogError("Total download size exceeds max download size");
+                    return null;
+                }
+            }
+
+            return listOfNodesWithMeshes;
+        }
+
+        // Given a node, Request the global pose data (gps location, heading, rotation and accuracy)
+        // Depending on how the node was created, not all this data is guaranteed to be returned,
+        // so checks should be made.
+        [Experimental]
+        public static async Task<GlobalPoseData> RequestGlobalPoseForNode(string nodeId)
+        {
+            var request = new MeshDownloadRequestResponse.GetDataLayerRequest()
+            {
+                requestIdentifier = GenerateRequestIdentifier(),
+                nodeIdentifier = nodeId,
+                dataLayerName = DataLayerName
+            };
+
+            var authHeaderDict = SetupAuthHeaderDict();
+            if (authHeaderDict == null)
+            {
+                return null;
+            }
+
+            var endpoint = GetUrlForMethod(DataLayerMethod);
+            var nodesToLoadResponse =
+                await HttpClient.SendPostAsync<
+                    MeshDownloadRequestResponse.GetDataLayerRequest,
+                    MeshDownloadRequestResponse.GetDataLayerResponse>
+                (
+                    endpoint,
+                    request,
+                    authHeaderDict
+                );
+
+            if (nodesToLoadResponse.Status == ResponseStatus.Success)
+            {
+                var data = nodesToLoadResponse.Data;
+                if (data.StatusCodeEnum == MeshDownloadRequestResponse.VpsServiceStatusCode.STATUS_CODE_SUCCESS)
+                {
+                    var blob = data.dataLayerItems[0].dataBlob;
+                    byte[] decodedBytes = Convert.FromBase64String(blob);
+
+                    // Convert the byte array to a UTF-8 string.
+                    string decodedString = Encoding.UTF8.GetString(decodedBytes);
+                    return JsonUtility.FromJson<GlobalPoseData>(decodedString);
+                }
+                else
+                {
+                    Debug.LogError($"Failed to get pose for node. Status = {data.statusCode}");
+                }
+            }
+            else
+            {
+                Debug.LogError("Failed to get pose for node.");
+            }
+
+            return null;
+        }
+
+        // Returns a dictionary of nodeIds to mesh urls
+        // If a node has no mesh, it will not be included in the dictionary
+        // This is a helper method for GetMeshUrlsForNode
+        private static async Task<Dictionary<string, NodeToLoad>> GetMeshUrlsForNodes
+        (
+            List<string> nodeIds,
+            Dictionary<string, string> headers,
+            MeshDownloadRequestResponse.MeshAlgorithm meshFormat =
+                MeshDownloadRequestResponse.MeshAlgorithm.VERTEX_COLORED
+        )
+        {
+            MeshDownloadRequestResponse.GetMeshUrlRequest request = new MeshDownloadRequestResponse.GetMeshUrlRequest();
+            var meshUrls = new Dictionary<string, NodeToLoad>();
+            request.nodeIdentifiers = nodeIds.ToArray();
+            request.meshAlgorithm = (int)meshFormat;
+            request.requestIdentifier = Guid.NewGuid().ToString("N").ToUpper();
+
+            var endpoint = GetUrlForMethod(meshingMethod);
+            var response =
+                await HttpClient.SendPostAsync<
+                    MeshDownloadRequestResponse.GetMeshUrlRequest,
+                    MeshDownloadRequestResponse.GetMeshUrlResponse>
+                (
+                    endpoint,
+                    request,
+                    headers
+                );
+
+            if (response.Status == ResponseStatus.Success)
+            {
+                var isTexturedMesh =
+                    meshFormat == MeshDownloadRequestResponse.MeshAlgorithm.TEXTURED;
+
+                // Populate the mesh urls in the dictionary
+                // If a node has no mesh, it will not be included in the output
+                foreach (var node in response.Data.nodeMeshData)
+                {
+                    if (string.IsNullOrWhiteSpace(node.url))
+                    {
+                        continue;
+                    }
+
+                    // If the mesh is textured, but the texture url is empty, skip the node
+                    if (isTexturedMesh && string.IsNullOrWhiteSpace(node.textureUrl))
+                    {
+                        continue;
+                    }
+
+                    // Only populate the textureUrl if the mesh is textured
+                    var nodeToLoad = new NodeToLoad()
+                    {
+                        nodeId = node.nodeId,
+                        meshUrl = node.url,
+                        textureUrl = isTexturedMesh ? node.textureUrl : null
+                    };
+
+                    meshUrls.Add(node.nodeId, nodeToLoad);
+                }
+            }
+            else
+            {
+                // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                Debug.LogError("Failed to get mesh urls");
+            }
+
+            return meshUrls;
+        }
+
+        // Returns a list of nodes to load, with transforms populated
+        // This is a helper method for GetMeshUrlsForNode
+        // The mesh urls will be populated by GetMeshUrlsForNodes
+        // Method summary:
+        // 1. Get all of the nodes in the space of the target node
+        // 2. Populate a temporary list of nodes in the space of the target node
+        // 3. Get the edges in the space of the target node
+        // 4. Add an entry for the each node and edge pair to the return list
+        // 6. Add the last remaining node with no edge (origin of the space)
+        // 7. Return the List<NodeToLoad> with node transforms and mesh urls
+        private static async Task<List<NodeToLoad>> GetNodesInSpace(string nodeId, Dictionary<string, string> headers, bool searchForReplacedNode = true)
+        {
+            var nodesToLoad = new List<NodeToLoad>();
+
+            // Get all of the nodes in the space of the target node
+            var targetGraphNode = new MeshDownloadRequestResponse.TargetGraphNode
+            {
+                nodeId = nodeId,
+                restrictResultsToNodeSpace = true
+            };
+
+            MeshDownloadRequestResponse.GetGraphRequest graphRequest =
+                new MeshDownloadRequestResponse.GetGraphRequest
+                {
+                    requestIdentifier = GenerateRequestIdentifier(),
+                    targetGraphNode = targetGraphNode,
+                    radius = 550,
+                    maxNodes = 700
+                };
+
+            var endpoint = GetUrlForMethod(graphMethod);
+            var nodesToLoadResponse =
+                await HttpClient.SendPostAsync<
+                    MeshDownloadRequestResponse.GetGraphRequest,
+                    MeshDownloadRequestResponse.GetGraphResponse>
+                (
+                    endpoint,
+                    graphRequest,
+                    headers
+                );
+
+            if (nodesToLoadResponse.Status == ResponseStatus.Success)
+            {
+                var response = nodesToLoadResponse.Data;
+
+                // Validate that the response is valid
+                if (response.targetNodeId != nodeId ||
+                    response.nodes == null ||
+                    response.nodes.Length == 0)
+                {
+                    if ((response.nodes == null || response.nodes.Length == 0) && searchForReplacedNode)
+                    {
+                        // Check if the node has been replaced with a new active node
+                        var replacedNodeResponse = await TryGetNodesInSpaceForReplacedNode(nodeId, headers);
+                        if (replacedNodeResponse != null)
+                        {
+                            return replacedNodeResponse;
+                        }
+                    }
+
+                    // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                    Debug.LogWarning("Failed to get nodes to load");
+                    return null;
+                }
+
+                // Get the space of the target node
+                String space = "";
+                double lat = 0;
+                double lon = 0;
+
+                // Populate a temporary list of nodes in the space of the target node
+                var nodesInSpaceList = new List<string>();
+                var nodeGpsDict = new Dictionary<string, (double, double)>();
+                foreach (var node in response.nodes)
+                {
+                    nodeGpsDict[node.identifier] = (node.gps.latitude, node.gps.longitude);
+                    if (node.identifier.Equals(nodeId))
+                    {
+                        space = node.spaceIdentifier;
+                        lat = node.gps.latitude;
+                        lon = node.gps.longitude;
+                    }
+                }
+
+                // If the target node has no space, return the target node as a single node to load
+                if (string.IsNullOrWhiteSpace(space))
+                {
+                    nodesToLoad.Add
+                    (
+                        new NodeToLoad
+                        (
+                            nodeId,
+                            space,
+                            Vector3.zero,
+                            new Vector4(0, 0, 0, 1),
+                            lat,
+                            lon,
+                            true
+                        )
+                    );
+
+                    return nodesToLoad;
+                }
+
+                // Filtering code to validate that nodes and edges are as expected
+
+                // Get the nodes in the space of the target node
+                // This populates a temporary list of nodeIds to find edges for
+                // If a node does not have an associated edge, assume it is the origin of the space
+                foreach (var node in response.nodes)
+                {
+                    if (node.spaceIdentifier.Equals(space))
+                    {
+                        nodesInSpaceList.Add(node.identifier);
+                    }
+                }
+
+                // Get the edges in the space of the target node
+                foreach (var edge in response.edges)
+                {
+                    // If the edge is not in the space of the target node, skip it
+                    if (!nodesInSpaceList.Contains(edge.source))
+                    {
+                        continue;
+                    }
+
+                    // Add an entry for the node and edge to the return list
+                    nodesToLoad.Add
+                    (
+                        new NodeToLoad
+                        (
+                            edge.source,
+                            space,
+                            edge.sourceToDestination.translation,
+                            edge.sourceToDestination.rotation,
+                            nodeGpsDict[edge.source].Item1,
+                            nodeGpsDict[edge.source].Item2
+                        )
+                    );
+
+                    // Remove the node from the temporary list of nodes in the space
+                    nodesInSpaceList.Remove(edge.source);
+                }
+
+                // Add the last remaining node (origin of the space)
+                if (nodesInSpaceList.Count == 1)
+                {
+                    var id = nodesInSpaceList.First();
+                    nodesToLoad.Add
+                    (
+                        new NodeToLoad
+                        (
+                            id,
+                            space,
+                            Vector3.zero,
+                            new Vector4(0, 0, 0, 1),
+                            nodeGpsDict[id].Item1,
+                            nodeGpsDict[id].Item2,
+                            true
+                        )
+                    );
+                }
+                else
+                {
+                    // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                    // Just log for now, not sure if this is possible
+                    Debug.LogError("Multiple nodes in space have no associated edge");
+                }
+            }
+            else
+            {
+                // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                Debug.LogError("Failed to get nodes to load");
+            }
+
+            return nodesToLoad;
+        }
+
+        private static async Task<List<NodeToLoad>> TryGetNodesInSpaceForReplacedNode
+        (
+            string nodeId,
+            Dictionary<string, string> headers
+        )
+        {
+            var replacedNodeRequest = new MeshDownloadRequestResponse.GetReplacedNodesRequest
+            {
+                requestIdentifier = GenerateRequestIdentifier(),
+                nodeIdentifiers = new[] { nodeId }
+            };
+
+            var endpoint = GetUrlForMethod(replacedNodeMethod);
+            var replacedNodeResponse =
+                await HttpClient.SendPostAsync<
+                    MeshDownloadRequestResponse.GetReplacedNodesRequest,
+                    MeshDownloadRequestResponse.GetReplacedNodesResponse>
+                (
+                    endpoint,
+                    replacedNodeRequest,
+                    headers
+                );
+
+            if (replacedNodeResponse.Status == ResponseStatus.Success)
+            {
+                var response = replacedNodeResponse.Data;
+                if (response.transformToActiveNode != null && response.transformToActiveNode.Length > 0)
+                {
+                    var replacedNode = response.transformToActiveNode[0];
+                    var activeNode = replacedNode.activeNode;
+                    var transform = replacedNode.transformFromReplacedToActiveNode;
+
+                    var nodesInNewSpace = await GetNodesInSpace(activeNode, headers, false);
+                    if (nodesInNewSpace != null && nodesInNewSpace.Count > 0)
+                    {
+                        nodesInNewSpace.Add
+                        (
+                            new NodeToLoad
+                            (
+                                nodeId,
+                                nodesInNewSpace.First().spaceId,
+                                transform.translation,
+                                transform.rotation,
+                                0, // TODO: Replace with actual GPS
+                                0 // TODO: Replace with actual GPS
+                            )
+                        );
+
+                        return nodesInNewSpace;
+                    }
+
+                    return null;
+                }
+            }
+
+            return null;
+        }
+
+        // Use a HEAD request to get the total download size of the meshes
+        private static async Task<ulong> GetTotalDownloadSize
+        (
+            List<NodeToLoad> nodes
+        )
+        {
+            ulong totalBytesToDownload = 0;
+            foreach (var node in nodes)
+            {
+                using var headerRequest = new UnityWebRequest(node.meshUrl, UnityWebRequest.kHttpVerbHEAD);
+                await headerRequest.SendWebRequest();
+                if (headerRequest.result == UnityWebRequest.Result.Success)
+                {
+                    string size = headerRequest.GetResponseHeader("Content-Length");
+                    totalBytesToDownload += ulong.TryParse(size, out var sizeLong) ? sizeLong : 0;
+                }
+
+                if (string.IsNullOrWhiteSpace(node.textureUrl))
+                {
+                    continue;
+                }
+
+                using var textureHeaderRequest = new UnityWebRequest(node.textureUrl, UnityWebRequest.kHttpVerbHEAD);
+                await textureHeaderRequest.SendWebRequest();
+                if (textureHeaderRequest.result == UnityWebRequest.Result.Success)
+                {
+                    string size = textureHeaderRequest.GetResponseHeader("Content-Length");
+                    totalBytesToDownload += ulong.TryParse(size, out var sizeLong) ? sizeLong : 0;
+                }
+            }
+
+            return totalBytesToDownload;
+        }
+
+        internal static async Task<NsdkVpsSpaceResponse> GetSpaceDataForNode(string nodeId)
+        {
+            var authHeaderDict = SetupAuthHeaderDict();
+
+            var nodeRepresentation = await GetNodesInSpace(nodeId, authHeaderDict);
+            if (nodeRepresentation == null || nodeRepresentation.Count == 0)
+            {
+                return default;
+            }
+
+            var spaceId = nodeRepresentation.First().spaceId;
+
+            var request = new MeshDownloadRequestResponse.GetSpaceDataRequest()
+            {
+                spaceIdentifiers = new[] { spaceId },
+                requestIdentifier = GenerateRequestIdentifier()
+            };
+
+            var endpoint = GetUrlForMethod(spaceDataMethod);
+            var response =
+                await HttpClient
+                    .SendPostAsync<MeshDownloadRequestResponse.GetSpaceDataRequest,
+                            MeshDownloadRequestResponse.GetSpaceDataResponse>
+                        (endpoint, request, authHeaderDict);
+
+            if (response.Status == ResponseStatus.Success)
+            {
+                if (response.Data.spaceDataList.Length != 1)
+                {
+                    Debug.LogError($"GetSpaceData expected 1 space, but got {response.Data.spaceDataList.Length}. Using first space.");
+                }
+
+                var spaceData = new NsdkVpsSpace();
+                spaceData.Nodes = new List<NsdkVpsNode>();
+                spaceData.SpaceId = spaceId;
+                foreach (var node in nodeRepresentation)
+                {
+                    if (node.spaceId != spaceId)
+                    {
+                        Debug.LogError($"Node {node.nodeId} is not in space {spaceId}");
+                        return default;
+                    }
+
+                    var nsdkNode = new NsdkVpsNode
+                    {
+                        NodeId = node.nodeId,
+                        NodeToSpaceOriginPose = new Pose(node.position, node.rotation),
+                        IsOrigin = node.isOrigin
+                    };
+
+                    if (nsdkNode.IsOrigin)
+                    {
+                        spaceData.OriginNodeId = nsdkNode.NodeId;
+                    }
+
+                    spaceData.Nodes.Add(nsdkNode);
+                }
+
+                spaceData.SpaceLabels = response.Data.spaceDataList.First().spaceLabels.Select(label => new NsdkVpsSpace.NsdkVpsSpaceLabel(label)).ToList();
+                spaceData.SpaceQualityScore = response.Data.spaceDataList.First().spaceQualityScore;
+                var res = new NsdkVpsSpaceResponse(true, spaceData);
+                return res;
+            }
+
+            // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+            Debug.LogError("Failed to get space data");
+            return default;
+        }
+
+        private static string GetUrlForMethod(string method)
+        {
+            // Default
+            var configEndpoint = prodVpsEndpoint;
+
+            var settings = NsdkSettingsHelper.ActiveSettings.EndpointSettings;
+            if (!string.IsNullOrWhiteSpace(settings.VpsEndpoint))
+            {
+                configEndpoint = settings.VpsEndpoint;
+            }
+
+            return string.Format(configEndpointFormatter, configEndpoint, method);
+        }
+
+        private static string GenerateRequestIdentifier()
+        {
+            return Guid.NewGuid().ToString("N").ToUpper();
+        }
+
+        private static Dictionary<string, string> SetupAuthHeaderDict()
+        {
+            var apiKey = NsdkSettingsHelper.ActiveSettings.ApiKey;
+            var authHeaderDict = new Dictionary<string, string>();
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
+                Debug.LogError("No API key set");
+                return null;
+            }
+
+            authHeaderDict["Authorization"] = apiKey;
+            return authHeaderDict;
+        }
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "name": "NianticSpatial.NSDK.AR",
+    "rootNamespace": "NianticSpatial.NSDK.AR",
+    "references": [
+        "Unity.XR.ARSubsystems",
+        "Unity.XR.Management",
+        "Unity.XR.CoreUtils",
+        "Unity.XR.ARFoundation",
+        "Unity.XR.ARCore",
+        "Unity.XR.ARKit",
+        "Unity.InputSystem",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Core.Runtime",
+        "Unity.XR.OpenXR",
+        "Unity.XR.Simulation",
+        "Unity.Burst",
+        "Unity.Mathematics"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Niantic.Platform.Analytics.NATelemetry.dll",
+        "Niantic.Protobuf.dll",
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "",
+            "define": "MODULE_URP_ENABLED"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "17.0.0",
+            "define": "MODULE_URP_17_OR_NEWER"
+        },
+        {
+            "name": "com.unity.xr.arfoundation",
+            "expression": "6.0.0",
+            "define": "ARF_6_0_OR_NEWER"
+        },
+        {
+            "name": "com.unity.xr.arfoundation",
+            "expression": "6.1.0",
+            "define": "ARF_6_1_OR_NEWER"
+        },
+        {
+            "name": "com.unity.xr.arfoundation",
+            "expression": "6.2.0",
+            "define": "ARF_6_2_OR_NEWER"
+        }
+    ],
+    "noEngineReferences": false
+}

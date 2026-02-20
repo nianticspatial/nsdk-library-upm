@@ -1,0 +1,37 @@
+{
+  "name": "com.nianticspatial.nsdk",
+  "displayName": "Niantic Spatial Development Kit AR Plugin",
+  "version": "4.0.0-b2-26022000",
+  "unity": "2021.3",
+  "description": "Provides native Niantic Spatial Development Kit integration for use with Unity's multi-platform XR API.\n* NSDK is a trademark of Niantic Spatial Inc., registered in the U.S. and other countries and regions. \n Samples available at https://github.com/niantic-lightship/ardk-samples",
+  "keywords": [
+    "nsdk",
+    "ar",
+    "vps",
+    "xr",
+    "reality",
+    "xreditorsubsystem",
+    "niantic spatial"
+  ],
+  "author": {
+    "name": "Niantic Spatial",
+    "email": "support@nianticspatial.com",
+    "url": "https://www.nianticspatial.com/"
+  },
+  "dependencies": {
+    "com.unity.editorcoroutines": "1.0.0",
+    "com.unity.xr.arfoundation": "5.2.0",
+    "com.unity.xr.arcore": "5.2.0",
+    "com.unity.xr.arkit": "5.2.0",
+    "com.unity.xr.openxr": "1.6.0",
+    "com.unity.xr.core-utils": "2.1.0",
+    "com.unity.xr.management": "4.0.1",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.burst": "1.8.17"
+  },
+  "documentationUrl": "https://www.nianticspatial.com/docs/",
+  "changelogUrl": "https://lightship.dev/docs/ardk/release_notes/release3.0/",
+  "licensesUrl": "https://lightship.dev/legal/terms",
+  "repository": {},
+  "samples": []
+}

@@ -1,0 +1,341 @@
+// Copyright 2022-2026 Niantic Spatial.
+
+using System;
+using System.Linq;
+using NianticSpatial.NSDK.AR.Common;
+
+using NianticSpatial.NSDK.AR.Subsystems.Semantics;
+using NianticSpatial.NSDK.AR.Utilities;
+using NianticSpatial.NSDK.AR.XRSubsystems;
+using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
+using UnityEngine.XR.Management;
+
+#if MODULE_URP_ENABLED
+using NianticSpatial.NSDK.AR.Occlusion;
+using UnityEngine.Rendering.Universal;
+#endif
+
+namespace NianticSpatial.NSDK.AR.Semantics
+{
+    public sealed class NsdkSemanticsOverlay : ConditionalRenderer
+    {
+        private static readonly int s_semanticsTextureId = Shader.PropertyToID("_Semantics");
+        private static readonly int s_samplerMatrixId = Shader.PropertyToID("_SamplerMatrix");
+        private static readonly int s_extrinsics = Shader.PropertyToID("_Extrinsics");
+        private static readonly int s_intrinsicsId = Shader.PropertyToID("_Intrinsics");
+        private static readonly int s_imageWidthId = Shader.PropertyToID("_ImageWidth");
+        private static readonly int s_imageHeightId = Shader.PropertyToID("_ImageHeight");
+        private static readonly int s_backProjectionDistanceId = Shader.PropertyToID("_BackprojectionDistance");
+
+        /// <summary>
+        /// Whether the semantics metadata (such as number of channels) is available.
+        /// </summary>
+        public bool IsMetadataAvailable => _channels != null;
+
+        /// <summary>
+        /// The shader name to use for the semantics overlay.
+        /// </summary>
+        public const string KShaderName = "Nsdk/SemanticsOverlay";
+
+        protected override string ShaderName
+        {
+            get => KShaderName;
+        }
+
+        protected override string RendererName
+        {
+            get => "Nsdk Semantics Overlay";
+        }
+
+        // Components
+        private NsdkSemanticsSubsystem _semanticsSubsystem;
+
+        // Resources
+        private Texture2D _tempTexture;
+        private Mesh _mesh;
+
+        // URP render pass
+#if MODULE_URP_ENABLED
+        private MeshRenderingPass _renderPass;
+#endif
+
+        // Helpers
+        private SemanticsChannel[] _channels;
+        private int _currentChannelIndex = 3;
+
+        /// <summary>
+        /// Distance in meters (from the camera) to back-project the image.
+        /// </summary>
+        public float BackProjectionDistance { get; set; } = 5.0f;
+
+        /// <summary>
+        /// The intrinsics matrix of the semantics image.
+        /// </summary>
+        public XRCameraIntrinsics? Intrinsics { get; private set; } = null;
+
+        /// <summary>
+        /// Sets the current channel to display.
+        /// </summary>
+        public void SetChannel(int index)
+        {
+            _currentChannelIndex = index;
+            ValidateCurrentChannel();
+        }
+
+        /// <summary>
+        /// Sets the current channel to display.
+        /// </summary>
+        public void SetChannel(SemanticsChannel channel)
+        {
+            if (_channels != null)
+            {
+                var index = System.Array.IndexOf(_channels, channel);
+                if (index < 0)
+                {
+                    Debug.LogError($"Invalid channel: {channel}");
+                    return;
+                }
+
+                _currentChannelIndex = index;
+            }
+            else
+            {
+                Debug.LogError("Metadata is not available yet.");
+            }
+        }
+
+        private void ValidateCurrentChannel()
+        {
+            if (_channels != null)
+            {
+                if (_currentChannelIndex < 0 || _currentChannelIndex >= _channels.Length)
+                {
+                    Debug.LogError($"Invalid channel index: {_currentChannelIndex}. Changing to default channel.");
+                    _currentChannelIndex = 3;
+                }
+            }
+        }
+
+        protected override CameraEvent[] CameraEvents
+        {
+            get => new[] { CameraEvent.BeforeForwardOpaque };
+        }
+
+        protected override string[] OnRequestExternalPassDependencies(CameraEvent evt)
+        {
+#if !UNITY_EDITOR && (NIANTICSPATIAL_NSDK_ML2_ENABLED || NIANTICSPATIAL_NSDK_META_ENABLED)
+            // We don't expect built-in command buffers (e.g. background rendering) on ML2
+            return null;
+#endif
+            // The AR Background Pass is not required for this effect,
+            // but we have to schedule ourselves after it, if it is present.
+            return GetComponent<ARCameraBackground>() != null ? new[] { "AR Background" } : null;
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _mesh = CreateMesh();
+
+#if MODULE_URP_ENABLED
+            // Allocate the render pass
+            _renderPass = new MeshRenderingPass(
+                name: "Nsdk Semantics Overlay",
+                renderPassEvent: RenderPassEvent.BeforeRenderingOpaques);
+#endif
+        }
+
+        private void OnEnable()
+        {
+            RenderPipelineManager.beginCameraRendering += EnqueueUniversalRenderPass;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            RenderPipelineManager.beginCameraRendering -= EnqueueUniversalRenderPass;
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            if (_tempTexture != null)
+            {
+                Destroy(_tempTexture);
+            }
+
+            if (_mesh != null)
+            {
+                Destroy(_mesh);
+            }
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+
+            if (!TryAcquireSubsystems())
+            {
+                return;
+            }
+
+            if (!_semanticsSubsystem.running)
+            {
+                return;
+            }
+
+            // Cache channels
+            if (!IsMetadataAvailable)
+            {
+                var channels = _semanticsSubsystem.GetChannels();
+                _channels = channels.ToArray();
+                ValidateCurrentChannel();
+            }
+
+            // Update the material with the latest semantics data
+            if (FetchSemanticsData(
+                    _channels[_currentChannelIndex],
+                    out var texture,
+                    out var intrinsics,
+                    out var samplerMatrix))
+            {
+                // Cache intrinsics
+                Intrinsics = new XRCameraIntrinsics(
+                    new Vector2(intrinsics.m00, intrinsics.m11),
+                    new Vector2(intrinsics.m02, intrinsics.m12),
+                    new Vector2Int(texture.width, texture.height));
+
+                // Bind the texture and metadata to the material
+                Material.SetTexture(s_semanticsTextureId, texture);
+                Material.SetInt(s_imageWidthId, texture.width);
+                Material.SetInt(s_imageHeightId, texture.height);
+
+                // Bind image intrinsics
+                Material.SetVector(s_intrinsicsId,
+                    new Vector4(intrinsics.m00, intrinsics.m11, intrinsics.m02, intrinsics.m12));
+
+                // Calculate camera to world matrix (use HMD/head pose)
+                var cameraToWorld = InputReader.CurrentPose ?? Matrix4x4.identity;
+                cameraToWorld.m02 *= -1.0f;
+                cameraToWorld.m12 *= -1.0f;
+                cameraToWorld.m22 *= -1.0f;
+                cameraToWorld.m32 *= -1.0f;
+
+                // Bind camera extrinsics
+                Material.SetMatrix(s_extrinsics, cameraToWorld);
+                Material.SetFloat(s_backProjectionDistanceId, BackProjectionDistance);
+
+                // The sampler matrix is assumed to be in image space here (no crop, no rotation, only mirror and warp)
+                Material.SetMatrix(s_samplerMatrixId, samplerMatrix);
+            }
+            else
+            {
+                Debug.LogWarning($"Failed to fetch data for channel: {_channels[_currentChannelIndex]}");
+            }
+        }
+
+        private bool FetchSemanticsData(SemanticsChannel channel, out Texture2D texture, out Matrix4x4 intrinsicsMatrix, out Matrix4x4 samplerMatrix)
+        {
+            // Acquire the latest image
+            if (_semanticsSubsystem.TryAcquireSemanticChannelCpuImage(
+                    channel: channel,
+                    cameraParams: null, // Viewport should default to image container
+                    cpuImage: out var cpuImage,
+                    samplerMatrix: out samplerMatrix))
+            {
+                // Copy the image to a Texture2D
+                ImageSamplingUtils.CreateOrUpdateTexture(cpuImage, ref _tempTexture);
+                cpuImage.Dispose();
+                texture = _tempTexture;
+
+                var intrinsics = _semanticsSubsystem.LatestIntrinsicsMatrix;
+                if (intrinsics.HasValue)
+                {
+                    intrinsicsMatrix = intrinsics.Value;
+                    return true;
+                }
+            }
+
+            texture = null;
+            intrinsicsMatrix = Matrix4x4.identity;
+            samplerMatrix = Matrix4x4.identity;
+            return false;
+        }
+
+        protected override bool OnAddRenderCommands(CommandBuffer cmd, Material mat)
+        {
+            cmd.DrawMesh(_mesh, Matrix4x4.identity, mat);
+            return true;
+        }
+
+        protected override void OnInitializeMaterial(Material mat)
+        {
+            mat.SetTexture(s_semanticsTextureId, null);
+        }
+
+        private bool TryAcquireSubsystems()
+        {
+            if (_semanticsSubsystem != null)
+            {
+                return true;
+            }
+
+            var xrManager = XRGeneralSettings.Instance.Manager;
+            if (!xrManager.isInitializationComplete)
+            {
+                return false;
+            }
+
+            _semanticsSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRSemanticsSubsystem>() as NsdkSemanticsSubsystem;
+            if (_semanticsSubsystem == null)
+            {
+                Debug.LogError
+                (
+                    "Destroying XRSemanticsOverlay component because " +
+                    $"no active {typeof(XRSemanticsSubsystem).FullName} is available. " +
+                    "Please ensure that a valid loader configuration exists in the XR project settings."
+                );
+
+                Destroy(this);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Create a simple quad mesh.
+        /// </summary>
+        private static Mesh CreateMesh()
+        {
+            var mesh = new Mesh
+            {
+                vertices = new Vector3[4],
+                uv = new[] { new Vector2(0, 0), new Vector2(1, 0), new Vector2(1, 1), new Vector2(0, 1) },
+                triangles = new[] { 2, 1, 0, 3, 2, 0 }
+            };
+
+            mesh.UploadMeshData(true);
+            return mesh;
+        }
+
+        private void EnqueueUniversalRenderPass(ScriptableRenderContext context, Camera cam)
+        {
+#if MODULE_URP_ENABLED
+            if (cam == Camera)
+            {
+                // Configure the render pass
+                _renderPass.Material = Material;
+                _renderPass.Mesh = _mesh;
+
+                // Enqueue the render pass
+                cam.GetUniversalAdditionalCameraData().scriptableRenderer.EnqueuePass(_renderPass);
+            }
+#endif
+        }
+    }
+}

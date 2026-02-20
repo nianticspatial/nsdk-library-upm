@@ -1,0 +1,30 @@
+{
+    "name": "NianticSpatial.NSDK.Simulation.Editor",
+    "rootNamespace": "NianticSpatial.NSDK.Simulation.Editor",
+    "references": [
+        "Unity.EditorCoroutines.Editor",
+        "Unity.XR.ARSubsystems",
+        "Unity.XR.Management",
+        "Unity.XR.CoreUtils",
+        "Unity.XR.CoreUtils.Editor",
+        "Unity.XR.Management.Editor",
+        "NianticSpatial.NSDK.AR",
+        "Unity.XR.ARCore",
+        "Unity.XR.ARKit",
+        "Unity.XR.ARSubsystems.Editor",
+        "Unity.XR.ARFoundation",
+        "NianticSpatial.NSDK.AR.Editor",
+        "Unity.XR.Simulation"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
