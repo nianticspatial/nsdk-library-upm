@@ -3,10 +3,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
-
-#if !MODULE_URP_ENABLED
 using UnityEngine.Rendering;
-#else
+#if MODULE_URP_ENABLED
 using UnityEngine.Rendering.Universal;
 #endif
 

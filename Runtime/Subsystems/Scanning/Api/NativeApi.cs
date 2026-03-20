@@ -4,7 +4,6 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using NianticSpatial.NSDK.AR.Core;
-using NianticSpatial.NSDK.AR.Core;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using UnityEngine;
 
