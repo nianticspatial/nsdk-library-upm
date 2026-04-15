@@ -49,6 +49,15 @@ namespace NianticSpatial.NSDK.AR.PAM
     }
 
     // IMPORTANT – This struct has explicit matching C# and pure-C alignment/padding requirements
+    // C# to C struct. Must match ardk_string.h
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct ArdkStringCStruct
+    {
+        public IntPtr Data;
+        public uint DataSize;
+    }
+
+    // IMPORTANT – This struct has explicit matching C# and pure-C alignment/padding requirements
     // C# to C struct. Must match compass.h
     [StructLayout(LayoutKind.Sequential)]
     internal struct CompassDataCStruct
@@ -189,18 +198,10 @@ namespace NianticSpatial.NSDK.AR.PAM
     }
 
     // IMPORTANT – This struct has explicit matching C# and pure-C alignment/padding requirements
-    // C# to C struct. Must match frame_data.h
+    // C# to C struct. Must match nsdk_camera_frame.h (NSDK_CameraFrame)
     [StructLayout(LayoutKind.Sequential)]
-    internal struct NsdkFrameData
+    internal struct NsdkCameraFrameCStruct
     {
-        // Most recent Compass data from the device
-        // 64b aligned struct
-        public CompassDataCStruct CompassData;
-
-        // Most recent GPS data from the device
-        // 64b aligned struct
-        public GpsLocationCStruct GpsLocation;
-
         // Camera pose and image timestamp in milliseconds since epoch
         // Note, this is not strictly the exact timestamp for all devices as of May 2024 (e.g. Magic Leap)
         public ulong CameraTimestampMs;
@@ -209,48 +210,98 @@ namespace NianticSpatial.NSDK.AR.PAM
         public CameraPlaneCStruct CameraImagePlane0;
         public CameraPlaneCStruct CameraImagePlane1;
         public CameraPlaneCStruct CameraImagePlane2;
-
-        // Platform depth data
-        public IntPtr DepthDataPtr;
-        // Platform depth confidence data
-        public IntPtr DepthConfidencesDataPtr;
-        // Platform Depth image intrinsics with image resolution
-        public CameraIntrinsicsCStruct DepthCameraIntrinsics;
-
-        // An unique Id to identify the current frame across frames within the same run
-        public uint FrameId;
-
         // Camera pose of the current frame as a 4x4 float matrix.
         public TransformCStruct CameraPose;
-
-        // Depth sensor pose (platform depth camera pose). For platforms without a dedicated
-        // depth sensor this must be set to the same value as CameraPose.
-        public TransformCStruct DepthCameraPose;
-
         // Camera intrinsics
         public CameraIntrinsicsCStruct CameraIntrinsics;
-
-        // The width of the raw camera image.
+        // The width and height of the raw camera image
         public uint CameraImageWidth;
-        // The height of the raw camera image.
         public uint CameraImageHeight;
+
         // Camera image format
         public ImageFormatCEnum CameraImageFormat;
+
+        // A descriptive name for the camera sensor, e.g. "camera_rear"
+        public ArdkStringCStruct SensorName;
+
+        // True if this camera sensor should be used as the default for SDK features
+        public byte DefaultCameraSensor; // C bool is 1 byte
+
+        // Orientation of this camera image within its buffer. See ardk_orientation.h for definitions.
+        // Use XREnumConversions.FromUnityToNsdk() to calculate the correct value
+        public uint CameraOrientation;
+    }
+
+    // IMPORTANT – This struct has explicit matching C# and pure-C alignment/padding requirements
+    // C# to C struct. Must match nsdk_depth_frame.h (NSDK_DepthFrame)
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct NsdkDepthFrameCStruct
+    {
+        // Depth frame timestamp in milliseconds since epoch
+        public ulong DepthTimestampMs;
+
+        // Platform depth data (float buffer)
+        public IntPtr DepthImageData;
+
+        // Platform depth confidence data.
+        public IntPtr DepthConfidenceData;
+
+        // Platform depth image intrinsics with image resolution.
+        public CameraIntrinsicsCStruct DepthImageIntrinsics;
+
+        // Pose of the depth camera/sensor
+        // If depth is requested but unavailable, set this to identity
+        public TransformCStruct DepthCameraPose;
 
         // Length of the depth float buffer (same value as depth confidence buffer as well)
         public uint DepthAndConfidenceDataLength;
 
-        // Width of the depth float buffer
-        public uint DepthDataWidth;
-        // Height of the depth float buffer
-        public uint DepthDataHeight;
+        // Width and height of the depth float buffer
+        public uint DepthImageDataWidth;
+        public uint DepthImageDataHeight;
 
-        // Orientation of current frame. See orientation.h for definitions
+        // A descriptive name for the camera sensor, e.g. "lidar_rear"
+        public ArdkStringCStruct SensorName;
+
+        // Name of the camera sensor this depth is aligned to (if applicable)
+        public ArdkStringCStruct AlignedToCameraSensorName;
+
+        // True if this is the default depth sensor
+        public byte DefaultDepthSensor; // C bool is 1 byte
+
+        // Orientation of this depth image within its buffer. See ardk_orientation.h for definitions.
         // Use XREnumConversions.FromUnityToNsdk() to calculate the correct value
-        public uint ScreenOrientation;
+        public uint CameraOrientation;
+    }
+
+    // IMPORTANT – This struct has explicit matching C# and pure-C alignment/padding requirements
+    // C# to C struct. Must match ardk_frame_data.h (ARDK_FrameData)
+    [StructLayout(LayoutKind.Sequential)]
+    internal struct NsdkFrameData
+    {
+        // Most recent compass data from the device
+        // 64b-aligned struct
+        public CompassDataCStruct CompassData;
+
+        // Most recent GPS data from the device
+        // 64b-aligned struct
+        public GpsLocationCStruct GpsLocation;
+
+        // A unique ID to identify the current frame across frames within the same run
+        public uint FrameId;
 
         // Tracking state of current frame. See tracking_state.h for definitions.
         // Use XREnumConversions.FromUnityToNsdk() to calculate the correct value
         public uint TrackingState;
+
+        // Pointer to array of camera frames (NsdkCameraFrameCStruct buffer)
+        public IntPtr CameraFrames;
+        // The number of frames in the CameraFrames array
+        public uint CameraFramesCount;
+
+        // Pointer to array of depth frames (NsdkDepthFrameCStruct buffer)
+        public IntPtr DepthFrames;
+        // The number of frames in the DepthFrames array
+        public uint DepthFramesCount;
     }
 }

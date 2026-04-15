@@ -7,10 +7,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using NianticSpatial.NSDK.AR.Loader;
-using NianticSpatial.NSDK.AR.PersistentAnchors.Spaces;
+using NianticSpatial.NSDK.AR.Settings;
 using NianticSpatial.NSDK.AR.Utilities;
 using NianticSpatial.NSDK.AR.Utilities.Http;
-using Protogen;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.XR.ARSubsystems;
@@ -546,75 +545,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             return totalBytesToDownload;
         }
 
-        internal static async Task<NsdkVpsSpaceResponse> GetSpaceDataForNode(string nodeId)
-        {
-            var authHeaderDict = SetupAuthHeaderDict();
-
-            var nodeRepresentation = await GetNodesInSpace(nodeId, authHeaderDict);
-            if (nodeRepresentation == null || nodeRepresentation.Count == 0)
-            {
-                return default;
-            }
-
-            var spaceId = nodeRepresentation.First().spaceId;
-
-            var request = new MeshDownloadRequestResponse.GetSpaceDataRequest()
-            {
-                spaceIdentifiers = new[] { spaceId },
-                requestIdentifier = GenerateRequestIdentifier()
-            };
-
-            var endpoint = GetUrlForMethod(spaceDataMethod);
-            var response =
-                await HttpClient
-                    .SendPostAsync<MeshDownloadRequestResponse.GetSpaceDataRequest,
-                            MeshDownloadRequestResponse.GetSpaceDataResponse>
-                        (endpoint, request, authHeaderDict);
-
-            if (response.Status == ResponseStatus.Success)
-            {
-                if (response.Data.spaceDataList.Length != 1)
-                {
-                    Debug.LogError($"GetSpaceData expected 1 space, but got {response.Data.spaceDataList.Length}. Using first space.");
-                }
-
-                var spaceData = new NsdkVpsSpace();
-                spaceData.Nodes = new List<NsdkVpsNode>();
-                spaceData.SpaceId = spaceId;
-                foreach (var node in nodeRepresentation)
-                {
-                    if (node.spaceId != spaceId)
-                    {
-                        Debug.LogError($"Node {node.nodeId} is not in space {spaceId}");
-                        return default;
-                    }
-
-                    var nsdkNode = new NsdkVpsNode
-                    {
-                        NodeId = node.nodeId,
-                        NodeToSpaceOriginPose = new Pose(node.position, node.rotation),
-                        IsOrigin = node.isOrigin
-                    };
-
-                    if (nsdkNode.IsOrigin)
-                    {
-                        spaceData.OriginNodeId = nsdkNode.NodeId;
-                    }
-
-                    spaceData.Nodes.Add(nsdkNode);
-                }
-
-                spaceData.SpaceLabels = response.Data.spaceDataList.First().spaceLabels.Select(label => new NsdkVpsSpace.NsdkVpsSpaceLabel(label)).ToList();
-                spaceData.SpaceQualityScore = response.Data.spaceDataList.First().spaceQualityScore;
-                var res = new NsdkVpsSpaceResponse(true, spaceData);
-                return res;
-            }
-
-            // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
-            Debug.LogError("Failed to get space data");
-            return default;
-        }
-
         private static string GetUrlForMethod(string method)
         {
             // Default
@@ -636,18 +566,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems
 
         private static Dictionary<string, string> SetupAuthHeaderDict()
         {
-            var apiKey = NsdkSettingsHelper.ActiveSettings.ApiKey;
-            var authHeaderDict = new Dictionary<string, string>();
-
-            if (string.IsNullOrWhiteSpace(apiKey))
-            {
-                // This class uses Debug instead of ARLog to support editor logging without NSDK Native loaded
-                Debug.LogError("No API key set");
-                return null;
-            }
-
-            authHeaderDict["Authorization"] = apiKey;
-            return authHeaderDict;
+            return Metadata.GetApiGatewayHeaders("");
         }
     }
 }

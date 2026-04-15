@@ -34,7 +34,6 @@ namespace NianticSpatial.NSDK.AR.Editor
         private const string Category = "Niantic Spatial Development Kit";
         private const string PlaybackDatasetMetaFilename = "capture.json";
         private const string UnityDownloadsPage = "https://unity.com/download";
-        private const string CreateAPIKeyHelpLink = "https://nianticspatial.com/docs/beta/ardk/install/#adding-your-api-key-to-your-unity-project";
         private const string UpdateGradleVersionHelpLink = "https://nianticspatial.com/docs/beta/ardk/install/#installing-gradle-for-android";
 
         private static Dictionary<BuildTargetGroup, List<BuildValidationRule>> s_platformRules;
@@ -204,19 +203,15 @@ namespace NianticSpatial.NSDK.AR.Editor
                 new BuildValidationRule
                 {
                     Category = Category,
-#if NIANTICSPATIAL_NSDK_APIKEY_ENABLED
-                    Message = "If using NSDK, please either login, disable developer authentication, or set the Lightship API Key provided in your project at https://lightship.dev/account/projects",
-#else
-                    Message = "If using NSDK, please either login or disable developer authentication",
-#endif
-                    // Use the same predicate for now whether NIANTICSPATIAL_NSDK_APIKEY_ENABLED is set or not.
-                    // This is not ideal, but fixes the build jobs that inject the API key into the build pipeline.
-                    CheckPredicate = () => !string.IsNullOrWhiteSpace(nsdkSettings.ApiKey) || !string.IsNullOrEmpty(nsdkSettings.RefreshToken) || !nsdkSettings.UseDeveloperAuthentication,
+                    Message = "If using NSDK, please provide an access token, login, or disable developer authentication",
+                    CheckPredicate = () =>
+                        !string.IsNullOrEmpty(nsdkSettings.AccessTokenOverride) ||
+                        !string.IsNullOrEmpty(nsdkSettings.RefreshToken) ||
+                        !nsdkSettings.UseDeveloperAuthentication,
                     IsRuleEnabled = getIsLightshipPluginEnabled.Invoke,
                     FixIt = () => SettingsService.OpenProjectSettings(NSDKPath),
-                    FixItMessage = "Open `Project Settings` > `XR Plug-in Management` > `Niantic Spatial Development Kit` and set the Lightship API Key provided by the Lightship Portal.",
+                    FixItMessage = "Open `Project Settings` > `XR Plug-in Management` > `Niantic Spatial Development Kit` and provide an access token, login, or disable developer authentication.",
                     HelpText = "For further assistance, follow the instructions in the Lightship SDK docs.",
-                    HelpLink = CreateAPIKeyHelpLink,
                     FixItAutomatic = false,
                     Error = false
                 },
@@ -314,14 +309,14 @@ namespace NianticSpatial.NSDK.AR.Editor
                 new BuildValidationRule
                 {
                     Category = Category,
-                    Message = $"If using NSDK Depth, Meshing, or Semantics features for iOS, set the target iOS version to 13.0 or higher (currently {getIosTargetOsVersionString.Invoke()}).",
+                    Message = $"If using NSDK Depth, Meshing, or Scene Segmentation features for iOS, set the target iOS version to 13.0 or higher (currently {getIosTargetOsVersionString.Invoke()}).",
                     CheckPredicate = () => OSVersion.Parse(getIosTargetOsVersionString.Invoke()) >= new OSVersion(13),
                     IsRuleEnabled = () =>
                     {
                         var isFeatureEnabled =
                             nsdkSettings.UseNsdkDepth ||
                             nsdkSettings.UseNsdkMeshing ||
-                            nsdkSettings.UseNsdkSemanticSegmentation;
+                            nsdkSettings.UseNsdkSceneSegmentation;
                         return
                             getIosIsLightshipPluginEnabled.Invoke() &&
                             isFeatureEnabled;
@@ -363,7 +358,7 @@ namespace NianticSpatial.NSDK.AR.Editor
                     {
                         var isFeatureEnabled =
                             nsdkSettings.UseNsdkScanning ||
-                            nsdkSettings.UseNsdkPersistentAnchor;
+                            nsdkSettings.UseNsdkVps2;
                         return
                             getIosIsLightshipPluginEnabled.Invoke() &&
                             isFeatureEnabled;
@@ -461,23 +456,6 @@ namespace NianticSpatial.NSDK.AR.Editor
                     },
                     Error = true
                 },
-#if !UNITY_2022_1_OR_NEWER
-                // This rule is only enabled on Unity versions 2022 or lower since Unity 2022 no longer has
-                // a means to programatically set the android sdk version to 33 as it expects the
-                // "highest installed version" option to be used
-                new BuildValidationRule
-                {
-                    Category = Category,
-                    Message = $"If using NSDK for Android, set the target Android SDK version to 33 or higher" +
-                        $" (currently {(getAndroidTargetSdkVersion.Invoke() == 0 ? "automatic" : getAndroidTargetSdkVersion.Invoke())}).",
-                    CheckPredicate = () => getAndroidTargetSdkVersion.Invoke() >= 33 || getAndroidTargetSdkVersion.Invoke() == 0,
-                    IsRuleEnabled = getAndroidIsLightshipPluginEnabled.Invoke,
-                    FixIt = () => PlayerSettings.Android.targetSdkVersion = (AndroidSdkVersions)33,
-                    FixItMessage = $"Open `Project Settings` > `Player` > 'Android settings' > `Other Settings` and set the target Android SDK version to 33 or higher.",
-                    FixItAutomatic = true,
-                    Error = true
-                }
-#endif
             };
             return androidRules;
         }

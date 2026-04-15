@@ -4,7 +4,7 @@
 
 using System;
 using NianticSpatial.NSDK.AR.Meshing;
-using NianticSpatial.NSDK.AR.Semantics;
+using NianticSpatial.NSDK.AR.SceneSegmentation;
 using NianticSpatial.NSDK.AR.Subsystems.Meshing;
 using Unity.XR.CoreUtils;
 using UnityEditor;
@@ -28,7 +28,7 @@ namespace NianticSpatial.NSDK.AR.Editor
         private SerializedProperty _enableMeshDecimation;
 
         private SerializedProperty _isMeshFilteringEnabled;
-        private SerializedProperty _semanticSegmentationManager = null;
+        private SerializedProperty _sceneSegmentationManager = null;
         private SerializedProperty _isFilteringAllowListEnabled;
         private SerializedProperty _filteringAllowList;
         private SerializedProperty _isFilteringBlockListEnabled;
@@ -42,11 +42,11 @@ namespace NianticSpatial.NSDK.AR.Editor
             public static readonly string meshBlockSizeWarning =
                 "For best results, the mesh block size should be an exact multiple of the voxel size.";
 
-            public static readonly string noSemanticSegmentationManagerWarning =
-                "There must be an active ARSemanticSegmentationManager in the scene to enable mesh filtering.";
+            public static readonly string noSceneSegmentationManagerWarning =
+                "There must be an active ARSceneSegmentationManager in the scene to enable mesh filtering.";
         }
 
-        private bool _triedLookingForSemanticsManager = false;
+        private bool _triedLookingForSceneSegmentationManager = false;
 
         private bool _triedLookingForMainCamera = false;
         private Camera _mainCamera = null;
@@ -91,19 +91,19 @@ namespace NianticSpatial.NSDK.AR.Editor
             EditorGUILayout.PropertyField(_isMeshFilteringEnabled);
             if (_isMeshFilteringEnabled.boolValue)
             {
-                EditorGUILayout.PropertyField(_semanticSegmentationManager);
+                EditorGUILayout.PropertyField(_sceneSegmentationManager);
 
                 // If we haven't tried autofinding the segmentation manager yet, try it now.
-                if (_semanticSegmentationManager.objectReferenceValue == null && !_triedLookingForSemanticsManager)
+                if (_sceneSegmentationManager.objectReferenceValue == null && !_triedLookingForSceneSegmentationManager)
                 {
-                    _triedLookingForSemanticsManager = true;
-                    _semanticSegmentationManager.objectReferenceValue = FindAnyObjectByType<ARSemanticSegmentationManager>(FindObjectsInactive.Include);
+                    _triedLookingForSceneSegmentationManager = true;
+                    _sceneSegmentationManager.objectReferenceValue = FindAnyObjectByType<ARSceneSegmentationManager>(FindObjectsInactive.Include);
                 }
 
                 // Now that we've tried auto-filling, show the correct UI
-                if (_semanticSegmentationManager.objectReferenceValue == null)
+                if (_sceneSegmentationManager.objectReferenceValue == null)
                 {
-                    EditorGUILayout.HelpBox(Contents.noSemanticSegmentationManagerWarning, MessageType.Error);
+                    EditorGUILayout.HelpBox(Contents.noSceneSegmentationManagerWarning, MessageType.Error);
                 }
                 else
                 {
@@ -151,7 +151,7 @@ namespace NianticSpatial.NSDK.AR.Editor
             _meshCullingDistance = serializedObject.FindProperty("_meshCullingDistance");
             _enableMeshDecimation = serializedObject.FindProperty("_enableMeshDecimation");
             _isMeshFilteringEnabled = serializedObject.FindProperty("_isMeshFilteringEnabled");
-            _semanticSegmentationManager = serializedObject.FindProperty("_semanticSegmentationManager");
+            _sceneSegmentationManager = serializedObject.FindProperty("_sceneSegmentationManager");
             _isFilteringAllowListEnabled = serializedObject.FindProperty("_isFilteringAllowListEnabled");
             _filteringAllowList = serializedObject.FindProperty("_allowList");
             _isFilteringBlockListEnabled = serializedObject.FindProperty("_isFilteringBlockListEnabled");

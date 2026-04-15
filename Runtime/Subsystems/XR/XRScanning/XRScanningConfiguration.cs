@@ -47,6 +47,7 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         private float _voxelSize;
         private float _nearDepth;
         private float _farDepth;
+        private bool _recordAllSensors;
 
         public int Framerate
         {
@@ -134,6 +135,12 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
             set => _fullResolutionFramerate = value;
         }
 
+        public bool RecordAllSensors
+        {
+            get => _recordAllSensors;
+            set => _recordAllSensors = value;
+        }
+
         public string ScanBasePath
         {
             get => _scanBasePath;
@@ -210,7 +217,7 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// Tests for equality.
         /// </summary>
         /// <param name="other">The other <see cref="XRScanningConfiguration"/> to compare against.</param>
-        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRPersistentAnchor"/>, otherwise false.</returns>
+        /// <returns>`True` if every field in <paramref name="other"/> is equal to this <see cref="XRVps2Anchor"/>, otherwise false.</returns>
         private bool Equals(XRScanningConfiguration other)
         {
             return

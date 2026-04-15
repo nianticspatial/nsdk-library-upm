@@ -139,9 +139,8 @@ namespace NianticSpatial.NSDK.AR.Editor
 
                 project.WriteToFile(projectPath);
 
-#if (FIX_INTEGRATED_SUBSYSTEM_2021 && UNITY_2021_3_OR_NEWER && !UNITY_2022) || (FIX_INTEGRATED_SUBSYSTEM_2022 && UNITY_2022)
+                // This patching is still needed in Unity 6. Otherwise UnityPluginLoad() never gets called on iOS.
                 PostProcessIosUnityAppControllerFix(buildPath);
-#endif
 #endif // UNITY_IOS
             }
         }
@@ -296,12 +295,10 @@ namespace NianticSpatial.NSDK.AR.Editor
                     }
 
                     AddDefineSymbols.Add("NIANTICSPATIAL_NSDK_AR_LOADER_ENABLED");
-                    AddDefineSymbols.Add("NIANTICSPATIAL_NSDK_USE_FAST_LIGHTWEIGHT_PAM");
                 }
                 else if (!NsdkBuildProcessor.loaderEnabled && previousLoaderEnabled)
                 {
                     AddDefineSymbols.Remove("NIANTICSPATIAL_NSDK_AR_LOADER_ENABLED");
-                    AddDefineSymbols.Remove("NIANTICSPATIAL_NSDK_USE_FAST_LIGHTWEIGHT_PAM");
                     AddDefineSymbols.Remove("NIANTICSPATIAL_NSDK_SPACES_ENABLED");
                 }
             }

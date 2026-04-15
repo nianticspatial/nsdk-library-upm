@@ -3,14 +3,12 @@
 using System;
 using NianticSpatial.NSDK.AR.Subsystems;
 using NianticSpatial.NSDK.AR.Subsystems.Meshing;
-using NianticSpatial.NSDK.AR.Subsystems.ObjectDetection;
 using NianticSpatial.NSDK.AR.Subsystems.Occlusion;
-using NianticSpatial.NSDK.AR.Subsystems.Semantics;
+using NianticSpatial.NSDK.AR.Subsystems.SceneSegmentation;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.XRSubsystems;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.SubsystemsImplementation.Extensions;
 using UnityEngine.XR;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -24,41 +22,35 @@ namespace NianticSpatial.NSDK.AR.Utilities.Metrics
         private ARCameraManager _cameraManager;
 
         private XROcclusionSubsystem _occlusionSubsystem;
-        private NsdkSemanticsSubsystem _semanticsSubsystem;
+        private NsdkSceneSegmentationSubsystem _sceneSegmentationSubsystem;
         private NsdkMeshingProvider _meshingProvider;
-        private NsdkObjectDetectionSubsystem.NsdkObjectDetectionProvider _objectDetectionProvider;
 
         private bool _automaticallyTrackFPS;
         private bool _canAutomaticallyTrackFPS;
 
         private bool _usingDepth;
-        private bool _usingSemantics;
+        private bool _usingSceneSegmentation;
         private bool _usingMesh;
-        private bool _usingObjectDetection;
 
         private ulong _lastTimeDepth;
-        private ulong _lastTimeSemantics;
+        private ulong _lastTimeSceneSegmentation;
         private ulong _lastTimeMesh;
-        private ulong _lastTimeObjectDetection;
 
         private float _instantDepthFPS;
-        private float _instantSemanticsFPS;
+        private float _instantSceneSegmentationFPS;
         private float _instantMeshFPS;
-        private float _instantObjectDetectionFPS;
 
-        private uint? _latestSemanticsFrameId;
+        private uint? _latestSceneSegmentationFrameId;
 
         public FPSMetricsUtility(
             bool usingDepth = true,
-            bool usingSemantics = true,
+            bool usingSceneSegmentation = true,
             bool usingMesh = true,
-            bool usingObjectDetection = true,
             bool automaticallyTrackFPS = true)
         {
             _usingDepth = usingDepth;
-            _usingSemantics = usingSemantics;
+            _usingSceneSegmentation = usingSceneSegmentation;
             _usingMesh = usingMesh;
-            _usingObjectDetection = usingObjectDetection;
             _automaticallyTrackFPS = automaticallyTrackFPS;
 
             var xrManager = XRGeneralSettings.Instance?.Manager;
@@ -75,11 +67,11 @@ namespace NianticSpatial.NSDK.AR.Utilities.Metrics
                 _usingDepth = false;
             }
 
-            _semanticsSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRSemanticsSubsystem>() as NsdkSemanticsSubsystem;
-            if (_semanticsSubsystem is null)
+            _sceneSegmentationSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRSceneSegmentationSubsystem>() as NsdkSceneSegmentationSubsystem;
+            if (_sceneSegmentationSubsystem is null)
             {
-                Log.Debug("Semantics FPS not being tracked");
-                _usingSemantics = false;
+                Log.Debug("Scene Segmentation FPS not being tracked");
+                _usingSceneSegmentation = false;
             }
 
             var activeMeshSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRMeshSubsystem>();
@@ -87,14 +79,6 @@ namespace NianticSpatial.NSDK.AR.Utilities.Metrics
             {
                 Log.Debug("Mesh FPS not being tracked");
                 _usingMesh = false;
-            }
-
-            var activeObjectDetectionSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRObjectDetectionSubsystem>() as NsdkObjectDetectionSubsystem;
-            _objectDetectionProvider = activeObjectDetectionSubsystem?.GetProvider() as NsdkObjectDetectionSubsystem.NsdkObjectDetectionProvider;
-            if (activeObjectDetectionSubsystem is null || _objectDetectionProvider is null)
-            {
-                Log.Debug("Object Detection FPS not being tracked");
-                _usingObjectDetection = false;
             }
 
             TryAutomaticallyTrackFPS();
@@ -168,13 +152,13 @@ namespace NianticSpatial.NSDK.AR.Utilities.Metrics
                 }
             }
 
-            if (_usingSemantics)
+            if (_usingSceneSegmentation)
             {
-                var thisTimeSemantics = GetLatestSemanticsTimestamp();
-                if (_usingSemantics && thisTimeSemantics != _lastTimeSemantics)
+                var thisTimeSceneSegmentation = GetLatestSceneSegmentationTimestamp();
+                if (_usingSceneSegmentation && thisTimeSceneSegmentation != _lastTimeSceneSegmentation)
                 {
-                    _instantSemanticsFPS = (1.0f / (Math.Abs((long)(thisTimeSemantics - _lastTimeSemantics)) / 1000.0f));
-                    _lastTimeSemantics = thisTimeSemantics;
+                    _instantSceneSegmentationFPS = (1.0f / (Math.Abs((long)(thisTimeSceneSegmentation - _lastTimeSceneSegmentation)) / 1000.0f));
+                    _lastTimeSceneSegmentation = thisTimeSceneSegmentation;
                 }
             }
 
@@ -188,15 +172,6 @@ namespace NianticSpatial.NSDK.AR.Utilities.Metrics
                 }
             }
 
-            if (_usingObjectDetection)
-            {
-                var thisTimeObjectDetection = GetLatestObjectDetectionTimestamp();
-                if (_usingObjectDetection && thisTimeObjectDetection != _lastTimeObjectDetection)
-                {
-                    _instantObjectDetectionFPS = (1.0f / (Math.Abs((long)(thisTimeObjectDetection - _lastTimeObjectDetection)) / 1000.0f));
-                    _lastTimeObjectDetection = thisTimeObjectDetection;
-                }
-            }
         }
 
         public ulong GetLatestDepthTimestamp()
@@ -227,36 +202,36 @@ namespace NianticSpatial.NSDK.AR.Utilities.Metrics
             return 0;
         }
 
-        public ulong GetLatestSemanticsTimestamp()
+        public ulong GetLatestSceneSegmentationTimestamp()
         {
-            ulong semanticsTimestampMs = 0;
+            ulong sceneSegmentationTimestampMs = 0;
 
-            if (!_usingSemantics)
+            if (!_usingSceneSegmentation)
             {
-                return semanticsTimestampMs;
+                return sceneSegmentationTimestampMs;
             }
 
             // If we have already acquired the latest frame, return the last timestamp
-            if (_latestSemanticsFrameId == _semanticsSubsystem.LatestFrameId)
+            if (_latestSceneSegmentationFrameId == _sceneSegmentationSubsystem.LatestFrameId)
             {
-                return _lastTimeSemantics;
+                return _lastTimeSceneSegmentation;
             }
 
-            if (_semanticsSubsystem.TryAcquirePackedSemanticChannelsCpuImage(out XRCpuImage semanticsBuffer, out Matrix4x4 _))
+            if (_sceneSegmentationSubsystem.TryAcquirePackedSceneSegmentationChannelsCpuImage(out XRCpuImage sceneSegmentationBuffer, out Matrix4x4 _))
             {
-                semanticsTimestampMs = (ulong)(semanticsBuffer.timestamp * 1000);
-                _latestSemanticsFrameId = _semanticsSubsystem.LatestFrameId;
-                semanticsBuffer.Dispose();
+                sceneSegmentationTimestampMs = (ulong)(sceneSegmentationBuffer.timestamp * 1000);
+                _latestSceneSegmentationFrameId = _sceneSegmentationSubsystem.LatestFrameId;
+                sceneSegmentationBuffer.Dispose();
             }
 
-            return semanticsTimestampMs;
+            return sceneSegmentationTimestampMs;
         }
 
-        public float GetInstantSemanticsFPS()
+        public float GetInstantSceneSegmentationFPS()
         {
-            if (_usingSemantics && _canAutomaticallyTrackFPS)
+            if (_usingSceneSegmentation && _canAutomaticallyTrackFPS)
             {
-                return _instantSemanticsFPS;
+                return _instantSceneSegmentationFPS;
             }
 
             return 0;
@@ -282,19 +257,5 @@ namespace NianticSpatial.NSDK.AR.Utilities.Metrics
             return 0;
         }
 
-        public ulong GetLatestObjectDetectionTimestamp()
-        {
-            return _objectDetectionProvider?.LatestTimestamp ?? 0;
-        }
-
-        public float GetInstantObjectDetectionFPS()
-        {
-            if (_usingObjectDetection && _canAutomaticallyTrackFPS)
-            {
-                return _instantObjectDetectionFPS;
-            }
-
-            return 0;
-        }
     }
 }

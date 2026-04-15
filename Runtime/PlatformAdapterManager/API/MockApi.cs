@@ -75,9 +75,54 @@ namespace NianticSpatial.NSDK.AR.PAM
             _readyDataFormats = DataFormatFlags.kNone;
         }
 
+        /// <summary>
+        /// Marshals the pointer to NsdkFrameData (ARDK_FrameData layout).
+        /// </summary>
         public static NsdkFrameData IntPtrToFrameDataCStruct(IntPtr ptr)
         {
             return (NsdkFrameData)Marshal.PtrToStructure(ptr, typeof(NsdkFrameData));
+        }
+
+        /// <summary>
+        /// Captures frame data including camera and depth frames. Must be called from within
+        /// the ARDK_SAH_OnFrame callback while the frame data pointers are still valid,
+        /// since CameraFrames and DepthFrames point to stack-allocated arrays that become
+        /// invalid after the callback returns.
+        /// </summary>
+        public static (NsdkFrameData FrameData, NsdkCameraFrameCStruct? CameraFrame, NsdkDepthFrameCStruct? DepthFrame) CaptureFrameData(IntPtr ptr)
+        {
+            var frameData = (NsdkFrameData)Marshal.PtrToStructure(ptr, typeof(NsdkFrameData));
+            NsdkCameraFrameCStruct? cameraFrame = null;
+            NsdkDepthFrameCStruct? depthFrame = null;
+            if (frameData.CameraFramesCount > 0 && frameData.CameraFrames != IntPtr.Zero)
+                cameraFrame = (NsdkCameraFrameCStruct)Marshal.PtrToStructure(frameData.CameraFrames, typeof(NsdkCameraFrameCStruct));
+            if (frameData.DepthFramesCount > 0 && frameData.DepthFrames != IntPtr.Zero)
+                depthFrame = (NsdkDepthFrameCStruct)Marshal.PtrToStructure(frameData.DepthFrames, typeof(NsdkDepthFrameCStruct));
+            return (frameData, cameraFrame, depthFrame);
+        }
+
+        /// <summary>
+        /// Returns the first camera frame when present. For use by tests and tools.
+        /// Note: Only use with frame data captured via CaptureFrameData; GetFirstCameraFrame
+        /// dereferences pointers that may be invalid if the original frame was stack-allocated.
+        /// </summary>
+        public static NsdkCameraFrameCStruct? GetFirstCameraFrame(NsdkFrameData frameData)
+        {
+            if (frameData.CameraFramesCount == 0 || frameData.CameraFrames == IntPtr.Zero)
+                return null;
+            return (NsdkCameraFrameCStruct)Marshal.PtrToStructure(frameData.CameraFrames, typeof(NsdkCameraFrameCStruct));
+        }
+
+        /// <summary>
+        /// Returns the first depth frame when present. For use by tests and tools.
+        /// Note: Only use with frame data captured via CaptureFrameData; GetFirstDepthFrame
+        /// dereferences pointers that may be invalid if the original frame was stack-allocated.
+        /// </summary>
+        public static NsdkDepthFrameCStruct? GetFirstDepthFrame(NsdkFrameData frameData)
+        {
+            if (frameData.DepthFramesCount == 0 || frameData.DepthFrames == IntPtr.Zero)
+                return null;
+            return (NsdkDepthFrameCStruct)Marshal.PtrToStructure(frameData.DepthFrames, typeof(NsdkDepthFrameCStruct));
         }
     }
 }

@@ -27,7 +27,6 @@ namespace NianticSpatial.NSDK.AR.Editor.Auth
         [SerializeField]
         private int _accessExpiresAt;
 
-        public string ApiKey => NsdkSettings.Instance.ApiKey;
         public AuthEnvironmentType AuthEnvironment => AuthEditorSettings.Instance.AuthEnvironment;
 
         /// <summary>

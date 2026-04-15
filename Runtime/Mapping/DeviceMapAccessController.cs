@@ -10,105 +10,81 @@ using UnityEngine;
 namespace NianticSpatial.NSDK.AR.Mapping
 {
     /// <summary>
-    /// Class to access primitive device map data and configs using the new ARDK_MapStorage_* API
-    /// @note This is an experimental feature, and is subject to breaking changes or deprecation without notice
+    /// Class to access primitive device map data and configs.
     /// </summary>
-    [Experimental]
     [PublicAPI]
     public class DeviceMapAccessController
     {
-        private IntPtr _unityContextHandleCache = IntPtr.Zero;
+        private IntPtr _unityContextHandle;
+        private IMapStorageAccessApi _api;
+        private bool _disposed;
+
         private static DeviceMapAccessController _instance;
+        private static readonly object _instanceLock = new object();
 
-        private static object _instanceLock = new object();
-        public static DeviceMapAccessController Instance
+        /// <summary>
+        /// Gets or creates the shared map access object.
+        /// </summary>
+        /// <returns>The shared DeviceMapAccessController instance, or null if one could not be acquired.</returns>
+        [Experimental]
+        public static DeviceMapAccessController Acquire()
         {
-            get
+            lock (_instanceLock)
             {
-                lock (_instanceLock)
+                var unityContextHandle = NsdkUnityContext.UnityContextHandle;
+                if (unityContextHandle == IntPtr.Zero)
                 {
-                    // If NsdkUnityContext is not initialized, return null
-                    if (NsdkUnityContext.UnityContextHandle == IntPtr.Zero)
-                    {
-                        if (_instance != null)
-                        {
-                            _instance.Destroy();
-                            _instance = null;
-                        }
-                        return null;
-                    }
+                    _instance?.Release();
+                    _instance = null;
+                    return null;
+                }
 
-                    // If the instance hasn't been created yet, create it and initialize it
-                    if (_instance == null)
-                    {
-                        _instance = new DeviceMapAccessController();
-                        // Deregister no-ops if we haven't registered yet. Prevents double registration
-                        //  in case someone else destroys the instance
-                        NsdkUnityContext.OnDeinitialized -= DestroyNativeInstance;
-                        NsdkUnityContext.OnDeinitialized += DestroyNativeInstance;
-
-                        _instance.Init();
-                        return _instance;
-                    }
-
-                    // If the Unity context handle hasn't changed, return the instance
-                    if (_instance._unityContextHandleCache == NsdkUnityContext.UnityContextHandle)
-                    {
-                        Debug.Log("Returning cached instance");
-                        return _instance;
-                    }
-
-                    // If the Unity context handle has changed, destroy the native instance and create a new one
-                    _instance.Destroy();
-                    _instance.Init();
-
+                if (_instance != null && _instance._unityContextHandle == unityContextHandle)
+                {
                     return _instance;
                 }
+
+                // Context handle changed or no instance yet — recreate
+                _instance?.Release();
+                _instance = new DeviceMapAccessController(unityContextHandle);
+
+                // Clean up when the native context is torn down
+                NsdkUnityContext.OnDeinitialized -= ReleaseInstance;
+                NsdkUnityContext.OnDeinitialized += ReleaseInstance;
+
+                return _instance;
             }
         }
 
-        internal DeviceMapAccessController()
+        private static void ReleaseInstance()
         {
+            lock (_instanceLock)
+            {
+                _instance?.Release();
+                _instance = null;
+            }
+        }
+
+        private DeviceMapAccessController(IntPtr unityContextHandle)
+        {
+            _unityContextHandle = unityContextHandle;
             _api = new NativeMapStorageAccessApi();
-        }
 
-        private IMapStorageAccessApi _api;
-
-        internal void Init()
-        {
-            if (NsdkUnityContext.UnityContextHandle == IntPtr.Zero)
+            if (!_api.Acquire(_unityContextHandle))
             {
-                Log.Error("Unity context handle is not initialized yet. " +
-                    "DeviceMapAccessController cannot be initialized");
-                return;
-            }
-
-            if (_unityContextHandleCache == NsdkUnityContext.UnityContextHandle)
-            {
-                Log.Warning("DeviceMapAccessController is already initialized.");
-                return;
-            }
-
-            _api = new NativeMapStorageAccessApi();
-            _unityContextHandleCache = NsdkUnityContext.UnityContextHandle;
-            
-            if (!_api.Create(_unityContextHandleCache))
-            {
-                Log.Error("Failed to create map storage access API");
+                Log.Error("Failed to create map storage access ");
             }
         }
 
-        internal void Destroy()
+        public void Release()
         {
-            if (_api == null)
+            if (_api != null)
             {
-                return;
+                _api.Release();
+                _api = null;
             }
 
-            _api.Destroy();
-            _api.Dispose();
-            _unityContextHandleCache = IntPtr.Zero;
-            _api = null;
+            _unityContextHandle = IntPtr.Zero;
         }
 
         /// <summary>
@@ -116,7 +92,7 @@ namespace NianticSpatial.NSDK.AR.Mapping
         /// @note This is an experimental feature, and is subject to breaking changes or deprecation without notice
         /// </summary>
         [Experimental]
-        public bool ClearDeviceMap()
+        public bool ClearDeviceMaps()
         {
             if (_api == null)
             {
@@ -185,6 +161,14 @@ namespace NianticSpatial.NSDK.AR.Mapping
                 return false;
             }
 
+            // Try to decode as ARDK3 device map and swap if converted successfully
+            var didConvert = ARDeviceMapCompatibilityUtil.TryConvertArdk3ToNsdk(mapData, out var nsdkDeviceMap);
+            if (didConvert)
+            {
+                // swap the blob data with converted map blob data
+                mapData = nsdkDeviceMap;
+            }
+
             return _api.AddMap(mapData);
         }
 
@@ -226,10 +210,10 @@ namespace NianticSpatial.NSDK.AR.Mapping
         /// AR session, if possible.
         /// @note This is an experimental feature, and is subject to breaking changes or deprecation without notice
         /// </summary>
-        /// <param name="anchorPayload">The payload of the anchor, encoded as a base64 string.</param>
+        /// <param name="anchorPayload">The payload of the anchor, as a base64-encoded string.</param>
         /// <returns>True if successful, false otherwise.</returns>
         [Experimental]
-        public bool CreateRootAnchor(out byte[] anchorPayload)
+        public bool CreateRootAnchor(out string anchorPayload)
         {
             anchorPayload = null;
 
@@ -254,17 +238,15 @@ namespace NianticSpatial.NSDK.AR.Mapping
         /// <returns>True if successful, false otherwise.</returns>
         [Experimental]
         public bool ExtractMapMetadataFromAnchor(
-            byte[] anchorPayload,
+            string anchorPayload,
             byte[] mapData,
             out Vector3[] points,
-            out float[] errors,
-            out bool usesLearnedFeatures)
+            out float[] errors)
         {
             points = null;
             errors = null;
-            usesLearnedFeatures = false;
 
-            if (anchorPayload == null || anchorPayload.Length == 0)
+            if (string.IsNullOrEmpty(anchorPayload))
             {
                 Log.Error("Anchor payload is empty");
                 return false;
@@ -281,20 +263,14 @@ namespace NianticSpatial.NSDK.AR.Mapping
                 return false;
             }
 
-            return _api.ExtractMapMetadataFromAnchor(anchorPayload, mapData, out points, out errors, out usesLearnedFeatures);
+            // Convert base64 string back to byte array for the API call
+            byte[] anchorPayloadBytes = System.Text.Encoding.UTF8.GetBytes(anchorPayload);
+            return _api.ExtractMapMetadataFromAnchor(anchorPayloadBytes, mapData, out points, out errors);
         }
 
         internal void UseFakeMapStorageAccessApi(IMapStorageAccessApi mapStorageAccessApi)
         {
             _api = mapStorageAccessApi;
-        }
-
-        private static void DestroyNativeInstance()
-        {
-            lock (_instanceLock)
-            {
-                _instance?.Destroy();
-            }
         }
     }
 }

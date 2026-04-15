@@ -40,19 +40,13 @@ namespace NianticSpatial.NSDK.AR.Sites
         /// </summary>
         public long CreatedTimestamp { get; }
 
-        /// <summary>
-        /// The organization ID associated with the user, or null if not associated.
-        /// </summary>
-        public string OrganizationId { get; }
-
         public UserInfo(
             string id,
             string firstName,
             string lastName,
             string email,
             string status,
-            long createdTimestamp,
-            string organizationId)
+            long createdTimestamp)
         {
             Id = id;
             FirstName = firstName;
@@ -60,7 +54,6 @@ namespace NianticSpatial.NSDK.AR.Sites
             Email = email;
             Status = status;
             CreatedTimestamp = createdTimestamp;
-            OrganizationId = organizationId;
         }
     }
 }

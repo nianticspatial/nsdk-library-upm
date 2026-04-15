@@ -26,12 +26,10 @@ namespace NianticSpatial.NSDK.AR.Loader
         private static List<XRMeshSubsystemDescriptor> s_MeshSubsystemDescriptors = new();
         private static List<XRCameraSubsystemDescriptor> s_CameraSubsystemDescriptors = new();
         private static List<XROcclusionSubsystemDescriptor> _occlusionSubsystemDescriptors = new();
-        private static List<XRPersistentAnchorSubsystemDescriptor> s_persistentAnchorSubsystemDescriptors = new();
 
         private NsdkLoaderHelper _nsdkLoaderHelper;
         private readonly List<INsdkExternalLoader> _externalLoaders = new List<INsdkExternalLoader>();
         private bool _useZBufferDepth = true;
-        private bool _useSimulationPersistentAnchors = true;
 
         /// <summary>
         /// Initializes the loader. This is called from Unity when initializing XR.
@@ -59,18 +57,8 @@ namespace NianticSpatial.NSDK.AR.Loader
 
             var settings = NsdkSettingsHelper.ActiveSettings;
             _useZBufferDepth = settings.NsdkSimulationParams.UseZBufferDepth;
-            _useSimulationPersistentAnchors = settings.NsdkSimulationParams.UseSimulationPersistentAnchor;
 
             _nsdkLoaderHelper.Initialize(this);
-
-            if (_useSimulationPersistentAnchors)
-            {
-                CreateSubsystem<XRPersistentAnchorSubsystemDescriptor, XRPersistentAnchorSubsystem>
-                (
-                    s_persistentAnchorSubsystemDescriptors,
-                    "Nsdk-Simulation-PersistentAnchor"
-                );
-            }
 
             return true;
         }
@@ -135,7 +123,6 @@ namespace NianticSpatial.NSDK.AR.Loader
             DestroySubsystem<XRInputSubsystem>();
             DestroySubsystem<XRCameraSubsystem>();
             DestroySubsystem<XRSessionSubsystem>();
-            DestroySubsystem<XRPersistentAnchorSubsystem>();
 
             return true;
         }

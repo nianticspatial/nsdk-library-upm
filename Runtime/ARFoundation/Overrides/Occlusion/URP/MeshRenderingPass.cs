@@ -3,9 +3,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-#if UNITY_6000_0_OR_NEWER
 using UnityEngine.Rendering.RenderGraphModule;
-#endif
 
 namespace NianticSpatial.NSDK.AR.Occlusion
 {
@@ -31,7 +29,6 @@ namespace NianticSpatial.NSDK.AR.Occlusion
         protected override void OnExecuteCompatibilityMode(CommandBuffer cmd, ref RenderingData renderingData) =>
             cmd.DrawMesh(Mesh, Matrix4x4.identity, Material);
 
-#if UNITY_6000_0_OR_NEWER
         /// <summary>
         /// Contains the rendering context.
         /// </summary>
@@ -48,7 +45,6 @@ namespace NianticSpatial.NSDK.AR.Occlusion
             builder.SetRenderFunc((PassData _, RasterGraphContext context) =>
                 context.cmd.DrawMesh(Mesh, Matrix4x4.identity, Material));
         }
-#endif
     }
 }
 #endif // MODULE_URP_ENABLED

@@ -121,14 +121,13 @@ namespace NianticSpatial.NSDK.AR
         /// <summary>
         /// Destroys each initialized subsystem.
         /// </summary>
-        /// <returns>Always returns `true`.</returns>
-        internal bool Deinitialize(INsdkInternalLoaderSupport loader)
+        internal void Deinitialize(INsdkInternalLoaderSupport loader)
         {
             Log.Info("Deinitialize playback subsystems");
             if (loader == null)
             {
                 Log.Warning("Loader is null. Assuming system is already deinitialized.");
-                return true;
+                return;
             }
 
             DatasetReader?.UnloadDataset();
@@ -157,8 +156,6 @@ namespace NianticSpatial.NSDK.AR
 
                 loader.DestroySubsystem<XRCameraSubsystem>();
             }
-
-            return true;
         }
 
         private static void ConfigureLocationAndCompass(bool isLoaded, PlaybackDatasetReader datasetReader)

@@ -56,14 +56,6 @@ namespace NiantiSpatial.NSDK.Editor
     public void OnPostGenerateGradleAndroidProject(string basePath)
     {
 
-// We use a custom version for the gradle plugin version for 2021 due to us needing newer features
-// not present in the one shipped in unity 2021. Once unity gets to 2022.2, the unity gradle
-// version is adequate for what we need and we can use it versus our custom version
-#if UNITY_2022_2_OR_NEWER
-#else
-      SetGradlePluginVersion("4.2.0", GetBuildGradlePath(basePath));
-#endif
-
       var needsWrite = false;
       var androidManifest = new AndroidManifest(GetManifestPath(basePath));
       needsWrite |= androidManifest.AddPermissionRequest(CameraPermissionString);

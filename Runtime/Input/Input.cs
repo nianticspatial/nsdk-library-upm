@@ -201,16 +201,6 @@ namespace NianticSpatial.NSDK.AR
         public static Vector2 compositionCursorPos => UnityEngine.Input.compositionCursorPos;
 
         /// <summary>
-        ///   <para>Property indicating whether keypresses are eaten by a textinput if it has focus (default true).</para>
-        /// </summary>
-        [Obsolete("eatKeyPressOnTextFieldFocus property is deprecated, and only provided to support legacy behavior.")]
-        public static bool eatKeyPressOnTextFieldFocus
-        {
-            get => UnityEngine.Input.eatKeyPressOnTextFieldFocus;
-            set => UnityEngine.Input.eatKeyPressOnTextFieldFocus = value;
-        }
-
-        /// <summary>
         ///   <para>Indicates if a mouse device is detected.</para>
         /// </summary>
         public static bool mousePresent => UnityEngine.Input.mousePresent;
@@ -243,9 +233,6 @@ namespace NianticSpatial.NSDK.AR
             get => UnityEngine.Input.multiTouchEnabled;
             set => UnityEngine.Input.multiTouchEnabled = value;
         }
-
-        [Obsolete("isGyroAvailable property is deprecated. Please use SystemInfo.supportsGyroscope instead.")]
-        public static bool isGyroAvailable => UnityEngine.Input.isGyroAvailable;
 
         /// <summary>
         ///   <para>Device physical orientation as reported by OS. (Read Only)</para>

@@ -13,22 +13,22 @@ namespace NianticSpatial.NSDK.AR.Common
         public const int Session = UnityEngine.XR.ARFoundation.ARUpdateOrder.k_Session;
 
         /// <summary>
-        /// The <see cref="ARPersistentAnchorManager"/>'s update order.
-        /// Should come after the <see cref="ARSession"/>.
-        /// </summary>
-        public const int PersistentAnchorManager = Session + 1;
-
-        /// <summary>
-        /// The <see cref="ARPersistentAnchor"/>'s update order.
-        /// Should come after the <see cref="ARPersistentAnchorManager"/>.
-        /// </summary>
-        public const int PersistentAnchor = PersistentAnchorManager + 1;
-
-        /// <summary>
         /// The <see cref="ARVps2Manager"/>'s update order.
         /// Should come after the <see cref="ARSession"/>.
         /// </summary>
         public const int Vps2Manager = Session + 1;
+
+        /// <summary>
+        /// The <see cref="ARVps2Anchor"/>'s update order.
+        /// Should come after Vps2Manager.
+        /// </summary>
+        public const int Vps2Anchor = Vps2Manager + 1;
+
+        /// <summary>
+        /// The <see cref="ARDeviceMappingManager"/>'s update order.
+        /// Should come after the <see cref="ARSession"/>.
+        /// </summary>
+        public const int DeviceMappingManager = Session + 1;
 
         /// <summary>
         /// The <see cref="ARScanningManager"/>'s update order.
@@ -42,16 +42,11 @@ namespace NianticSpatial.NSDK.AR.Common
         public const int OcclusionManager = UnityEngine.XR.ARFoundation.ARUpdateOrder.k_OcclusionManager;
 
         /// <summary>
-        /// The <see cref="ARSemanticSegmentationManager"/>'s update order.
+        /// The <see cref="ARSceneSegmentationManager"/>'s update order.
         /// Should come after the <see cref="AROcclusionManager"/> to ensure that the model choice is made by the
         /// occlusion manager before semantic segmentation starts.
         /// </summary>
-        public const int SemanticSegmentationManager = OcclusionManager + 1;
+        public const int SceneSegmentationManager = OcclusionManager + 1;
 
-        /// <summary>
-        /// The <see cref="ARObjectDetectionManager"/>'s update order.
-        /// Should come after the <see cref="ARSession"/>.
-        /// </summary>
-        public const int ObjectDetectionManager = Session + 1;
     }
 }

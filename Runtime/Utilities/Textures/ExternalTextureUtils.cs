@@ -4,9 +4,7 @@ using System;
 using Unity.Collections.LowLevel.Unsafe;
 using UnityEngine;
 
-#if UNITY_6000_0_OR_NEWER
 using UnityEngine.Experimental.Rendering;
-#endif
 
 namespace NianticSpatial.NSDK.AR.Utilities.Textures
 {
@@ -25,15 +23,11 @@ namespace NianticSpatial.NSDK.AR.Utilities.Textures
             (
                 externalTexture.width,
                 externalTexture.height,
-#if UNITY_6000_0_OR_NEWER
                 GraphicsFormatUtility.GetGraphicsFormat(outputFormat ?? externalTexture.format,
                     externalTexture.isDataSRGB),
                 externalTexture.mipmapCount > 1
                     ? TextureCreationFlags.MipChain
                     : TextureCreationFlags.DontInitializePixels
-#else
-                    outputFormat ?? externalTexture.format, externalTexture.mipmapCount > 1
-#endif
             );
 
             ReadFromExternalTexture(externalTexture, destinationTexture);

@@ -1,7 +1,6 @@
 // Copyright 2022-2026 Niantic Spatial.
 
 using System;
-using Niantic.Lightship.AR.Protobuf;
 using NianticSpatial.NSDK.AR.Settings;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -49,16 +48,8 @@ namespace NianticSpatial.NSDK.AR.Telemetry
                     processor = SystemInfo.processorType;
                 }
 
-                var initEvent = new InitializationEvent()
-                {
-                    InstallMode = Application.installMode.ToString(),
-                    Processor = processor,
-                };
-
-                TelemetryService.PublishEvent(new ArdkNextTelemetryOmniProto()
-                {
-                    InitializationEvent = initEvent,
-                });
+                TelemetrySinkNative.PublishInitializationEvent(Application.installMode.ToString(),
+                    processor);
 
                 ARSession.stateChanged -= LogInitializationEventOnStart;
             }
@@ -74,10 +65,7 @@ namespace NianticSpatial.NSDK.AR.Telemetry
             {
                 if (sessionStateChangedEventArgs.state == ARSessionState.SessionInitializing)
                 {
-                    TelemetryService.PublishEvent(new ArdkNextTelemetryOmniProto()
-                    {
-                        ArSessionStartEvent = new ArSessionStartEvent(),
-                    });
+                    TelemetrySinkNative.PublishArSessionStartEvent();
                 }
             }
             else if (Metadata.IsEditor())
@@ -86,10 +74,7 @@ namespace NianticSpatial.NSDK.AR.Telemetry
                 // event for UnityEditor
                 if (sessionStateChangedEventArgs.state == ARSessionState.SessionTracking)
                 {
-                    TelemetryService.PublishEvent(new ArdkNextTelemetryOmniProto()
-                    {
-                        ArSessionStartEvent = new ArSessionStartEvent(),
-                    });
+                    TelemetrySinkNative.PublishArSessionStartEvent();
                 }
             }
         }

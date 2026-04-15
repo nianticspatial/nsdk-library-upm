@@ -1,7 +1,5 @@
 // Copyright 2022-2026 Niantic Spatial.
 
-using System;
-
 namespace NianticSpatial.NSDK.AR.Loader
 {
     public class OverloadPlaybackSettings : INsdkPlaybackSettings
@@ -36,15 +34,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         {
             get { return _loopInfinitely; }
             set { _loopInfinitely = value; }
-        }
-
-        private uint _numberOfIterations = 1;
-
-        [Obsolete]
-        public uint NumberOfIterations
-        {
-            get { return _numberOfIterations; }
-            set { _numberOfIterations = value; }
         }
 
         private int _startFrame = 0;

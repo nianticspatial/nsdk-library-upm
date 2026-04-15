@@ -4,9 +4,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-#if UNITY_6000_0_OR_NEWER
 using UnityEngine.Rendering.RenderGraphModule;
-#endif
 
 namespace NianticSpatial.NSDK.AR.Occlusion
 {
@@ -29,7 +27,6 @@ namespace NianticSpatial.NSDK.AR.Occlusion
         public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor) =>
             ConfigureTarget(Target);
 
-#if UNITY_6000_0_OR_NEWER
         private class PassData
         {
             public UniversalCameraData CameraData;
@@ -68,7 +65,6 @@ namespace NianticSpatial.NSDK.AR.Occlusion
                     data.CameraData.camera.projectionMatrix);
             });
         }
-#endif
     }
 }
 #endif // MODULE_URP_ENABLED

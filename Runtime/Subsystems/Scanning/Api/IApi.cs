@@ -113,5 +113,9 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
 
         // FPS for full resolution frame recording.
         public int FullResolutionFramerate;
+
+        // Flag to indicate if all sensors will be recorded.
+        [MarshalAs(UnmanagedType.U1)]
+        public bool RecordAllSensors;
     }
 }

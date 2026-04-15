@@ -40,6 +40,20 @@ namespace NianticSpatial.NSDK.AR.Auth
             }
         }
 
+        public static void LogoutAndPropagateTokens()
+        {
+            NsdkSettingsHelper.ActiveSettings?.UpdateAccess(string.Empty, 0, string.Empty, 0);
+            try
+            {
+                AuthRuntimeSettingsStore.Instance.Clear();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning($"[Auth] Failed to clear runtime settings store: {e.Message}");
+            }
+            AuthClient.StaticLogout();
+        }
+
         private static readonly IAuthRuntimeSettingsUpdater s_settingsUpdater = AuthRuntimeSettingsUpdater.Instance;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -68,21 +82,22 @@ namespace NianticSpatial.NSDK.AR.Auth
 
         private static async Task RefreshAccessAsync()
         {
+            // Don't start the refresh loop if an access token override is being used (no refresh token to rotate).
+            // Check this before loading persisted settings, which could overwrite the token.
+            if (NsdkSettingsHelper.ActiveSettings.UsingAccessTokenOverride)
+            {
+#if NIANTICSPATIAL_NSDK_AUTH_DEBUG
+                Debug.Log("[Auth] Refresh loop not started — using access token override.");
+#endif
+                return;
+            }
+
             // Grab a copy of the application's cancellation token, so we can cancel the task if on exit
             // (the token is replaced on exit, so we need the current one)
             s_settingsUpdatedCts = new CancellationTokenSource();
             var cancellationToken = CancellationTokenSource.CreateLinkedTokenSource(
                 s_settingsUpdatedCts.Token, Application.exitCancellationToken).Token;
-
-            // If we have an API key, don't load runtime settings and don't start the refresh loop.
-            if (!string.IsNullOrEmpty(NsdkSettingsHelper.ActiveSettings.ApiKey))
-            {
-#if NIANTICSPATIAL_NSDK_AUTH_DEBUG
-                Debug.Log("[Auth] Refresh loop not started as we have an API key.");
-#endif
-                return;
-            }
-
+            
             // Load the current runtime settings from disk, if available
             // (otherwise we use the default settings)
             await AuthRuntimeSettingsStore.Instance.LoadAsync(NsdkSettingsHelper.ActiveSettings, cancellationToken);

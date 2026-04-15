@@ -19,11 +19,6 @@ namespace NianticSpatial.NSDK.AR.Loader
             get => EndpointSettings.VpsEndpoint;
         }
 
-        internal string VpsCoverageEndpoint
-        {
-            get => EndpointSettings.VpsCoverageEndpoint;
-        }
-
         internal string SharedArEndpoint
         {
             get => EndpointSettings.SharedArEndpoint;
@@ -42,11 +37,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         internal string SmoothDepthSemanticsEndpoint
         {
             get => EndpointSettings.SmoothDepthSemanticsEndpoint;
-        }
-
-        internal string ObjectDetectionEndpoint
-        {
-            get => EndpointSettings.ObjectDetectionEndpoint;
         }
 
         internal string TelemetryApiKey

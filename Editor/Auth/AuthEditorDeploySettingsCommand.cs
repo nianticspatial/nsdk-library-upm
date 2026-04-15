@@ -24,6 +24,14 @@ namespace NianticSpatial.NSDK.AR.Editor.Auth
             // We can't declare a dependency on it here, so we grab it when we need it.
             var deployedSettings = NsdkSettings.Instance.AuthBuildSettings;
 
+            // If an access token override is present, it takes priority.
+            // Clear developer auth tokens so only the access token is embedded in the build.
+            if (!string.IsNullOrEmpty(deployedSettings.AccessTokenOverride))
+            {
+                deployedSettings.UpdateAccess(string.Empty, 0, string.Empty, 0);
+                return;
+            }
+
             // Only copy over the auth settings if we're using developer authentication.
             if (deployedSettings.UseDeveloperAuthentication)
             {

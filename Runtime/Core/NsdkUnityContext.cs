@@ -30,7 +30,6 @@ namespace NianticSpatial.NSDK.AR.Core
         internal static PlatformAdapterManager PlatformAdapterManager { get; private set; }
         private static EnvironmentConfig s_environmentConfig;
         private static UserConfig s_userConfig;
-        private static TelemetryService s_telemetryService;
         internal static bool s_isDeviceLidarSupported = false;
         internal const string featureFlagFileName = "featureFlag.json";
 
@@ -62,7 +61,7 @@ namespace NianticSpatial.NSDK.AR.Core
                 ScanningSqcEndpoint = settings.EndpointSettings.ScanningSqcEndpoint,
                 SharedArEndpoint = settings.EndpointSettings.SharedArEndpoint,
                 VpsEndpoint = settings.EndpointSettings.VpsEndpoint,
-                VpsCoverageEndpoint = settings.EndpointSettings.VpsCoverageEndpoint,
+                VpsCoverageEndpoint = "",
                 IdentityEndpoint = settings.EndpointSettings.IdentityEndpoint,
                 PortalEndpoint = settings.EndpointSettings.PortalEndpoint,
                 FastDepthEndpoint = settings.EndpointSettings.FastDepthSemanticsEndpoint,
@@ -71,7 +70,7 @@ namespace NianticSpatial.NSDK.AR.Core
                 FastSemanticsEndpoint = settings.EndpointSettings.FastDepthSemanticsEndpoint,
                 MediumSemanticsEndpoint = settings.EndpointSettings.DefaultDepthSemanticsEndpoint,
                 SmoothSemanticsEndpoint = settings.EndpointSettings.SmoothDepthSemanticsEndpoint,
-                ObjectDetectionEndpoint = settings.EndpointSettings.ObjectDetectionEndpoint,
+
                 TelemetryEndpoint = "",
                 TelemetryKey = "",
                 BevEndpoint = settings.EndpointSettings.BevEndpoint,
@@ -80,9 +79,10 @@ namespace NianticSpatial.NSDK.AR.Core
 
             s_userConfig = new UserConfig
             {
-                ApiKey = settings.ApiKey,
-                // Note: NSDK native can also receive the refresh token, but we don't want to set it here
-                // (in Unity, we run the refresh loop in C#).
+                // TODO: ARDK-7769 Remove ApiKey when it is removed from underlying C API
+                ApiKey = string.Empty,
+                // Refresh token is not set — token refresh is handled entirely in C#.
+                // The RefreshToken field in UserConfig is kept for C ABI compatibility only.
                 AccessToken = settings.AccessToken,
                 FeatureFlagFilePath = string.IsNullOrEmpty(featureFlagFilePath) ? GetFeatureFlagPath() : featureFlagFilePath,
             };
@@ -94,7 +94,6 @@ namespace NianticSpatial.NSDK.AR.Core
                 Manufacturer = Metadata.Manufacturer,
                 ClientId = Metadata.ClientId,
                 DeviceModel = Metadata.DeviceModel,
-                Version = Metadata.Version,
                 AppInstanceId = Metadata.AppInstanceId,
                 DeviceLidarSupported = isDeviceLidarSupported,
                 // Unity returns WGS84 altitude (desired) on Android but MSL altitude (requires conversion) on iOS.
@@ -116,30 +115,42 @@ namespace NianticSpatial.NSDK.AR.Core
                 settings.StdOutNsdkLogLevel
             );
 
-            if (!disableTelemetry)
+#if NIANTICSPATIAL_NSDK_TELEMETRY_DISABLE
+            const bool telemetryDisabledByScriptingDefine = true;
+#else
+            const bool telemetryDisabledByScriptingDefine = false;
+#endif
+            var telemetryDisabled = disableTelemetry || telemetryDisabledByScriptingDefine;
+
+            if (!telemetryDisabled)
             {
-                // Cannot use Application.persistentDataPath in testing
+                // Native process-wide sink drain (ardk::TelemetryPublisher); independent of C# TelemetryService.
                 try
                 {
-                    AnalyticsTelemetryPublisher telemetryPublisher =
-                        new AnalyticsTelemetryPublisher
-                        (
-                            endpoint: settings.EndpointSettings.TelemetryEndpoint,
-                            directoryPath: Path.Combine(Application.persistentDataPath, "telemetry"),
-                            key: settings.EndpointSettings.TelemetryApiKey,
-                            registerLogger: false
-                        );
-
-                    s_telemetryService = new TelemetryService(UnityContextHandle, telemetryPublisher, settings.ApiKey);
+                    if (!TelemetryPublishingNative.TryStart(settings.AuthEnvironment.ToString()))
+                    {
+                        Log.Debug("Native telemetry publishing was already started.");
+                    }
                 }
                 catch (Exception e)
                 {
-                    Log.Debug($"Failed to initialize telemetry service with exception {e}");
+                    Log.Debug($"Failed to start native telemetry publishing: {e}");
                 }
             }
             else
             {
-                Log.Debug("Detected a test run. Keeping telemetry disabled.");
+                Log.Debug(
+                    telemetryDisabledByScriptingDefine
+                        ? "NIANTICSPATIAL_NSDK_TELEMETRY_DISABLE is set. Keeping telemetry disabled."
+                        : "Detected a test run. Keeping telemetry disabled.");
+                try
+                {
+                    TelemetrySinkNative.Disable();
+                }
+                catch (Exception e)
+                {
+                    Log.Warning($"Failed to disable native telemetry sink: {e}");
+                }
             }
             OnUnityContextHandleInitialized?.Invoke();
 
@@ -203,8 +214,14 @@ namespace NianticSpatial.NSDK.AR.Core
 
                 DisposePam();
 
-                s_telemetryService?.Dispose();
-                s_telemetryService = null;
+                try
+                {
+                    TelemetryPublishingNative.Stop();
+                }
+                catch (Exception e)
+                {
+                    Log.Debug($"Failed to stop native telemetry publishing: {e}");
+                }
 
                 if (!CheckUnityContext(UnityContextHandle))
                 {
@@ -374,7 +391,6 @@ namespace NianticSpatial.NSDK.AR.Core
             public string Manufacturer;
             public string DeviceModel;
             public string ClientId;
-            public string Version;
             public string AppInstanceId;
             public bool DeviceLidarSupported;
             public bool AltitudeIsMeanSeaLevel;

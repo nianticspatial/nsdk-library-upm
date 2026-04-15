@@ -10,12 +10,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Meshing
     {
         private static bool s_isConstructed;
 
-        [Obsolete("Use Construct(IntPtr unityContext) instead.")]
-        public NsdkMeshingProvider(IntPtr unityContext)
-        {
-            Lightship_ARDK_Unity_Meshing_Provider_Construct(unityContext);
-        }
-
         public static void Construct(IntPtr unityContext)
         {
             if (!s_isConstructed)
@@ -23,6 +17,22 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Meshing
                 Lightship_ARDK_Unity_Meshing_Provider_Construct(unityContext);
                 s_isConstructed = true;
             }
+        }
+
+        public static void Reset()
+        {
+            // Reset the construction flag so that the next loader initialization will call
+            // Construct() again. This is necessary because Construct() registers Unity's meshing
+            // lifecycle callbacks (Initialize/Start/Stop/Shutdown) and creates the native
+            // MeshingProvider singleton via GetInstance().reset(new MeshingProvider(...)). If
+            // s_isConstructed is not cleared, subsequent loader initializations skip Construct(),
+            // leaving the native singleton in its post-Shutdown state (ardk_handle_ == nullptr),
+            // which causes ARDK_Status_NullArdkHandle errors when Unity starts the subsystem.
+            // There is no native Destroy API — the native lifecycle is fully managed through
+            // Unity's subsystem callbacks, with Shutdown() handling native cleanup. Re-calling
+            // Construct() after Shutdown() is safe: it replaces the singleton via unique_ptr::reset
+            // and re-registers the lifecycle provider.
+            s_isConstructed = false;
         }
 
         public static bool Configure

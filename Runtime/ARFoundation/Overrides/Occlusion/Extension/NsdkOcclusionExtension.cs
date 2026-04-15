@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using NianticSpatial.NSDK.AR.Common;
 using NianticSpatial.NSDK.AR.Occlusion.Features;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
-using NianticSpatial.NSDK.AR.Semantics;
+using NianticSpatial.NSDK.AR.SceneSegmentation;
 using NianticSpatial.NSDK.AR.Subsystems.Occlusion;
 using NianticSpatial.NSDK.AR.Subsystems.Playback;
-using NianticSpatial.NSDK.AR.Subsystems.Semantics;
+using NianticSpatial.NSDK.AR.Subsystems.SceneSegmentation;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.XR.ARFoundation;
@@ -56,7 +56,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion
         [SerializeField]
         [Tooltip("The list of semantic channels to be suppressed in the depth buffer. "
             + "Pixels classified as any of these channels will not occlude virtual objects.")]
-        private List<SemanticsChannel> _requestedSuppressionChannels = new();
+        private List<SceneSegmentationChannel> _requestedSuppressionChannels = new();
 
         [SerializeField]
         [HideInInspector]
@@ -90,7 +90,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion
         private XROrigin _xrOrigin;
         private XRCameraSubsystem _cameraSubsystem;
         private XROcclusionSubsystem _occlusionSubsystem;
-        private XRSemanticsSubsystem _semanticsSubsystem;
+        private XRSceneSegmentationSubsystem _sceneSegmentationSubsystem;
         private NsdkOcclusionSubsystem _nsdkOcclusionSubsystem;
         private NsdkPlaybackOcclusionSubsystem _nsdkPlaybackOcclusionSubsystem;
 
@@ -635,7 +635,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion
             // Acquire optional subsystems
             _xrOrigin = FindObjectOfType<XROrigin>();
             _cameraSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRCameraSubsystem>();
-            _semanticsSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRSemanticsSubsystem>();
+            _sceneSegmentationSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRSceneSegmentationSubsystem>();
             _nsdkOcclusionSubsystem = _occlusionSubsystem as NsdkOcclusionSubsystem;
             _nsdkPlaybackOcclusionSubsystem = _occlusionSubsystem as NsdkPlaybackOcclusionSubsystem;
 
@@ -695,66 +695,5 @@ namespace NianticSpatial.NSDK.AR.Occlusion
 
             return true;
         }
-
-        #region Deprecated APIs
-
-        [Obsolete("Use the CustomMaterial property instead.")]
-        public Material CustomBackgroundMaterial
-        {
-            get => CustomMaterial;
-            set => CustomMaterial = value;
-        }
-
-        [Obsolete("Use the Material property instead.")]
-        public Material BackgroundMaterial
-        {
-            get => Material;
-        }
-
-        [Obsolete("Use the CustomMaterial property instead. Assign null to use the default material.")]
-        public bool UseCustomBackgroundMaterial
-        {
-            get => _customMaterial != null;
-            set
-            {
-                if (value)
-                {
-                    if (_customMaterial == null)
-                    {
-                        Log.Error("Set to use a custom background material without a valid reference.");
-                        return;
-                    }
-
-                    OverrideMaterial(_customMaterial);
-                }
-                else
-                {
-                    _customMaterial = null;
-                    OverrideMaterial(null);
-                }
-            }
-        }
-
-        [Obsolete("Use the StableDepthMaterial property instead.")]
-        public Material FusedDepthMaterial
-        {
-            get => StableDepthMaterial;
-            set => StableDepthMaterial = value;
-        }
-
-        [Obsolete("Use OcclusionDistanceMode instead.")]
-        public OptimalOcclusionDistanceMode Mode
-        {
-            get => OcclusionDistanceMode;
-            set => OcclusionDistanceMode = value;
-        }
-
-        [Obsolete("This constant is no longer used.")]
-        public const string ZBufferOcclusionShaderName = "Nsdk/ZBufferOcclusion";
-
-        [Obsolete("This constant is no longer used.")]
-        public const string OcclusionMeshShaderName = "Nsdk/OcclusionMesh";
-
-        #endregion
     }
 }

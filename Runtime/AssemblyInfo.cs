@@ -26,3 +26,4 @@ using UnityEngine.Scripting;
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.PersistentAR.PreProd")]
 [assembly: InternalsVisibleTo("NianticSpatial.NSDK.GeoUploader.Tests")]
 [assembly: InternalsVisibleTo("Niantic.Lightship.Argus")]
+[assembly: InternalsVisibleTo("NianticSpatial.Argus.Editor")]

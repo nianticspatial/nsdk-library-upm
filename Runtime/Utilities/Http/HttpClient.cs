@@ -1,4 +1,4 @@
-// Copyright 2022-2025 Niantic.
+// Copyright 2022-2026 Niantic Spatial.
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace NianticSpatial.NSDK.AR.Utilities.Http
     ///   generic deserialization
     /// </summary>
     internal static class HttpClient
-    {// Copyright 2022-2026 Niantic Spatial.
+    {
         internal const string ContentTypeJson = "application/json";
         private const string ContentTypeOctetStream = "application/octet-stream";
 
@@ -352,6 +352,11 @@ namespace NianticSpatial.NSDK.AR.Utilities.Http
 
     #region Custom Awaiter for SendWebRequest()
 
+    /// <summary>
+    /// Awaiter for <c>SendWebRequest()</c>. Registers <c>completed</c> only inside
+    /// <see cref="OnCompleted"/> (after storing the continuation), avoiding a race where a quick
+    /// request completes synchronously but Unity still invokes <c>completed</c> with no continuation set.
+    /// </summary>
     internal class UnityWebRequestAwaiter : INotifyCompletion
     {
         private readonly UnityWebRequestAsyncOperation asyncOp;
@@ -360,7 +365,6 @@ namespace NianticSpatial.NSDK.AR.Utilities.Http
         public UnityWebRequestAwaiter(UnityWebRequestAsyncOperation asyncOp)
         {
             this.asyncOp = asyncOp;
-            asyncOp.completed += OnRequestCompleted;
         }
 
         public bool IsCompleted
@@ -374,12 +378,28 @@ namespace NianticSpatial.NSDK.AR.Utilities.Http
 
         public void OnCompleted(Action continuation)
         {
-            this._continuation = continuation;
+            _continuation = continuation;
+            if (asyncOp.isDone)
+            {
+                InvokeContinuation();
+            }
+            else
+            {
+                asyncOp.completed += OnRequestCompleted;
+            }
         }
 
         private void OnRequestCompleted(AsyncOperation obj)
         {
-            _continuation();
+            asyncOp.completed -= OnRequestCompleted;
+            InvokeContinuation();
+        }
+
+        private void InvokeContinuation()
+        {
+            var c = _continuation;
+            _continuation = null;
+            c?.Invoke();
         }
     }
 

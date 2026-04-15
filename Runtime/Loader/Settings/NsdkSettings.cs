@@ -22,9 +22,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         public const string SettingsKey = "NianticSpatial.NSDK.AR.NsdkSettings";
         public const string BuildSettingsKey = "NianticSpatial.NSDK.AR.AuthBuildSettings";
 
-        [SerializeField, Tooltip("This should match an API Key found in your NSDK developer account")]
-        private string _apiKey = string.Empty;
-
         [FormerlySerializedAs("_useLightshipDepth")]
         [SerializeField]
         [Tooltip
@@ -56,27 +53,19 @@ namespace NianticSpatial.NSDK.AR.Loader
         private bool _useNsdkMeshing = true;
 
         [FormerlySerializedAs("_useLightshipSemanticSegmentation")]
-        [SerializeField, Tooltip("When enabled, NSDK's semantic segmentation features can be used.")]
-        private bool _useNsdkSemanticSegmentation = true;
+        [FormerlySerializedAs("_useNsdkSemanticSegmentation")]
+        [SerializeField, Tooltip("When enabled, NSDK's scene segmentation features can be used.")]
+        private bool _useNsdkSceneSegmentation = true;
 
         [FormerlySerializedAs("_useLightshipScanning")]
         [SerializeField, Tooltip("When enabled, NSDK's scanning features can be used.")]
         private bool _useNsdkScanning = true;
 
-        [FormerlySerializedAs("_useLightshipPersistentAnchor")]
-        [SerializeField, Tooltip("When enabled, NSDK VPS can be used.")]
-        private bool _useNsdkPersistentAnchor = true;
-
-        [FormerlySerializedAs("_useLightshipObjectDetection")]
-        [SerializeField, Tooltip("When enabled, NSDK's object detection features can be used.")]
-        private bool _useNsdkObjectDetection = true;
-
         [SerializeField, Tooltip("When enabled, NSDK's VPS2 feature can be used.")]
         private bool _useNsdkVps2 = true;
 
-        [FormerlySerializedAs("_useLightshipWorldPositioning")]
-        [SerializeField, Tooltip("When enabled, NSDK's World Positioning System (WPS) feature can be used")]
-        private bool _useNsdkWorldPositioning = true;
+        [SerializeField, Tooltip("When enabled, NSDK's device mapping features can be used.")]
+        private bool _useNsdkDeviceMapping = true;
 
         [SerializeField, Tooltip("Source of location and compass data")]
         private LocationDataSource _locationAndCompassDataSource = LocationDataSource.Sensors;
@@ -113,23 +102,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         private TestSettings _testSettings;
 
         /// <summary>
-        /// Get the NSDK API key.
-        /// </summary>
-        public string ApiKey
-        {
-            get
-            {
-                if (!string.IsNullOrWhiteSpace(_apiKey))
-                {
-                    // ensure that the config provider's key is overridden in case the user has provided their own
-                    return _apiKey;
-                }
-
-                return EndpointSettings.ApiKey ?? string.Empty;
-            }
-        }
-
-        /// <summary>
         /// The current runtime refresh token
         /// </summary>
         public string RefreshToken => _authBuildSettings?.RefreshToken;
@@ -140,9 +112,13 @@ namespace NianticSpatial.NSDK.AR.Loader
         public int RefreshExpiresAt => _authBuildSettings?.RefreshExpiresAt ?? 0;
 
         /// <summary>
-        /// The current runtime access token
+        /// The effective access token. Returns the access token override if set,
+        /// otherwise the developer auth access token.
         /// </summary>
-        public string AccessToken => _authBuildSettings?.AccessToken;
+        public string AccessToken =>
+            !string.IsNullOrEmpty(_authBuildSettings?.AccessTokenOverride)
+                ? _authBuildSettings.AccessTokenOverride
+                : _authBuildSettings?.AccessToken;
 
         /// <summary>
         /// Time when the current runtime access token expires
@@ -156,6 +132,11 @@ namespace NianticSpatial.NSDK.AR.Loader
             // Changes to auth tokens need to be saved immediately (any prior tokens on disk are now invalid)
             SettingsUtils.SaveImmediatelyInEditor(_authBuildSettings);
         }
+
+        /// <summary>
+        /// An access token that takes priority over developer authentication when set.
+        /// </summary>
+        public string AccessTokenOverride => _authBuildSettings?.AccessTokenOverride;
 
         public bool UseDeveloperAuthentication => _authBuildSettings?.UseDeveloperAuthentication ?? true;
 
@@ -195,29 +176,24 @@ namespace NianticSpatial.NSDK.AR.Loader
         public bool PreferLidarIfAvailable => _preferLidarIfAvailable;
 
         /// <summary>
-        /// When enabled, NSDK VPS can be used.
-        /// </summary>
-        public bool UseNsdkPersistentAnchor => _useNsdkPersistentAnchor;
-
-        /// <summary>
         /// When enabled, NSDK's VPS2 feature can be used.
         /// </summary>
         public bool UseNsdkVps2 => _useNsdkVps2;
 
         /// <summary>
-        /// When enabled, NSDK's semantic segmentation features can be used.
+        /// When enabled, NSDK's device mapping features can be used.
         /// </summary>
-        public bool UseNsdkSemanticSegmentation => _useNsdkSemanticSegmentation;
+        public bool UseNsdkDeviceMapping => _useNsdkDeviceMapping;
+
+        /// <summary>
+        /// When enabled, NSDK's scene segmentation features can be used.
+        /// </summary>
+        public bool UseNsdkSceneSegmentation => _useNsdkSceneSegmentation;
 
         /// <summary>
         /// When enabled, NSDK's scanning features can be used.
         /// </summary>
         public bool UseNsdkScanning => _useNsdkScanning;
-
-        /// <summary>
-        /// When true, NSDK's object detection features can be used.
-        /// </summary>
-        public bool UseNsdkObjectDetection => _useNsdkObjectDetection;
 
         /// <summary>
         /// Source of location and compass data fetched from the NianticSpatial.NSDK.AR.Input APIs
@@ -273,8 +249,6 @@ namespace NianticSpatial.NSDK.AR.Loader
             }
             set => _spoofCompassInfo = value;
         }
-
-        public bool UseNsdkWorldPositioning => _useNsdkWorldPositioning;
 
         /// <summary>
         /// The highest log level to print for Unity logger
@@ -451,17 +425,13 @@ namespace NianticSpatial.NSDK.AR.Loader
         (
             bool enableDepth = false,
             bool enableMeshing = false,
-            bool enablePersistentAnchors = false,
             bool usePlayback = false,
             string playbackDataset = "",
             bool runPlaybackManually = false,
             bool loopPlaybackInfinitely = false,
-            uint numberOfPlaybackLoops = 1,
-            string apiKey = "",
-            bool enableSemanticSegmentation = false,
+            bool enableSceneSegmentation = false,
             bool preferLidarIfAvailable = false,
             bool enableScanning = false,
-            bool enableObjectDetection = false,
             LogLevel unityLogLevel = LogLevel.Debug,
             EndpointSettings endpointSettings = null,
             LogLevel stdoutLogLevel = LogLevel.Off,
@@ -470,20 +440,19 @@ namespace NianticSpatial.NSDK.AR.Loader
             bool tickPamOnUpdate = true,
             NsdkSimulationParams simulationParams = null,
             LocationDataSource locationAndCompassDataSource = LocationDataSource.Sensors,
-            bool enableVps2 = false
+            bool enableVps2 = false,
+            bool enableDeviceMapping = false
         )
         {
             var settings = CreateInstance<NsdkSettings>();
 
-            settings._apiKey = apiKey;
             settings._useNsdkDepth = enableDepth;
             settings._preferLidarIfAvailable = preferLidarIfAvailable;
             settings._useNsdkMeshing = enableMeshing;
-            settings._useNsdkPersistentAnchor = enablePersistentAnchors;
             settings._useNsdkVps2 = enableVps2;
-            settings._useNsdkSemanticSegmentation = enableSemanticSegmentation;
+            settings._useNsdkDeviceMapping = enableDeviceMapping;
+            settings._useNsdkSceneSegmentation = enableSceneSegmentation;
             settings._useNsdkScanning = enableScanning;
-            settings._useNsdkObjectDetection = enableObjectDetection;
             settings._locationAndCompassDataSource = locationAndCompassDataSource;
             settings._unityLogLevel = unityLogLevel;
             settings._fileLogLevel = fileLogLevel;
@@ -495,9 +464,7 @@ namespace NianticSpatial.NSDK.AR.Loader
                     UsePlayback = usePlayback,
                     PlaybackDatasetPath = playbackDataset,
                     RunManually = runPlaybackManually,
-                    LoopInfinitely = loopPlaybackInfinitely,
-                    NumberOfIterations = numberOfPlaybackLoops
-
+                    LoopInfinitely = loopPlaybackInfinitely
                 };
 
             if (endpointSettings == null)

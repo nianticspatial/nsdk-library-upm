@@ -23,7 +23,7 @@ namespace NianticSpatial.NSDK.AR.Settings
     [PublicAPI]
     public static class Metadata
     {
-        private const string NsdkVersion = "4.0.0-b2-26022000";
+        private const string NsdkVersion = "4.0.0-26041500";
 
         // NSDK Renaming TODO: These ardk variables are also defined in the c++ project and protobufs,
         // and will need to be updated when those do
@@ -46,7 +46,6 @@ namespace NianticSpatial.NSDK.AR.Settings
             Version = NsdkVersion;
             AppInstanceId = Guid.NewGuid().ToString();
             AgeLevel = ARClientEnvelope.Types.AgeLevel.Unknown;
-
 
             s_isUnityContextInitialized = false;
             NsdkUnityContext.OnUnityContextHandleInitialized += () =>
@@ -83,6 +82,7 @@ namespace NianticSpatial.NSDK.AR.Settings
         internal static string ClientId { get; private set; }
         internal static string DeviceModel { get; }
         internal static string AppInstanceId { get; }
+        // TODO: Remove UserId as no longer used
         internal static string UserId { get; private set; }
         internal static string AccessToken { get; private set; }
         internal static ARClientEnvelope.Types.AgeLevel AgeLevel { get; private set; }
@@ -168,21 +168,6 @@ namespace NianticSpatial.NSDK.AR.Settings
             AuthClient.SetAccessToken(accessToken);
 
             AccessToken = accessToken;
-#endif
-        }
-
-        /// <summary>
-        /// Sets the refresh token so native can refresh access tokens as needed.
-        /// </summary>
-        /// <param name="refreshToken">The refresh token string</param>
-        [PublicAPI]
-        public static void SetRefreshToken(string refreshToken)
-        {
-#if NIANTICSPATIAL_NSDK_AR_LOADER_ENABLED
-            RunUnityContextCheck();
-
-            refreshToken = GetSanitizedToken(refreshToken);
-            AuthClient.SetRefreshToken(refreshToken);
 #endif
         }
 

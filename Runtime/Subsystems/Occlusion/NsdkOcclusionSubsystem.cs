@@ -150,7 +150,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Occlusion
             Log.Info("NsdkOcclusionSubsystem.Register");
             const string id = "Nsdk-Occlusion";
 
-#if UNITY_6000_0_OR_NEWER
             var xrOcclusionSubsystemCinfo = new XROcclusionSubsystemDescriptor.Cinfo()
             {
                 id = id,
@@ -164,21 +163,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Occlusion
             };
 
             XROcclusionSubsystemDescriptor.Register(xrOcclusionSubsystemCinfo);
-#else
-            var xrOcclusionSubsystemCinfo = new XROcclusionSubsystemCinfo()
-            {
-                id = id,
-                providerType = typeof(NsdkOcclusionProvider),
-                subsystemTypeOverride = typeof(NsdkOcclusionSubsystem),
-                humanSegmentationStencilImageSupportedDelegate = () => Supported.Unsupported,
-                humanSegmentationDepthImageSupportedDelegate = () => Supported.Unsupported,
-                environmentDepthImageSupportedDelegate = () => Supported.Supported,
-                environmentDepthConfidenceImageSupportedDelegate = () => Supported.Unsupported,
-                environmentDepthTemporalSmoothingSupportedDelegate = () => Supported.Unsupported
-            };
-
-            XROcclusionSubsystem.Register(xrOcclusionSubsystemCinfo);
-#endif
 
 
         }

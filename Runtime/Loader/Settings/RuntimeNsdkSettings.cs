@@ -13,7 +13,6 @@ namespace NianticSpatial.NSDK.AR.Loader
 {
     public class RuntimeNsdkSettings : IAuthSettings
     {
-        private string _apiKey;
         private AuthEnvironmentType _authEnvironment;
         private string _accessToken;
         private int _accessExpiresAt;
@@ -22,12 +21,11 @@ namespace NianticSpatial.NSDK.AR.Loader
         private bool _useNsdkDepth;
         private bool _preferLidarIfAvailable;
         private bool _useNsdkMeshing;
-        private bool _useNsdkSemanticSegmentation;
+        private bool _useNsdkSceneSegmentation;
         private bool _useNsdkScanning;
-        private bool _useNsdkPersistentAnchor;
-        private bool _useNsdkObjectDetection;
-        private bool _useNsdkWorldPositioning;
         private bool _useNsdkVps2;
+        private bool _useNsdkDeviceMapping;
+        private bool _usingAccessTokenOverride;
         private LocationDataSource _locationAndCompassDataSource;
         private SpoofLocationInfo _spoofLocationInfo;
         private SpoofCompassInfo _spoofCompassInfo;
@@ -40,25 +38,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         private EndpointSettings _endpointSettings;
         private TestSettings _testSettings;
         private INsdkPlaybackSettings _playbackSettings;
-
-        /// <summary>
-        /// Get the NSDK API key.
-        /// </summary>
-        public string ApiKey
-        {
-            get
-            {
-                if (!string.IsNullOrWhiteSpace(_apiKey))
-                {
-                    // ensure that the config provider's key is overridden in case the user has provided their own
-                    return _apiKey;
-                }
-
-                return EndpointSettings.ApiKey ?? string.Empty;
-            }
-
-            internal set => _apiKey = value;
-        }
 
         public AuthEnvironmentType AuthEnvironment => _authEnvironment;
 
@@ -79,6 +58,12 @@ namespace NianticSpatial.NSDK.AR.Loader
         public int RefreshExpiresAt => _refreshExpiresAt;
 
         public bool IsRuntimeLogin { get; set; }
+
+        /// <summary>
+        /// Whether an access token override was provided and is being used instead of developer auth.
+        /// When true, the refresh loop should not run.
+        /// </summary>
+        public bool UsingAccessTokenOverride => _usingAccessTokenOverride;
 
         /// <summary>
         /// When enabled, NSDK's depth and occlusion features can be used via ARFoundation. Additional occlusion
@@ -115,12 +100,12 @@ namespace NianticSpatial.NSDK.AR.Loader
         }
 
         /// <summary>
-        /// When enabled, NSDK's semantic segmentation features can be used.
+        /// When enabled, NSDK's scene segmentation features can be used.
         /// </summary>
-        public bool UseNsdkSemanticSegmentation
+        public bool UseNsdkSceneSegmentation
         {
-            get => _useNsdkSemanticSegmentation;
-            set => _useNsdkSemanticSegmentation = value;
+            get => _useNsdkSceneSegmentation;
+            set => _useNsdkSceneSegmentation = value;
         }
 
         /// <summary>
@@ -133,15 +118,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         }
 
         /// <summary>
-        /// When enabled, NSDK VPS can be used.
-        /// </summary>
-        public bool UseNsdkPersistentAnchor
-        {
-            get => _useNsdkPersistentAnchor;
-            set => _useNsdkPersistentAnchor = value;
-        }
-
-        /// <summary>
         /// When enabled, NSDK's VPS2 feature can be used.
         /// </summary>
         public bool UseNsdkVps2
@@ -151,21 +127,12 @@ namespace NianticSpatial.NSDK.AR.Loader
         }
 
         /// <summary>
-        /// When true, NSDK's object detection features can be used.
+        /// When enabled, NSDK's device mapping features can be used.
         /// </summary>
-        public bool UseNsdkObjectDetection
+        public bool UseNsdkDeviceMapping
         {
-            get => _useNsdkObjectDetection;
-            set => _useNsdkObjectDetection = value;
-        }
-
-        /// <summary>
-        /// When true, NSDK's World Positioning System (WPS) feature can be used.
-        /// </summary>
-        public bool UseNsdkWorldPositioning
-        {
-            get => _useNsdkWorldPositioning;
-            set => _useNsdkWorldPositioning = value;
+            get => _useNsdkDeviceMapping;
+            set => _useNsdkDeviceMapping = value;
         }
 
         /// <summary>
@@ -303,16 +270,13 @@ namespace NianticSpatial.NSDK.AR.Loader
 
         internal void CopyFrom(NsdkSettings source)
         {
-            ApiKey = source.ApiKey;
             UseNsdkDepth = source.UseNsdkDepth;
             PreferLidarIfAvailable = source.PreferLidarIfAvailable;
             UseNsdkMeshing = source.UseNsdkMeshing;
-            UseNsdkPersistentAnchor = source.UseNsdkPersistentAnchor;
-            UseNsdkSemanticSegmentation = source.UseNsdkSemanticSegmentation;
+            UseNsdkSceneSegmentation = source.UseNsdkSceneSegmentation;
             UseNsdkScanning = source.UseNsdkScanning;
-            UseNsdkObjectDetection = source.UseNsdkObjectDetection;
-            UseNsdkWorldPositioning = source.UseNsdkWorldPositioning;
             UseNsdkVps2 = source.UseNsdkVps2;
+            UseNsdkDeviceMapping = source.UseNsdkDeviceMapping;
             LocationAndCompassDataSource = source.LocationAndCompassDataSource;
 
             _spoofLocationInfo = new SpoofLocationInfo(source.SpoofLocationInfo);
@@ -320,14 +284,23 @@ namespace NianticSpatial.NSDK.AR.Loader
 
             _authEnvironment = source.AuthEnvironment;
 
-            // Only copy the developer authentication settings if the user has left developer authentication enabled
-            // and is not using an API key
-            if (source.UseDeveloperAuthentication && string.IsNullOrEmpty(source.ApiKey))
+            // Access token override takes priority over developer authentication.
+            // When present, use it regardless of the developer auth setting.
+            if (!string.IsNullOrEmpty(source.AccessTokenOverride))
+            {
+                _accessToken = source.AccessTokenOverride;
+                _accessExpiresAt = 0;
+                _refreshToken = string.Empty;
+                _refreshExpiresAt = 0;
+                _usingAccessTokenOverride = true;
+            }
+            else if (source.UseDeveloperAuthentication)
             {
                 _accessToken = source.AccessToken;
                 _accessExpiresAt = source.AccessExpiresAt;
                 _refreshToken = source.RefreshToken;
                 _refreshExpiresAt = source.RefreshExpiresAt;
+                _usingAccessTokenOverride = false;
             }
 
             UnityNsdkLogLevel = source.UnityNsdkLogLevel;
@@ -346,77 +319,6 @@ namespace NianticSpatial.NSDK.AR.Loader
             _nsdkSimulationParams = new NsdkSimulationParams(source.NsdkSimulationParams);
         }
 
-        [Obsolete("Use the parameter-less constructor with object initializers instead")]
-        internal static RuntimeNsdkSettings _CreateRuntimeInstance
-        (
-            bool enableDepth = false,
-            bool enableMeshing = false,
-            bool enablePersistentAnchors = false,
-            bool usePlayback = false,
-            string playbackDataset = "",
-            bool runPlaybackManually = false,
-            bool loopPlaybackInfinitely = false,
-            string apiKey = "",
-            bool enableSemanticSegmentation = false,
-            bool preferLidarIfAvailable = false,
-            bool enableScanning = false,
-            bool enableObjectDetection = false,
-            bool enableWorldPositioning = false,
-            LogLevel unityLogLevel = LogLevel.Debug,
-            EndpointSettings endpointSettings = null,
-            LogLevel stdoutLogLevel = LogLevel.Off,
-            LogLevel fileLogLevel = LogLevel.Off,
-            bool disableTelemetry = true,
-            bool tickPamOnUpdate = true,
-            NsdkSimulationParams simulationParams = null,
-            int startFrame = 0,
-            int endFrame = -1
-        )
-        {
-            var settings =
-                new RuntimeNsdkSettings
-                {
-                    ApiKey = apiKey,
-                    UseNsdkDepth = enableDepth,
-                    PreferLidarIfAvailable = preferLidarIfAvailable,
-                    UseNsdkMeshing = enableMeshing,
-                    UseNsdkPersistentAnchor = enablePersistentAnchors,
-                    UseNsdkSemanticSegmentation = enableSemanticSegmentation,
-                    UseNsdkScanning = enableScanning,
-                    UseNsdkObjectDetection = enableObjectDetection,
-                    UseNsdkWorldPositioning = enableWorldPositioning,
-                    UnityNsdkLogLevel = unityLogLevel,
-                    FileNsdkLogLevel = fileLogLevel,
-                    StdOutNsdkLogLevel = stdoutLogLevel,
-                    UsePlayback = usePlayback,
-                    PlaybackDatasetPath = playbackDataset,
-                    RunPlaybackManually = runPlaybackManually,
-                    LoopPlaybackInfinitely = loopPlaybackInfinitely,
-                    _playbackSettings =
-                        new OverloadPlaybackSettings
-                        {
-                            UsePlayback = usePlayback,
-                            PlaybackDatasetPath = playbackDataset,
-                            RunManually = runPlaybackManually,
-                            LoopInfinitely = loopPlaybackInfinitely,
-                            StartFrame = startFrame,
-                            EndFrame = endFrame
-                        },
-                    _endpointSettings = endpointSettings ?? EndpointSettings.GetDefaultEnvironmentConfig(),
-                    _testSettings =
-                        new TestSettings
-                        {
-                            DisableTelemetry = disableTelemetry,
-                            TickPamOnUpdate = tickPamOnUpdate
-                        }
-                };
-
-            simulationParams ??= new NsdkSimulationParams();
-            settings._nsdkSimulationParams = simulationParams;
-
-            return settings;
-        }
-
         public void UpdateAccess(string accessToken, int accessExpiresAt, string refreshToken, int refreshExpiresAt)
         {
             _refreshToken = refreshToken;
@@ -428,9 +330,7 @@ namespace NianticSpatial.NSDK.AR.Loader
 
             if (NsdkUnityContext.UnityContextHandle != IntPtr.Zero)
             {
-                // Pass the access token to native NSDK code.
-                // Note: NSDK native can also receive the refresh token, but we don't want to set it here
-                // (in Unity, we run the refresh loop in C#).
+                // Pass only the access token to native. Refresh tokens stay in C#.
                 Metadata.SetAccessToken(_accessToken);
             }
         }
@@ -439,15 +339,12 @@ namespace NianticSpatial.NSDK.AR.Loader
         {
             return
                 $"{GetType()}: \n" +
-                "\t ApiKey: " + _apiKey + "\n" +
                 "\t UseNsdkDepth: " + UseNsdkDepth + "\n" +
                 "\t PreferLidarIfAvailable: " + PreferLidarIfAvailable + "\n" +
                 "\t UseNsdkMeshing: " + UseNsdkMeshing + "\n" +
-                "\t UseNsdkPersistentAnchor: " + UseNsdkPersistentAnchor + "\n" +
-                "\t UseNsdkSemanticSegmentation: " + UseNsdkSemanticSegmentation + "\n" +
+                "\t UseNsdkSceneSegmentation: " + UseNsdkSceneSegmentation + "\n" +
                 "\t UseNsdkScanning: " + UseNsdkScanning + "\n" +
-                "\t UseNsdkObjectDetection: " + UseNsdkObjectDetection + "\n" +
-                "\t UseNsdkWorldPositioning: " + UseNsdkWorldPositioning + "\n" +
+                "\t UseNsdkDeviceMapping: " + UseNsdkDeviceMapping + "\n" +
                 "\t UnityNsdkLogLevel: " + UnityNsdkLogLevel;
         }
 

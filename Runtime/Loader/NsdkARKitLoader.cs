@@ -33,12 +33,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         public XROcclusionSubsystem NsdkOcclusionSubsystem => ((XRLoaderHelper) this).GetLoadedSubsystem<XROcclusionSubsystem>();
 
         /// <summary>
-        /// The `XRPersistentAnchorSubsystem` whose lifecycle is managed by this loader.
-        /// </summary>
-        public XRPersistentAnchorSubsystem NsdkPersistentAnchorSubsystem =>
-            ((XRLoaderHelper) this).GetLoadedSubsystem<XRPersistentAnchorSubsystem>();
-
-        /// <summary>
         /// Initializes the loader. This is called from Unity when starting an AR session.
         /// </summary>
         /// <returns>`True` if the session subsystems were successfully created, otherwise `false`.</returns>

@@ -3,7 +3,7 @@
 #if UNITY_EDITOR
 
 using NianticSpatial.NSDK.AR.Occlusion;
-using NianticSpatial.NSDK.AR.Semantics;
+using NianticSpatial.NSDK.AR.SceneSegmentation;
 using NianticSpatial.NSDK.AR.Subsystems.Occlusion;
 using UnityEditor;
 using UnityEngine;
@@ -38,8 +38,8 @@ namespace NianticSpatial.NSDK.AR.Editor
             public const string HighFrameRateWarning =
                 "A target framerate over 20 could negatively affect performance on older devices.";
 
-            public const string NoSemanticSegmentationManagerWarning =
-                "Create an ARSemanticSegmentationManager to enable semantic depth suppression.";
+            public const string NoSceneSegmentationManagerWarning =
+                "Create an ARSceneSegmentationManager to enable semantic depth suppression.";
 
             public const string NoMeshManagerWarning =
                 "Place an ARMeshManager on a child object to enable depth stabilization.";

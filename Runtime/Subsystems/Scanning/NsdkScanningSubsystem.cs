@@ -30,7 +30,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
 
             private IApi _api;
             private XRScanningConfiguration _currentConfiguration = new XRScanningConfiguration();
-            private XRScanningState _state;
+            private ScanningState _state;
             private const string TextureRaycastColorPropertyName = "_RaycastColorTexture";
             private const string TextureRaycastNormalPropertyName = "_RaycastNormalTexture";
             private const string TextureRaycastPositionPropertyName = "_RaycastPositionTexture";
@@ -62,7 +62,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
 #if NIANTICSPATIAL_NSDK_AR_LOADER_ENABLED
                 _nativeProviderHandle = _api.Construct(NsdkUnityContext.UnityContextHandle);
 #endif
-                _state = XRScanningState.Ready;
+                _state = ScanningState.Ready;
                 _raycastColorTexturePropertyNameID = Shader.PropertyToID(TextureRaycastColorPropertyName);
                 _raycastNormalTexturePropertyNameID = Shader.PropertyToID(TextureRaycastNormalPropertyName);
                 _raycastPositionTexturePropertyNameID = Shader.PropertyToID(TextureRaycastPositionPropertyName);
@@ -109,7 +109,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
                     return;
                 }
 
-                if (_state != XRScanningState.Started)
+                if (_state != ScanningState.Started)
                 {
                     Log.Error("Can only save from started state");
                     return;
@@ -122,7 +122,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
                 }
 
                 _api.SaveCurrentScan(_nativeProviderHandle);
-                _state = XRScanningState.Saving;
+                _state = ScanningState.Saving;
             }
 
             public override void Start()
@@ -132,14 +132,14 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
                     return;
                 }
 
-                if (_state != XRScanningState.Ready && _state != XRScanningState.Stopped)
+                if (_state != ScanningState.Ready && _state != ScanningState.Stopped)
                 {
                     Log.Error($"Can't call Start when current state is {_state}");
                     return;
                 }
 
                 _api.Start(_nativeProviderHandle);
-                _state = XRScanningState.Started;
+                _state = ScanningState.Started;
             }
 
             public override void Stop()
@@ -150,7 +150,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
                 }
 
                 _api.Stop(_nativeProviderHandle);
-                _state = XRScanningState.Stopped;
+                _state = ScanningState.Stopped;
             }
 
             public override void Destroy()
@@ -160,7 +160,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
                     return;
                 }
 
-                if (_state != XRScanningState.Ready || _state != XRScanningState.Stopped)
+                if (_state != ScanningState.Ready || _state != ScanningState.Stopped)
                 {
                     Stop();
                 }
@@ -169,26 +169,26 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
                 _nativeProviderHandle = IntPtr.Zero;
             }
 
-            public override XRScanningState GetState()
+            public override ScanningState GetState()
             {
                 if (!_nativeProviderHandle.IsValidHandle())
                 {
-                    return XRScanningState.Error;
+                    return ScanningState.Error;
                 }
 
-                if (_state == XRScanningState.Saving)
+                if (_state == ScanningState.Saving)
                 {
                     // Check if these are done
                     if (_api.TryGetRecordingInfo(_nativeProviderHandle, out string scanId, out RecordingStatus status))
                     {
                         if (status == RecordingStatus.Saved)
                         {
-                            _state = XRScanningState.Saved;
+                            _state = ScanningState.Saved;
                         }
 
                         if (status == RecordingStatus.Error)
                         {
-                            _state = XRScanningState.Error;
+                            _state = ScanningState.Error;
                         }
                     }
                 }
@@ -241,6 +241,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
                     configurationCStruct.UseMultidepth = _currentConfiguration.UseEstimatedDepth;
                     configurationCStruct.EnableFullResolution = _currentConfiguration.FullResolutionEnabled;
                     configurationCStruct.FullResolutionFramerate = _currentConfiguration.FullResolutionFramerate;
+                    configurationCStruct.RecordAllSensors = _currentConfiguration.RecordAllSensors;
                     _api.Configure(_nativeProviderHandle, configurationCStruct);
                 }
             }

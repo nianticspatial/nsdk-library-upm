@@ -28,7 +28,6 @@ namespace NianticSpatial.NSDK.AR.API
                     // - FeatureDoesNotExist
                     // - FeatureAlreadyExists
 
-                    // Should not occur because deprecated: NoData, InternalError
                     throw new ArgumentOutOfRangeException
                     (
                         "nsdkStatus",

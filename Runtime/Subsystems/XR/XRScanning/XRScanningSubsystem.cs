@@ -30,7 +30,7 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// <summary>
         /// Get the current state of the scanning subsystem.
         /// </summary>
-        public XRScanningState GetState()
+        public ScanningState GetState()
         {
             return provider.GetState();
         }
@@ -132,7 +132,7 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
                 throw new NotImplementedException();
             }
 
-            public virtual XRScanningState GetState()
+            public virtual ScanningState GetState()
             {
                 throw new NotImplementedException();
             }

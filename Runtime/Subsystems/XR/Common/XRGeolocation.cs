@@ -19,7 +19,7 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         public double Altitude;
 
         /// The heading in degrees relative to the geographic North Pole.
-        public double HeadingEdn;
+        public double Heading;
 
         /// Device orientation in the East-Down-North (EDN) frame.
         public Quaternion OrientationEdn;

@@ -1,6 +1,5 @@
 // Copyright 2022-2026 Niantic Spatial.
 
-using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -13,7 +12,7 @@ namespace NianticSpatial.NSDK.AR.Loader
         private const string k_PlaybackDatasetPathKey = "Niantic.Lightship.AR.Settings.PlaybackDatasetPath";
         private const string k_RunManually = "Niantic.Lightship.AR.Settings.RunManually";
         private const string k_LoopInfinitely = "Niantic.Lightship.AR.Settings.LoopInfinitely";
-        private const string k_NumIterations = "Niantic.Lightship.AR.Settings.NumIterations";
+
         private const string k_StartFrame = "Niantic.Lightship.AR.Settings.StartFrame";
         private const string k_EndFrame = "Niantic.Lightship.AR.Settings.EndFrame";
 
@@ -22,7 +21,7 @@ namespace NianticSpatial.NSDK.AR.Loader
         public string PlaybackDatasetPath { get; set; }
         public bool RunManually { get; set; }
         public bool LoopInfinitely { get; set; }
-        public uint NumberOfIterations { get; set; }
+
         public int StartFrame { get; set; }
         public int EndFrame { get; set; }
 #else
@@ -73,23 +72,6 @@ namespace NianticSpatial.NSDK.AR.Loader
                 EditorPrefs.SetBool(k_LoopInfinitely, value);
             }
         }
-        public uint NumberOfIterations
-        {
-            get
-            {
-                return (uint) EditorPrefs.GetInt(k_NumIterations, 1);
-            }
-            set
-            {
-                if (value <= 0)
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-
-                EditorPrefs.SetInt(k_NumIterations, (int)value);
-            }
-        }
-
         public int StartFrame
         {
             get

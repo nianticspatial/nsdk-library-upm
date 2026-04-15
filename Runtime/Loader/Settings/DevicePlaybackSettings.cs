@@ -51,17 +51,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         }
 
         [SerializeField]
-        [Tooltip("How many times the dataset will be run. It will alternate each loop between going forward and backwards.")]
-        private uint _numberOfIterations = 1;
-
-        [Obsolete]
-        public uint NumberOfIterations
-        {
-            get { return _numberOfIterations; }
-            set { _numberOfIterations = value; }
-        }
-
-        [SerializeField]
         [Tooltip("The frame to start playback from.")]
         private int _startFrame = 0;
 

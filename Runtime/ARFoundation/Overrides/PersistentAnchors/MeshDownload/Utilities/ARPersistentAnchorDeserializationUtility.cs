@@ -9,7 +9,7 @@ using ManagedPoses;
 
 using MathTypes;
 
-using NianticSpatial.NSDK.AR.PersistentAnchors;
+using NianticSpatial.NSDK.AR.VPS2;
 using NianticSpatial.NSDK.AR.Utilities;
 
 using UnityEngine;
@@ -21,7 +21,7 @@ using Vector3 = UnityEngine.Vector3;
 
 namespace NianticSpatial.NSDK.AR.Subsystems
 {
-    public static class ARPersistentAnchorDeserializationUtility
+    internal static class ARPersistentAnchorDeserializationUtility
     {
         public static string GetOriginNodeIdAssociatedWithPayload(string payload)
         {
@@ -58,7 +58,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             return new TrackableId(assoc.Upper, assoc.Lower).ToNsdkHexString();
         }
 
-        public static string GetOriginNodeIdAssociatedWithPayload(ARPersistentAnchorPayload payload)
+        public static string GetOriginNodeIdAssociatedWithPayload(ARVps2AnchorPayload payload)
         {
             return GetOriginNodeIdAssociatedWithPayload(payload.ToBase64());
         }
@@ -75,12 +75,12 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             return ManagedPoseData.Parser.ParseFrom(bytes[..bytesWritten].ToArray());
         }
 
-        public static ManagedPoseData DeserializeAnchorToManagedPoseData(ARPersistentAnchorPayload payload)
+        public static ManagedPoseData DeserializeAnchorToManagedPoseData(ARVps2AnchorPayload payload)
         {
             return ManagedPoseData.Parser.ParseFrom(payload.Data);
         }
 
-        public static string DeserializeAnchorToJson(ARPersistentAnchorPayload payload)
+        public static string DeserializeAnchorToJson(ARVps2AnchorPayload payload)
         {
             var proto = ManagedPoseData.Parser.ParseFrom(payload.Data);
 

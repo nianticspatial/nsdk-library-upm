@@ -10,11 +10,6 @@ namespace NianticSpatial.NSDK.AR.Auth
     internal interface IAuthSettings
     {
         /// <summary>
-        /// Get the NSDK API key.
-        /// </summary>
-        string ApiKey { get; }
-
-        /// <summary>
         /// Get the current auth environment.
         /// </summary>
         AuthEnvironmentType AuthEnvironment { get; }

@@ -2,8 +2,8 @@
 
 using NianticSpatial.NSDK.AR.Common;
 using NianticSpatial.NSDK.AR.Occlusion.Features;
-using NianticSpatial.NSDK.AR.Semantics;
-using NianticSpatial.NSDK.AR.Subsystems.Semantics;
+using NianticSpatial.NSDK.AR.SceneSegmentation;
+using NianticSpatial.NSDK.AR.Subsystems.SceneSegmentation;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.XRSubsystems;
 using UnityEngine;
@@ -126,34 +126,34 @@ namespace NianticSpatial.NSDK.AR.Occlusion
                 // The occlusion suppression feature requires the semantic segmentation manager
                 case Suppression occlusionSuppression:
                     {
-                        if (_semanticsSubsystem == null)
+                        if (_sceneSegmentationSubsystem == null)
                         {
                             // Attempt to find the semantics subsystem
                             var xrManager = XRGeneralSettings.Instance.Manager;
                             if (xrManager != null)
                             {
-                                _semanticsSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRSemanticsSubsystem>();
+                                _sceneSegmentationSubsystem = xrManager.activeLoader.GetLoadedSubsystem<XRSceneSegmentationSubsystem>();
                             }
                         }
 
                         // The manager is required to run the semantics subsystem
                         var hasActiveManager = false;
-                        if (TryGetComponent<ARSemanticSegmentationManager>(out var manager) ||
-                            (manager = FindObjectOfType<ARSemanticSegmentationManager>()) != null)
+                        if (TryGetComponent<ARSceneSegmentationManager>(out var manager) ||
+                            (manager = FindObjectOfType<ARSceneSegmentationManager>()) != null)
                         {
                             hasActiveManager = manager.enabled;
                         }
 
                         if (!hasActiveManager)
                         {
-                            Log.Error(k_MissingSemanticSegmentationManagerMessage);
+                            Log.Error(k_MissingSceneSegmentationManagerMessage);
                             return false;
                         }
 
                         // Configure the component
                         return occlusionSuppression.Configure(
                             _xrOrigin,
-                            _semanticsSubsystem as NsdkSemanticsSubsystem,
+                            _sceneSegmentationSubsystem as NsdkSceneSegmentationSubsystem,
                             _occlusionTechnique,
                             _requestedSuppressionChannels);
                     }
@@ -373,7 +373,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion
         /// </summary>
         /// <param name="channel">Semantic segmentation channel to add</param>
         /// <returns>True if the channel was successfully added.</returns>
-        public bool AddSemanticSuppressionChannel(SemanticsChannel channel) =>
+        public bool AddSceneSegmentationSuppressionChannel(SceneSegmentationChannel channel) =>
             GetRenderComponent<Suppression>()?.AddChannel(channel) ?? false;
 
         /// <summary>
@@ -382,7 +382,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion
         /// </summary>
         /// <param name="channel">Semantic segmentation channel to remove.</param>
         /// <returns>True if the channel was found and removed.</returns>
-        public bool RemoveSemanticSuppressionChannel(SemanticsChannel channel) =>
+        public bool RemoveSceneSegmentationSuppressionChannel(SceneSegmentationChannel channel) =>
             GetRenderComponent<Suppression>()?.RemoveChannel(channel) ?? false;
 
         /// <summary>

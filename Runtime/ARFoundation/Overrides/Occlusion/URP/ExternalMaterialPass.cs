@@ -34,9 +34,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion
             this.renderPassEvent = renderPassEvent;
         }
 
-#if UNITY_6000_0_OR_NEWER
         [Obsolete("This rendering path is for compatibility mode only (when Render Graph is disabled). Use Render Graph API instead.", false)]
-#endif
         public sealed override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
             // Acquire a command buffer

@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using NianticSpatial.NSDK.AR.Editor.PersistentAR;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.LocationAR;
 using UnityEditor;
@@ -13,7 +12,7 @@ using NianticSpatial.NSDK.AR.Loader;
 
 [CustomEditor(typeof(ARLocationManager))]
 [InitializeOnLoad]
-internal class _ARLocationManagerEditor : _ARPersistentAnchorManagerEditor
+internal class _ARLocationManagerEditor : UnityEditor.Editor
 {
     private ARLocation[] _arLocations;
     private string[] _arLocationNames;
@@ -21,6 +20,18 @@ internal class _ARLocationManagerEditor : _ARPersistentAnchorManagerEditor
     private int _selectedLocationIndex = 0;
 
     private SerializedProperty _autoTrackProperty;
+
+    // ARVps2Manager serialized fields
+    private SerializedProperty _defaultAnchorGameObject;
+    private SerializedProperty _universalLocalizationEnabled;
+    private SerializedProperty _universalLocalizationRequestsPerSecond;
+    private SerializedProperty _vpsMapLocalizationEnabled;
+    private SerializedProperty _initialVpsRequestsPerSecond;
+    private SerializedProperty _continuousVpsRequestsPerSecond;
+    private SerializedProperty _geolocationSmoothingEnabled;
+    private SerializedProperty _deviceMapLocalizationEnabled;
+    private SerializedProperty _deviceMapLocalizationFramerate;
+    private SerializedProperty _vpsDebuggerEnabled;
 
     static _ARLocationManagerEditor()
     {
@@ -59,7 +70,23 @@ internal class _ARLocationManagerEditor : _ARPersistentAnchorManagerEditor
 
     public override void OnInspectorGUI()
     {
-        base.OnInspectorGUI();
+        serializedObject.Update();
+        EditorGUILayout.PropertyField(_defaultAnchorGameObject);
+
+        using (new EditorGUI.DisabledScope(Application.isPlaying))
+        {
+            EditorGUILayout.Space();
+            EditorGUILayout.LabelField("Configuration", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_universalLocalizationEnabled);
+            EditorGUILayout.PropertyField(_universalLocalizationRequestsPerSecond);
+            EditorGUILayout.PropertyField(_vpsMapLocalizationEnabled);
+            EditorGUILayout.PropertyField(_initialVpsRequestsPerSecond);
+            EditorGUILayout.PropertyField(_continuousVpsRequestsPerSecond);
+            EditorGUILayout.PropertyField(_geolocationSmoothingEnabled);
+            EditorGUILayout.PropertyField(_deviceMapLocalizationEnabled);
+            EditorGUILayout.PropertyField(_deviceMapLocalizationFramerate);
+            EditorGUILayout.PropertyField(_vpsDebuggerEnabled);
+        }
 
         EditorGUILayout.Space();
         EditorGUILayout.PropertyField(_autoTrackProperty);
@@ -274,10 +301,21 @@ internal class _ARLocationManagerEditor : _ARPersistentAnchorManagerEditor
         }
     }
 
-    private new void OnEnable()
+    private void OnEnable()
     {
-        base.OnEnable();
         _autoTrackProperty = serializedObject.FindProperty("_autoTrack");
+
+        // ARVps2Manager fields
+        _defaultAnchorGameObject = serializedObject.FindProperty("_defaultAnchorGameObject");
+        _universalLocalizationEnabled = serializedObject.FindProperty("_universalLocalizationEnabled");
+        _universalLocalizationRequestsPerSecond = serializedObject.FindProperty("_universalLocalizationRequestsPerSecond");
+        _vpsMapLocalizationEnabled = serializedObject.FindProperty("_vpsMapLocalizationEnabled");
+        _initialVpsRequestsPerSecond = serializedObject.FindProperty("_initialVpsRequestsPerSecond");
+        _continuousVpsRequestsPerSecond = serializedObject.FindProperty("_continuousVpsRequestsPerSecond");
+        _geolocationSmoothingEnabled = serializedObject.FindProperty("_geolocationSmoothingEnabled");
+        _deviceMapLocalizationEnabled = serializedObject.FindProperty("_deviceMapLocalizationEnabled");
+        _deviceMapLocalizationFramerate = serializedObject.FindProperty("_deviceMapLocalizationFramerate");
+        _vpsDebuggerEnabled = serializedObject.FindProperty("_vpsDebuggerEnabled");
     }
 }
 #endif

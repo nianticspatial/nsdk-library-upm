@@ -3,9 +3,7 @@
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-#if UNITY_6000_0_OR_NEWER
 using UnityEngine.Rendering.RenderGraphModule;
-#endif
 
 namespace NianticSpatial.NSDK.AR.Occlusion
 {
@@ -16,8 +14,6 @@ namespace NianticSpatial.NSDK.AR.Occlusion
     {
         protected FullScreenBlitPass(string name, RenderPassEvent renderPassEvent)
             : base(name, renderPassEvent) { }
-
-#if UNITY_6000_0_OR_NEWER
 
         /// <summary>
         /// Contains the rendering context data.
@@ -65,7 +61,6 @@ namespace NianticSpatial.NSDK.AR.Occlusion
                     data.CameraData.camera.projectionMatrix);
             });
         }
-#endif
 
         /// <summary>
         /// Invoked when the render pass is executed.

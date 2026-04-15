@@ -21,12 +21,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         public XROcclusionSubsystem NsdkOcclusionSubsystem => base.GetLoadedSubsystem<XROcclusionSubsystem>();
 
         /// <summary>
-        /// The `XRPersistentAnchorSubsystem` whose lifecycle is managed by this loader.
-        /// </summary>
-        public XRPersistentAnchorSubsystem NsdkPersistentAnchorSubsystem =>
-            base.GetLoadedSubsystem<XRPersistentAnchorSubsystem>();
-
-        /// <summary>
         /// The `XRMeshingSubsystem` whose lifecycle is managed by this loader.
         /// </summary>
         public XRMeshSubsystem NsdkMeshSubsystem => base.GetLoadedSubsystem<XRMeshSubsystem>();

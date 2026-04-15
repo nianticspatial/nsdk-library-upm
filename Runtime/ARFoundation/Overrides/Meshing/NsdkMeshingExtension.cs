@@ -2,10 +2,10 @@
 
 using System;
 using System.Collections.Generic;
-using NianticSpatial.NSDK.AR.Semantics;
+using NianticSpatial.NSDK.AR.SceneSegmentation;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.Subsystems.Meshing;
-using NianticSpatial.NSDK.AR.Subsystems.Semantics;
+using NianticSpatial.NSDK.AR.Subsystems.SceneSegmentation;
 using Unity.XR.CoreUtils;
 using NianticSpatial.NSDK.AR.Utilities;
 using UnityEngine;
@@ -69,7 +69,8 @@ namespace NianticSpatial.NSDK.AR.Meshing
         private bool _isMeshFilteringEnabled = false;
 
         [SerializeField]
-        private ARSemanticSegmentationManager _semanticSegmentationManager;
+        [FormerlySerializedAs("_semanticSegmentationManager")]
+        private ARSceneSegmentationManager _sceneSegmentationManager;
 
         [SerializeField]
         [Tooltip("Enable an allow list to select channels which channels are included in the mesh. This can be used together with a block list.")]
@@ -77,7 +78,7 @@ namespace NianticSpatial.NSDK.AR.Meshing
 
         [SerializeField]
         [Tooltip("List of channels to include in the mesh.")]
-        private List<SemanticsChannel> _allowList = new();
+        private List<SceneSegmentationChannel> _allowList = new();
         private int _packedAllowList = 0;
 
         [SerializeField]
@@ -86,7 +87,7 @@ namespace NianticSpatial.NSDK.AR.Meshing
 
         [SerializeField]
         [Tooltip("List of channels to exclude from the mesh.")]
-        private List<SemanticsChannel> _blockList = new();
+        private List<SceneSegmentationChannel> _blockList = new();
         private int _packedBlockList = 0;
 
         private bool _isDirty;
@@ -251,12 +252,12 @@ namespace NianticSpatial.NSDK.AR.Meshing
             {
                 if (value)
                 {
-                    if (_semanticSegmentationManager == null)
+                    if (_sceneSegmentationManager == null)
                     {
-                        _semanticSegmentationManager = FindAnyObjectByType<ARSemanticSegmentationManager>(FindObjectsInactive.Include);
-                        if (_semanticSegmentationManager == null)
+                        _sceneSegmentationManager = FindAnyObjectByType<ARSceneSegmentationManager>(FindObjectsInactive.Include);
+                        if (_sceneSegmentationManager == null)
                         {
-                            Log.Error("There must be an ARSemanticSegmentationManager " +
+                            Log.Error("There must be an ARSceneSegmentationManager " +
                                 "in the scene to enable mesh filtering.");
                             value = false;
                         }
@@ -292,7 +293,7 @@ namespace NianticSpatial.NSDK.AR.Meshing
         /// The list of channels included in the mesh. Both the IsMeshFilteringEnabled and
         /// IsFilteringAllowListEnabled values must be true in order for the allow list to have an effect.
         /// </summary>
-        public List<SemanticsChannel> AllowList
+        public List<SceneSegmentationChannel> AllowList
         {
             get => _allowList;
             set
@@ -326,7 +327,7 @@ namespace NianticSpatial.NSDK.AR.Meshing
         /// The list of names of channels excluded from the mesh. Both the IsMeshFilteringEnabled and
         /// IsFilteringBlockListEnabled values must be true in order for the block list to have an effect.
         /// </summary>
-        public List<SemanticsChannel> BlockList
+        public List<SceneSegmentationChannel> BlockList
         {
             get => _blockList;
             set
@@ -398,19 +399,19 @@ namespace NianticSpatial.NSDK.AR.Meshing
             Configure();
         }
 
-        private void OnMetadataInitialized(ARSemanticSegmentationModelEventArgs arSemanticSegmentationModelEventArgs)
+        private void OnMetadataInitialized(ARSceneSegmentationModelEventArgs arSceneSegmentationModelEventArgs)
         {
             _isDirty = true;
         }
 
-        private uint ChannelListToPackedMask(List<SemanticsChannel> channelList)
+        private uint ChannelListToPackedMask(List<SceneSegmentationChannel> channelList)
         {
             const int bitsPerPixel = sizeof(UInt32) * 8;
 
             uint mask = 0u;
-            foreach (SemanticsChannel channel in channelList)
+            foreach (SceneSegmentationChannel channel in channelList)
             {
-                int id = _semanticSegmentationManager.GetChannelIndex(channel);
+                int id = _sceneSegmentationManager.GetChannelIndex(channel);
                 if (id >= 0 && id < bitsPerPixel)
                 {
                     mask |= (1u << (bitsPerPixel - 1 - id));
@@ -429,9 +430,9 @@ namespace NianticSpatial.NSDK.AR.Meshing
 
             if (IsMeshFilteringEnabled)
             {
-                if (_semanticSegmentationManager == null)
+                if (_sceneSegmentationManager == null)
                 {
-                    Log.Error("Missing ARSemanticSegmentationManager component reference. " +
+                    Log.Error("Missing ARSceneSegmentationManager component reference. " +
                         "One in the scene is required to enable mesh filtering.");
                     IsMeshFilteringEnabled = false;
                 }
@@ -439,8 +440,8 @@ namespace NianticSpatial.NSDK.AR.Meshing
                 {
                     // If Mesh Filtering is enabled, but the Semantic Segmentation Manager does not have metadata,
                     // we can't configure yet, so wait.
-                    _semanticSegmentationManager.MetadataInitialized += OnMetadataInitialized;
-                    if (!_semanticSegmentationManager.IsMetadataAvailable)
+                    _sceneSegmentationManager.MetadataInitialized += OnMetadataInitialized;
+                    if (!_sceneSegmentationManager.IsMetadataAvailable)
                     {
                         _isDirty = true;
                         return;

@@ -2,6 +2,8 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
+using NianticSpatial.NSDK.AR.API;
 using NianticSpatial.NSDK.AR.Core;
 using NianticSpatial.NSDK.AR.Utilities;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
@@ -12,9 +14,9 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
     internal class NativeMapStorageAccessApi : IMapStorageAccessApi
     {
         private IntPtr _unityContextHandle;
-        private bool _isDisposed;
+        private bool _acquired;
 
-        public bool Create(IntPtr unityContextHandle)
+        public bool Acquire(IntPtr unityContextHandle)
         {
             if (!NsdkUnityContext.CheckUnityContext(unityContextHandle))
             {
@@ -24,30 +26,20 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
 
             _unityContextHandle = unityContextHandle;
             int status = Lightship_ARDK_Unity_MapStorageAccess_Create(unityContextHandle);
+            _acquired = status == 0;
             return status == 0; // ARDK_Status_OK = 0
         }
 
-        public bool Destroy()
+        public bool Release()
         {
-            if (_isDisposed || !_unityContextHandle.IsValidHandle())
+            if (!_unityContextHandle.IsValidHandle())
             {
                 return false;
             }
 
+            _acquired = false;
             int status = Lightship_ARDK_Unity_MapStorageAccess_Destroy(_unityContextHandle);
-            return status == 0; // ARDK_Status_OK = 0
-        }
-
-        public void Dispose()
-        {
-            if (_isDisposed)
-            {
-                return;
-            }
-
-            Destroy();
-            _unityContextHandle = IntPtr.Zero;
-            _isDisposed = true;
+            return status == (int)NsdkStatus.Ok;
         }
 
         public bool GetMapData(out byte[] mapData)
@@ -73,7 +65,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
             {
                 if (resourceHandle.IsValidHandle())
                 {
-                    Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                    NsdkExternUtils.ReleaseResource(resourceHandle);
                 }
                 return false;
             }
@@ -88,7 +80,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
             {
                 if (resourceHandle.IsValidHandle())
                 {
-                    Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                    NsdkExternUtils.ReleaseResource(resourceHandle);
                 }
             }
         }
@@ -116,7 +108,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
             {
                 if (resourceHandle.IsValidHandle())
                 {
-                    Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                    NsdkExternUtils.ReleaseResource(resourceHandle);
                 }
                 return false;
             }
@@ -131,7 +123,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
             {
                 if (resourceHandle.IsValidHandle())
                 {
-                    Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                    NsdkExternUtils.ReleaseResource(resourceHandle);
                 }
             }
         }
@@ -208,7 +200,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
                         {
                             if (resourceHandle.IsValidHandle())
                             {
-                                Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                                NsdkExternUtils.ReleaseResource(resourceHandle);
                             }
                             return false;
                         }
@@ -223,7 +215,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
                         {
                             if (resourceHandle.IsValidHandle())
                             {
-                                Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                                NsdkExternUtils.ReleaseResource(resourceHandle);
                             }
                         }
                     }
@@ -231,7 +223,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
             }
         }
 
-        public bool CreateRootAnchor(out byte[] anchorPayload)
+        public bool CreateRootAnchor(out string anchorPayload)
         {
             anchorPayload = null;
 
@@ -254,49 +246,42 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
             {
                 if (resourceHandle.IsValidHandle())
                 {
-                    Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                    NsdkExternUtils.ReleaseResource(resourceHandle);
                 }
                 return false;
             }
 
             try
             {
-                anchorPayload = new byte[payloadSize];
-                Marshal.Copy(payloadPtr, anchorPayload, 0, (int)payloadSize);
+                var payloadBytes = new byte[payloadSize];
+                Marshal.Copy(payloadPtr, payloadBytes, 0, (int)payloadSize);
+                anchorPayload = Encoding.UTF8.GetString(payloadBytes);
                 return true;
             }
             finally
             {
                 if (resourceHandle.IsValidHandle())
                 {
-                    Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                    NsdkExternUtils.ReleaseResource(resourceHandle);
                 }
             }
         }
 
-        public bool ExtractMapMetadataFromAnchor(byte[] anchorPayload, byte[] mapData, out Vector3[] points, out float[] errors, out bool usesLearnedFeatures)
+        public bool ExtractMapMetadataFromAnchor(byte[] anchorPayload, byte[] mapData, out Vector3[] points, out float[] errors)
         {
             points = null;
             errors = null;
-            usesLearnedFeatures = false;
 
             if (!CheckUnityContext() || anchorPayload == null || anchorPayload.Length == 0 || mapData == null || mapData.Length == 0)
             {
                 return false;
             }
 
-            IntPtr pointsPtr = IntPtr.Zero;
-            IntPtr errorsPtr = IntPtr.Zero;
-            uint pointsCount = 0;
-            bool usesLearnedFeaturesValue = false;
-            IntPtr resourceHandle = IntPtr.Zero;
-
-            IntPtr mapDataPtr = IntPtr.Zero;
             unsafe
             {
                 fixed (byte* mapPtr = mapData)
                 {
-                    mapDataPtr = (IntPtr)mapPtr;
+                    var mapDataPtr = (IntPtr)mapPtr;
                     fixed (byte* anchorPtr = anchorPayload)
                     {
                         int status = Lightship_ARDK_Unity_MapStorageAccess_ExtractMapMetadataFromAnchor(
@@ -305,17 +290,17 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
                             (uint)anchorPayload.Length,
                             mapDataPtr,
                             (uint)mapData.Length,
-                            out pointsPtr,
-                            out errorsPtr,
-                            out pointsCount,
-                            out usesLearnedFeaturesValue,
-                            out resourceHandle);
+                            out var pointsPtr,
+                            out var errorsPtr,
+                            out var pointsCount,
+                            out _,
+                            out var resourceHandle);
 
                         if (status != 0 || pointsPtr == IntPtr.Zero || errorsPtr == IntPtr.Zero || pointsCount == 0)
                         {
                             if (resourceHandle.IsValidHandle())
                             {
-                                Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                                NsdkExternUtils.ReleaseResource(resourceHandle);
                             }
                             return false;
                         }
@@ -340,14 +325,13 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
                                     pointsArray[i * 3 + 2]);
                             }
 
-                            usesLearnedFeatures = usesLearnedFeaturesValue;
                             return true;
                         }
                         finally
                         {
                             if (resourceHandle.IsValidHandle())
                             {
-                                Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(resourceHandle);
+                                NsdkExternUtils.ReleaseResource(resourceHandle);
                             }
                         }
                     }
@@ -357,9 +341,9 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
 
         private bool CheckUnityContext()
         {
-            if (_isDisposed || !_unityContextHandle.IsValidHandle())
+            if (!_acquired || !_unityContextHandle.IsValidHandle())
             {
-                Log.Warning("NativeMapStorageAccessApi: No valid Unity context handle");
+                Log.Warning("NativeMapStorageAccessApi: No valid native handles");
                 return false;
             }
 
@@ -426,8 +410,5 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
             out uint points_count_out,
             [MarshalAs(UnmanagedType.I1)] out bool uses_learned_features_out,
             out IntPtr resource_handle_out);
-
-        [DllImport(NsdkPlugin.Name)]
-        private static extern void Lightship_ARDK_Unity_MapStorageAccess_ReleaseResource(IntPtr resource_handle);
     }
 }

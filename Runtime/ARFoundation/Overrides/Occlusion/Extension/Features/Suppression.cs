@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 using NianticSpatial.NSDK.AR.Common;
-using NianticSpatial.NSDK.AR.Subsystems.Semantics;
+using NianticSpatial.NSDK.AR.Subsystems.SceneSegmentation;
 using NianticSpatial.NSDK.AR.Utilities;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using Unity.XR.CoreUtils;
@@ -30,11 +30,11 @@ namespace NianticSpatial.NSDK.AR.Occlusion.Features
         }
 
         // Required components
-        private NsdkSemanticsSubsystem _subsystem;
+        private NsdkSceneSegmentationSubsystem _subsystem;
 
         // Resources
         private Texture2D _gpuSuppression;
-        private HashSet<SemanticsChannel> _channels;
+        private HashSet<SceneSegmentationChannel> _channels;
         private XROrigin _origin;
 
         // Helpers
@@ -45,9 +45,9 @@ namespace NianticSpatial.NSDK.AR.Occlusion.Features
 
         public bool Configure(
             XROrigin origin,
-            NsdkSemanticsSubsystem subsystem,
+            NsdkSceneSegmentationSubsystem subsystem,
             NsdkOcclusionExtension.OcclusionTechnique technique,
-            IEnumerable<SemanticsChannel> suppressionChannels
+            IEnumerable<SceneSegmentationChannel> suppressionChannels
         )
         {
             // The subsystem is required to fetch the suppression mask
@@ -70,7 +70,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion.Features
             _origin = origin;
 
             // Initialize the suppression channels
-            _channels = new HashSet<SemanticsChannel>(suppressionChannels);
+            _channels = new HashSet<SceneSegmentationChannel>(suppressionChannels);
             _subsystemDirty = true;
             return true;
         }
@@ -119,7 +119,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion.Features
         /// </summary>
         /// <param name="channel">The channel to add.</param>
         /// <returns>True if the channel was successfully added, false otherwise.</returns>
-        internal bool AddChannel(SemanticsChannel channel)
+        internal bool AddChannel(SceneSegmentationChannel channel)
         {
             if (_channels.Add(channel))
             {
@@ -135,7 +135,7 @@ namespace NianticSpatial.NSDK.AR.Occlusion.Features
         /// </summary>
         /// <param name="channel">The channel to remove.</param>
         /// <returns>True if the channel was successfully removed, false otherwise.</returns>
-        internal bool RemoveChannel(SemanticsChannel channel)
+        internal bool RemoveChannel(SceneSegmentationChannel channel)
         {
             if (_channels.Remove(channel))
             {

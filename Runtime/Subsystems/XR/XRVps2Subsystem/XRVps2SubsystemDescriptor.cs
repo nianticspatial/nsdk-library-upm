@@ -114,42 +114,41 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// <summary>
         /// Creates the World Space subsystem descriptor from the construction info.
         /// </summary>
-        /// <param name="wpsSubsystemCinfo">The World Space subsystem descriptor constructor information.</param>
-        internal static XRVps2SubsystemDescriptor Create
-            (XRVps2SubsystemCinfo wpsSubsystemCinfo)
+        /// <param name="subsystemCinfo">The World Space subsystem descriptor constructor information.</param>
+        internal static XRVps2SubsystemDescriptor Create(XRVps2SubsystemCinfo subsystemCinfo)
         {
-            if (string.IsNullOrEmpty(wpsSubsystemCinfo.id))
+            if (string.IsNullOrEmpty(subsystemCinfo.id))
             {
                 throw new ArgumentException
                 (
                     "Cannot create World Space subsystem descriptor because id is invalid",
-                    nameof(wpsSubsystemCinfo)
+                    nameof(subsystemCinfo)
                 );
             }
 
-            if (wpsSubsystemCinfo.providerType == null ||
-                !wpsSubsystemCinfo.providerType.IsSubclassOf
+            if (subsystemCinfo.providerType == null ||
+                !subsystemCinfo.providerType.IsSubclassOf
                     (typeof(XRVps2Subsystem.Provider)))
             {
                 throw new ArgumentException
                 (
                     "Cannot create World Space subsystem descriptor because providerType is invalid",
-                    nameof(wpsSubsystemCinfo)
+                    nameof(subsystemCinfo)
                 );
             }
 
-            if (wpsSubsystemCinfo.subsystemTypeOverride == null ||
-                !wpsSubsystemCinfo.subsystemTypeOverride.IsSubclassOf
+            if (subsystemCinfo.subsystemTypeOverride == null ||
+                !subsystemCinfo.subsystemTypeOverride.IsSubclassOf
                     (typeof(XRVps2Subsystem)))
             {
                 throw new ArgumentException
                 (
                     "Cannot create World Space subsystem descriptor because subsystemTypeOverride is invalid",
-                    nameof(wpsSubsystemCinfo)
+                    nameof(subsystemCinfo)
                 );
             }
 
-            return new XRVps2SubsystemDescriptor(wpsSubsystemCinfo);
+            return new XRVps2SubsystemDescriptor(subsystemCinfo);
         }
     }
 }

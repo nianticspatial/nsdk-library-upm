@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Generic;
-using NianticSpatial.NSDK.AR.PersistentAnchors;
+using Niantic.Lightship.AR.Protobuf;
 using NianticSpatial.NSDK.AR.Utilities;
 using Unity.Collections;
 using UnityEngine;
@@ -12,7 +12,7 @@ using UnityEngine.XR.ARSubsystems;
 namespace NianticSpatial.NSDK.AR.XRSubsystems
 {
     [PublicAPI]
-    public class XRVps2Subsystem : TrackingSubsystem<XRPersistentAnchor, XRVps2Subsystem, XRVps2SubsystemDescriptor, XRVps2Subsystem.Provider>
+    public class XRVps2Subsystem : TrackingSubsystem<XRVps2Anchor, XRVps2Subsystem, XRVps2SubsystemDescriptor, XRVps2Subsystem.Provider>
     {
         public XRVps2Subsystem()
         {
@@ -64,8 +64,8 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         }
 
         /// <summary>
-        /// If true, enables smooth interpolation between VPS2 transformer updates. As VPS2 updates its estimate
-        /// from one transformer to another, having interpolation enabled will provide a more stable
+        /// If true, enables smooth interpolation between VPS2 localization updates. As VPS2 updates its estimate
+        /// from one localization to another, having interpolation enabled will provide a more stable
         /// experience, especially when GPS or compass readings update abruptly.
         /// </summary>
         public bool GeolocationSmoothingEnabled
@@ -74,45 +74,83 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         }
 
         /// <summary>
-        /// Get the latest VPS2 transformer. The transformer contains the metadata required to perform bidirectional
+        /// If true, localization on device maps is enabled. Device maps are created by the on-device mapping feature.
+        /// They do not provide a georeference.
+        /// </summary>
+        public bool DeviceMapLocalizationEnabled
+        {
+            set => provider.DeviceMapLocalizationEnabled = value;
+        }
+
+        /// <summary>
+        /// Number of times per second to attempt localization on available device maps.
+        /// </summary>
+        public int DeviceMapLocalizationFramerate
+        {
+            set => provider.DeviceMapLocalizationFramerate = value;
+        }
+
+        /// <summary>
+        /// If true, enable the VPS Debugger, which will log VPS2 related internal events to diagnose VPS2 tracking
+        /// behavior and issues.
+        /// </summary>
+        public bool VpsDebuggerEnabled
+        {
+            set => provider.VpsDebuggerEnabled = value;
+        }
+
+        /// <summary>
+        /// Get the latest VPS2 localization. The localization contains the metadata required to perform bidirectional
         /// conversions between the application’s AR tracking space and the global coordinate system
         /// (lat/lng/alt/heading).
         /// </summary>
         /// <note>
-        /// The transformer is a point-in-time snapshot. Updates to VPS2’s estimate are not reflected in
-        /// previously retrieved transformer instances. Call this method again each frame to get
+        /// The localization is a point-in-time snapshot. Updates to VPS2’s estimate are not reflected in
+        /// previously retrieved localization instances. Call this method again each frame to get
         /// the most up-to-date estimates.
         /// </note>
         /// <returns></returns>
-        public XRVps2Transformer GetLatestTransformer()
+        public XRVps2Localization GetLatestLocalization()
         {
-            return provider.GetLatestTransformer();
+            return provider.GetLatestLocalization();
         }
 
         /// <summary>
-        /// Convert a pose in the device's AR tracking space to a position and orientation in the global coordinate
-        /// system.
+        /// Get the geolocation of the device's last known camera pose.
         /// </summary>
-        /// <param name="transformer"></param>
-        /// <param name="pose"></param>
-        /// <returns></returns>
-        public XRVps2Geolocation GetGeolocation(XRVps2Transformer transformer, Pose pose)
+        /// <param name="headingMode">Controls how the heading is derived.
+        /// Use <see cref="HeadingMode.CameraDirection"/> when the device is upright,
+        /// or <see cref="HeadingMode.DeviceTop"/> when flat or for a compass-style heading.</param>
+        /// <returns>Geolocation data. Check tracking state for availability.</returns>
+        public XRVps2Geolocation GetDeviceGeolocation(
+            HeadingMode headingMode = HeadingMode.CameraDirection)
         {
-            return provider.GetGeolocation(transformer, pose);
+            return provider.GetDeviceGeolocation(headingMode);
         }
 
         /// <summary>
         /// Convert a position and orientation in the global coordinate system to a pose in the device's AR tracking space.
         /// </summary>
-        /// <param name="transformer"></param>
+        /// <param name="localization"></param>
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <param name="altitude"></param>
         /// <param name="orientationEdn"></param>
         /// <returns></returns>
-        public XRVps2Pose GetPose(XRVps2Transformer transformer, double latitude, double longitude, double altitude, Quaternion orientationEdn)
+        public XRVps2Pose GetPose(XRVps2Localization localization, double latitude, double longitude, double altitude, Quaternion orientationEdn)
         {
-            return provider.GetPose(transformer, latitude, longitude, altitude, orientationEdn);
+            return provider.GetPose(localization, latitude, longitude, altitude, orientationEdn);
+        }
+
+        /// <summary>
+        /// Convert a Unity LocationInfo to a pose in the device's AR tracking space using the provided localization.
+        /// </summary>
+        /// <param name="localization">The localization snapshot to use for conversion.</param>
+        /// <param name="location">The LocationInfo containing latitude, longitude, and altitude.</param>
+        /// <returns>The AR pose corresponding to the given location.</returns>
+        public XRVps2Pose GetPose(XRVps2Localization localization, LocationInfo location)
+        {
+            return provider.GetPose(localization, location.latitude, location.longitude, location.altitude, Quaternion.identity);
         }
 
         /// <summary>
@@ -120,7 +158,7 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// </summary>
         /// <param name="pose"></param>
         /// <returns></returns>
-        public bool TryCreateAnchor(Pose pose, out XRPersistentAnchor anchor)
+        public bool TryCreateAnchor(Pose pose, out XRVps2Anchor anchor)
         {
             return provider.TryCreateAnchor(pose, out anchor);
         }
@@ -130,7 +168,7 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// </summary>
         /// <param name="anchorPayload"></param>
         /// <returns></returns>
-        public bool TryTrackAnchor(string anchorPayload, out XRPersistentAnchor anchor)
+        public bool TryTrackAnchor(string anchorPayload, out XRVps2Anchor anchor)
         {
             return provider.TryTrackAnchor(anchorPayload, out anchor);
         }
@@ -155,7 +193,7 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
             return provider.GetAnchorPayload(trackableId, out payload);
         }
 
-        public override TrackableChanges<XRPersistentAnchor> GetChanges(Allocator allocator)
+        public override TrackableChanges<XRVps2Anchor> GetChanges(Allocator allocator)
         {
             return provider.GetChanges(allocator);
         }
@@ -164,9 +202,29 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// Get all the network request records since the last time this method was called.
         /// </summary>
         /// <returns></returns>
-        public List<XRVps2NetworkRequestRecord> GetLatestNetworkRequestRecords()
+        public List<XRVps2LocalizationRequestRecord> GetLatestLocalizationRequestRecords()
         {
-            return provider.GetLatestNetworkRequestRecords();
+            return provider.GetLatestLocalizationRequestRecords();
+        }
+
+        /// <summary>
+        /// Get all the debugger data since the last time this method was called.
+        /// </summary>
+        /// <returns></returns>
+        public List<VpsDebuggerDataEvent> GetLatestDebuggerData()
+        {
+            return provider.GetLatestDebuggerData();
+        }
+
+        /// <summary>
+        /// Get the session id, if one exists.
+        /// </summary>
+        /// <param name="sessionId">The session id as 32 character hexidecimal upper-case string.</param>
+        /// <returns>True if a session id is present, false otherwise</returns>
+        public bool GetSessionId(out string sessionId)
+        {
+            var success = provider.GetSessionId(out sessionId);
+            return success;
         }
 
         public abstract class Provider : SubsystemProvider<XRVps2Subsystem>
@@ -201,27 +259,48 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
                 set => throw new NotSupportedException();
             }
 
-            public virtual XRVps2Transformer GetLatestTransformer()
+            public virtual bool DeviceMapLocalizationEnabled
+            {
+                set => throw new NotSupportedException();
+            }
+
+            public virtual int DeviceMapLocalizationFramerate
+            {
+                set => throw new NotSupportedException();
+            }
+
+            public virtual bool VpsDebuggerEnabled
+            {
+                set => throw new NotSupportedException();
+            }
+
+            public virtual XRVps2Localization GetLatestLocalization()
             {
                 throw new NotSupportedException();
             }
 
-            public virtual XRVps2Geolocation GetGeolocation(XRVps2Transformer transformer, Pose pose)
+            public virtual XRVps2Geolocation GetDeviceGeolocation(
+                HeadingMode headingMode = HeadingMode.CameraDirection)
             {
                 throw new NotSupportedException();
             }
 
-            public virtual XRVps2Pose GetPose(XRVps2Transformer transformer, double latitude, double longitude, double altitude, Quaternion orientationEdn)
+            public virtual XRVps2Pose GetPose(XRVps2Localization localization, double latitude, double longitude, double altitude, Quaternion orientationEdn)
             {
                 throw new NotSupportedException();
             }
 
-            public virtual bool TryCreateAnchor(Pose pose, out XRPersistentAnchor anchor)
+            public virtual XRVps2Pose GetPose(XRVps2Localization localization, LocationInfo location)
+            {
+                return GetPose(localization, location.latitude, location.longitude, location.altitude, Quaternion.identity);
+            }
+
+            public virtual bool TryCreateAnchor(Pose pose, out XRVps2Anchor anchor)
             {
                 throw new NotSupportedException();
             }
 
-            public virtual bool TryTrackAnchor(string anchorPayload, out XRPersistentAnchor anchor)
+            public virtual bool TryTrackAnchor(string anchorPayload, out XRVps2Anchor anchor)
             {
                 throw new NotSupportedException();
             }
@@ -236,17 +315,25 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
                 throw new NotSupportedException();
             }
 
-            public virtual TrackableChanges<XRPersistentAnchor> GetChanges(Allocator allocator)
+            public virtual TrackableChanges<XRVps2Anchor> GetChanges(Allocator allocator)
             {
                 throw new NotSupportedException();
             }
 
-            public virtual List<XRVps2NetworkRequestRecord> GetLatestNetworkRequestRecords()
+            public virtual List<XRVps2LocalizationRequestRecord> GetLatestLocalizationRequestRecords()
+            {
+                throw new NotSupportedException();
+            }
+
+            public virtual List<VpsDebuggerDataEvent> GetLatestDebuggerData()
+            {
+                throw new NotSupportedException();
+            }
+
+            public virtual bool GetSessionId(out string sessionId)
             {
                 throw new NotSupportedException();
             }
         }
-
-
     }
 }

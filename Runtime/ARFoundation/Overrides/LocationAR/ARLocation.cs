@@ -1,7 +1,6 @@
 // Copyright 2022-2026 Niantic Spatial.
-using NianticSpatial.NSDK.AR.PersistentAnchors;
+using NianticSpatial.NSDK.AR.VPS2;
 using NianticSpatial.NSDK.AR.Utilities;
-using NianticSpatial.NSDK.AR.VpsCoverage;
 
 using UnityEngine;
 
@@ -16,7 +15,7 @@ namespace NianticSpatial.NSDK.AR.LocationAR
         /// <summary>
         /// The payload associated with the ARLocation
         /// </summary>
-        public ARPersistentAnchorPayload Payload;
+        public ARVps2AnchorPayload Payload;
 
         [SerializeField]
         internal GameObject MeshContainer;

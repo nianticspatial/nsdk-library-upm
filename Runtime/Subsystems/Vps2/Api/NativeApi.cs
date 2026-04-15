@@ -40,19 +40,19 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             return Native.Configure(providerHandle, config);
         }
 
-        public NsdkStatus GetLatestTransformer(IntPtr providerHandle, out IApi.NsdkVps2Transformer transformer)
+        public NsdkStatus GetLatestLocalization(IntPtr providerHandle, out IApi.NsdkVps2Localization localization)
         {
-            return Native.GetLatestTransformer(providerHandle, out transformer);
+            return Native.GetLatestLocalization(providerHandle, out localization);
         }
 
-        public NsdkStatus GetGeolocation(IApi.NsdkVps2Transformer transformer, NsdkTransform pose, out IApi.NsdkVps2GeolocationData location)
+        public NsdkStatus GetDeviceGeolocation(IntPtr providerHandle, HeadingMode headingMode, out IApi.NsdkVps2GeolocationData location)
         {
-            return Native.GetGeolocation(ref transformer, ref pose, out location);
+            return Native.GetDeviceGeolocation(providerHandle, (int)headingMode, out location);
         }
 
-        public NsdkStatus GetPose(IApi.NsdkVps2Transformer transformer, NsdkGeolocationData location, out IApi.NsdkVps2Pose pose)
+        public NsdkStatus GetPose(IApi.NsdkVps2Localization localization, NsdkGeolocationData location, out IApi.NsdkVps2Pose pose)
         {
-            return Native.GetPose(ref transformer, ref location, out pose);
+            return Native.GetPose(ref localization, ref location, out pose);
         }
 
         public NsdkStatus CreateAnchor(IntPtr providerHandle, NsdkTransform pose, ref byte[] anchorId)
@@ -90,15 +90,27 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             IntPtr providerHandle,
             byte[] anchorId,
             out IntPtr anchorPayloadPtr,
-            out int anchorPayloadSize
+            out int anchorPayloadSize,
+            out IntPtr resourceHandle
         )
         {
-            return Native.GetAnchorPayload(providerHandle, anchorId, out anchorPayloadPtr, out anchorPayloadSize);
+            return Native.GetAnchorPayload(providerHandle, anchorId, out anchorPayloadPtr, out anchorPayloadSize, out resourceHandle);
         }
 
-        public NsdkStatus GetLatestNetworkRequestRecords(IntPtr providerHandle, out IntPtr networkRequestRecords, out int size, out IntPtr handle)
+        public NsdkStatus GetLatestLocalizationRequestRecords(IntPtr providerHandle, out IntPtr networkRequestRecords, out int size, out IntPtr handle)
         {
-            return Native.GetLatestNetworkRequestRecords(providerHandle, out networkRequestRecords, out size, out handle);
+            return Native.GetLatestLocalizationRequestRecords(providerHandle, out networkRequestRecords, out size, out handle);
+        }
+
+        public NsdkStatus GetLatestDebuggerLogs(IntPtr providerHandle, out IntPtr logs, out int count,
+            out IntPtr handle)
+        {
+            return Native.GetLatestDebuggerLogs(providerHandle, out logs, out count, out handle);
+        }
+
+        public NsdkStatus GetSessionId(IntPtr providerHandle, ref byte[] sessionId)
+        {
+            return Native.GetSessionId(providerHandle, sessionId);
         }
 
         // Defined in ardk_vps_tracking_state.h
@@ -156,24 +168,24 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
               ARDK_VPS_AnchorTrackingStateReason_FatalNetworkError
             } ARDK_VPS_AnchorTrackingStateReason;
          */
-        public TrackingStateReason ConvertTrackingStateReasonToUnity(int nativeReason)
+        public Vps2AnchorTrackingStateReason ConvertTrackingStateReasonToUnity(int nativeReason)
         {
             switch (nativeReason)
             {
                 case 0:
-                    return TrackingStateReason.None;
+                    return Vps2AnchorTrackingStateReason.None;
                 case 1:
-                    return TrackingStateReason.Initializing;
+                    return Vps2AnchorTrackingStateReason.Initializing;
                 case 2:
-                    return TrackingStateReason.Removed;
+                    return Vps2AnchorTrackingStateReason.Removed;
                 case 3:
-                    return TrackingStateReason.InternalError;
+                    return Vps2AnchorTrackingStateReason.InternalError;
                 case 4:
-                    return TrackingStateReason.PermissionDenied;
+                    return Vps2AnchorTrackingStateReason.PermissionDenied;
                 case 5:
-                    return TrackingStateReason.FatalNetworkError;
+                    return Vps2AnchorTrackingStateReason.FatalNetworkError;
                 case 6:
-                    return TrackingStateReason.NoVisualLocalization;
+                    return Vps2AnchorTrackingStateReason.NoVisualLocalization;
             }
 
             throw new ArgumentOutOfRangeException(nameof(nativeReason));
@@ -199,14 +211,14 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_Stop")]
             public static extern NsdkStatus Stop(IntPtr providerHandle);
 
-            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetLatestTransformer")]
-            public static extern NsdkStatus GetLatestTransformer(IntPtr providerHandle, out IApi.NsdkVps2Transformer transformer);
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetLatestLocalization")]
+            public static extern NsdkStatus GetLatestLocalization(IntPtr providerHandle, out IApi.NsdkVps2Localization localization);
 
-            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetGeolocation")]
-            public static extern NsdkStatus GetGeolocation(ref IApi.NsdkVps2Transformer transformer, ref NsdkTransform pose, out IApi.NsdkVps2GeolocationData location);
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetDeviceGeolocation")]
+            public static extern NsdkStatus GetDeviceGeolocation(IntPtr providerHandle, int headingMode, out IApi.NsdkVps2GeolocationData location);
 
             [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetPose")]
-            public static extern NsdkStatus GetPose(ref IApi.NsdkVps2Transformer transformer, ref NsdkGeolocationData location, out IApi.NsdkVps2Pose pose);
+            public static extern NsdkStatus GetPose(ref IApi.NsdkVps2Localization localization, ref NsdkGeolocationData location, out IApi.NsdkVps2Pose pose);
 
             [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_CreateAnchor")]
             public static extern NsdkStatus CreateAnchor(IntPtr providerHandle, NsdkTransform pose, [Out] byte[] anchorIdOut);
@@ -236,16 +248,28 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
                 IntPtr providerHandle,
                 byte[] anchorId,
                 out IntPtr anchorPayloadPtr,
-                out int anchorPayloadSize
+                out int anchorPayloadSize,
+                out IntPtr resourceHandle
             );
 
-            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetLatestNetworkRequestRecords")]
-            public static extern NsdkStatus GetLatestNetworkRequestRecords(
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetLatestLocalizationRequestRecords")]
+            public static extern NsdkStatus GetLatestLocalizationRequestRecords(
                 IntPtr providerHandle,
                 out IntPtr networkRequestRecords,
                 out int count,
                 out IntPtr handle
             );
+
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetLatestDebuggerLogs")]
+            public static extern NsdkStatus GetLatestDebuggerLogs(
+                IntPtr providerHandle,
+                out IntPtr logs,
+                out int count,
+                out IntPtr handle
+            );
+
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetSessionId")]
+            public static extern NsdkStatus GetSessionId(IntPtr providerHandle, [Out] byte[] sessionId);
         }
     }
 }

@@ -23,6 +23,10 @@ namespace NianticSpatial.NSDK.AR.Auth
         [SerializeField]
         private int _accessExpiresAt;
 
+        [Tooltip("When set, this access token takes priority over developer authentication.")]
+        [SerializeField]
+        private string _accessTokenOverride = string.Empty;
+
         [Tooltip("Disable this if an alternate authentication scheme has been setup in the app (such as an enterprise back end server)")]
         [SerializeField]
         private bool _useDeveloperAuthentication = true;
@@ -64,6 +68,19 @@ namespace NianticSpatial.NSDK.AR.Auth
         public int AccessExpiresAt => _accessExpiresAt;
 
         /// <summary>
+        /// An access token that takes priority over developer authentication when set.
+        /// </summary>
+        public string AccessTokenOverride
+        {
+            get => _accessTokenOverride;
+            set
+            {
+                _accessTokenOverride = value;
+                SettingsUtils.SaveImmediatelyInEditor(this);
+            }
+        }
+
+        /// <summary>
         /// Whether to use the initial access and refresh tokens passed to runtime.
         /// </summary>
         public bool UseDeveloperAuthentication
@@ -86,6 +103,9 @@ namespace NianticSpatial.NSDK.AR.Auth
             _accessToken = string.Empty;
             _accessExpiresAt = 0;
             _refreshExpiresAt = 0;
+            // Note: _accessTokenOverride is intentionally not cleared here.
+            // Reset() is called when exiting play mode to clear transient developer auth tokens.
+            // The access token override is a persistent user setting.
         }
     }
 }

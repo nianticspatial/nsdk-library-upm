@@ -11,6 +11,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
     internal interface IApi
     {
         public const int NSDK_VPS2_ANCHOR_ID_SIZE = 32;
+        public const int NSDK_VPS2_SESSION_ID_SIZE = 32;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct NsdkVps2Config
@@ -21,6 +22,9 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             public float bevRequestsPerSecond;
 
             [MarshalAs(UnmanagedType.U1)]
+            public bool bevMulticameraEnabled;
+
+            [MarshalAs(UnmanagedType.U1)]
             public bool vpsLocalizationEnabled;
 
             public float initialVpsRequestsPerSecond;
@@ -28,11 +32,19 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
 
             [MarshalAs(UnmanagedType.U1)]
             public bool geolocationSmoothingEnabled;
+
+            [MarshalAs(UnmanagedType.U1)]
+            public bool vpsDebuggerEnabled;
+
+            [MarshalAs(UnmanagedType.U1)]
+            public bool deviceMapLocalizationEnabled;
+
+            public int deviceMapLocalizationFramerate;
         }
 
-        // Defined in ardk_vps2_transformer.h
+        // Defined in ardk_vps2_localization.h
         [StructLayout(LayoutKind.Sequential)]
-        public struct NsdkVps2Transformer
+        public struct NsdkVps2Localization
         {
             public Int32 trackingState;
             public double referenceLatitudeDegrees;
@@ -51,6 +63,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
         [StructLayout(LayoutKind.Sequential)]
         public struct NsdkVps2GeolocationData
         {
+            public Int32 trackingState;
             public NsdkGeolocationData geolocationData;
             public float horizontalAccuracyMeters;
             public float verticalAccuracyMeters;
@@ -70,12 +83,13 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
         [StructLayout(LayoutKind.Sequential)]
         public struct NsdkVps2NetworkResponseRecord
         {
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-            public byte[] requestIdentifier;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = NSDK_VPS2_ANCHOR_ID_SIZE)]
+            public byte[] requestIdentifier; // char[32] hex-encoded UUID
 
-            public int status;
-            public int type;
-            public int error;
+            public byte status;  // uint8_t enum
+            public byte type;    // uint8_t enum
+            public byte error;   // uint8_t enum
+
             public UInt64 startTimeMs;
             public UInt64 endTimeMs;
             public UInt64 frameId;
@@ -96,6 +110,8 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             private byte _padding1;             // alignment padding for float
             public float confidence;
             public ulong timestamp;
+            public NsdkGeolocationData geolocationData;
+            public byte hasGeolocation;
             public byte updateType;             // uint8_t in C++
         }
 
@@ -111,11 +127,11 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
 
         NsdkStatus Configure(IntPtr providerHandle, NsdkVps2Config config);
 
-        NsdkStatus GetLatestTransformer(IntPtr providerHandle, out NsdkVps2Transformer transformer);
+        NsdkStatus GetLatestLocalization(IntPtr providerHandle, out NsdkVps2Localization localization);
 
-        NsdkStatus GetGeolocation(NsdkVps2Transformer transformer, NsdkTransform pose, out NsdkVps2GeolocationData location);
+        NsdkStatus GetDeviceGeolocation(IntPtr providerHandle, HeadingMode headingMode, out NsdkVps2GeolocationData location);
 
-        NsdkStatus GetPose(NsdkVps2Transformer transformer, NsdkGeolocationData location, out NsdkVps2Pose pose);
+        NsdkStatus GetPose(NsdkVps2Localization localization, NsdkGeolocationData location, out NsdkVps2Pose pose);
 
         NsdkStatus CreateAnchor(IntPtr providerHandle, NsdkTransform pose, ref byte[] anchorId);
 
@@ -135,18 +151,28 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             IntPtr providerHandle,
             byte[] anchorId,
             out IntPtr anchorPayloadPtr,
-            out int anchorPayloadSize
+            out int anchorPayloadSize,
+            out IntPtr resourceHandle
         );
 
-        NsdkStatus GetLatestNetworkRequestRecords(
+        NsdkStatus GetLatestLocalizationRequestRecords(
             IntPtr providerHandle,
             out IntPtr networkRequestRecords,
             out int count,
             out IntPtr handle
         );
 
+        NsdkStatus GetLatestDebuggerLogs(
+            IntPtr providerHandle,
+            out IntPtr logs,
+            out int count,
+            out IntPtr handle
+        );
+
+        NsdkStatus GetSessionId(IntPtr providerHandle, ref byte[] sessionId);
+
         TrackingState ConvertTrackingStateToUnity(int nativeTrackingState);
 
-        TrackingStateReason ConvertTrackingStateReasonToUnity(int nativeReason);
+        Vps2AnchorTrackingStateReason ConvertTrackingStateReasonToUnity(int nativeReason);
     }
 }

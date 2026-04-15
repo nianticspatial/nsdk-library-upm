@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
+using Niantic.Lightship.AR.Protobuf;
 using NianticSpatial.NSDK.AR.API;
 using NianticSpatial.NSDK.AR.Core;
 using NianticSpatial.NSDK.AR.Utilities;
@@ -49,6 +50,9 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
             private float _requestedInitialVpsRps = 0;
             private float _requestedContinuousVpsRps = 0;
             private bool _geolocationSmoothingEnabled = false;
+            private bool _deviceMapLocalizationEnabled = false;
+            private int _deviceMapLocalizationFramerate = 0;
+            private bool _vpsDebuggerEnabled = false;
 
             private bool _configDirty;
 
@@ -138,6 +142,42 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     if (_geolocationSmoothingEnabled != value)
                     {
                         _geolocationSmoothingEnabled = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override bool DeviceMapLocalizationEnabled
+            {
+                set
+                {
+                    if (_deviceMapLocalizationEnabled != value)
+                    {
+                        _deviceMapLocalizationEnabled = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override int DeviceMapLocalizationFramerate
+            {
+                set
+                {
+                    if (_deviceMapLocalizationFramerate != value)
+                    {
+                        _deviceMapLocalizationFramerate = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override bool VpsDebuggerEnabled
+            {
+                set
+                {
+                    if (_vpsDebuggerEnabled != value)
+                    {
+                        _vpsDebuggerEnabled = value;
                         MarkConfigurationDirty();
                     }
                 }
@@ -241,41 +281,45 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     vpsLocalizationEnabled = _requestedVpsLocalizationEnabled,
                     initialVpsRequestsPerSecond = _requestedInitialVpsRps,
                     continuousVpsRequestsPerSecond = _requestedContinuousVpsRps,
-                    geolocationSmoothingEnabled = _geolocationSmoothingEnabled
+                    geolocationSmoothingEnabled = _geolocationSmoothingEnabled,
+                    deviceMapLocalizationEnabled = _deviceMapLocalizationEnabled,
+                    deviceMapLocalizationFramerate = _deviceMapLocalizationFramerate,
+                    vpsDebuggerEnabled = _vpsDebuggerEnabled
                 };
 
                 _api.Configure(_nativeProviderHandle, config).ThrowExceptionIfNeeded();
             }
 
-            public override XRVps2Transformer GetLatestTransformer()
+            public override XRVps2Localization GetLatestLocalization()
             {
                 if (!_nativeProviderHandle.IsValidHandle())
                 {
-                    return new XRVps2Transformer { TrackingState = Vps2TrackingState.Unavailable };
+                    return new XRVps2Localization { TrackingState = Vps2TrackingState.Unavailable };
                 }
 
-                _api.GetLatestTransformer
+                _api.GetLatestLocalization
                 (
                     _nativeProviderHandle,
-                    out IApi.NsdkVps2Transformer transformerOut
+                    out IApi.NsdkVps2Localization localizationOut
                 ).ThrowExceptionIfNeeded();
 
-                return new XRVps2Transformer
+                return new XRVps2Localization
                 {
-                    TrackingState = (Vps2TrackingState)transformerOut.trackingState,
-                    ReferenceLatitude = transformerOut.referenceLatitudeDegrees,
-                    ReferenceLongitude = transformerOut.referenceLongitudeDegrees,
-                    ReferenceAltitude = transformerOut.referenceAltitudeMeters,
-                    TrackingToEdn = transformerOut.trackingToRelativeLonNegAltLat.FromColumnMajorArray()
+                    TrackingState = (Vps2TrackingState)localizationOut.trackingState,
+                    ReferenceLatitude = localizationOut.referenceLatitudeDegrees,
+                    ReferenceLongitude = localizationOut.referenceLongitudeDegrees,
+                    ReferenceAltitude = localizationOut.referenceAltitudeMeters,
+                    TrackingToEdn = localizationOut.trackingToRelativeLonNegAltLat.FromColumnMajorArray()
                 };
             }
 
-            public override XRVps2Geolocation GetGeolocation(XRVps2Transformer transformer, Pose pose)
+            public override XRVps2Geolocation GetDeviceGeolocation(
+                HeadingMode headingMode = HeadingMode.CameraDirection)
             {
-                _api.GetGeolocation
+                _api.GetDeviceGeolocation
                 (
-                    ConvertToNsdk(transformer),
-                    pose.FromUnityToNsdk(),
+                    _nativeProviderHandle,
+                    headingMode,
                     out IApi.NsdkVps2GeolocationData locationOut
                 ).ThrowExceptionIfNeeded();
 
@@ -292,12 +336,13 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     Latitude = locationOut.geolocationData.latitude,
                     Longitude = locationOut.geolocationData.longitude,
                     Altitude = locationOut.geolocationData.altitude,
-                    HeadingEdn = locationOut.geolocationData.heading_edn,
+                    Heading = locationOut.geolocationData.heading_edn,
                     OrientationEdn = orientation
                 };
 
                 return new XRVps2Geolocation
                 {
+                    TrackingState = (Vps2TrackingState)locationOut.trackingState,
                     Geolocation = geolocation,
                     HorizontalAccuracy = locationOut.horizontalAccuracyMeters,
                     VerticalAccuracy = locationOut.verticalAccuracyMeters,
@@ -307,7 +352,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
 
             public override XRVps2Pose GetPose
             (
-                XRVps2Transformer transformer,
+                XRVps2Localization localization,
                 double latitude,
                 double longitude,
                 double altitude,
@@ -327,7 +372,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
 
                 _api.GetPose
                 (
-                    ConvertToNsdk(transformer),
+                    ConvertToNsdk(localization),
                     nsdkGeolocation,
                     out IApi.NsdkVps2Pose poseOut
                 ).ThrowExceptionIfNeeded();
@@ -341,11 +386,11 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 };
             }
 
-            public override bool TryCreateAnchor(Pose pose, out XRPersistentAnchor anchor)
+            public override bool TryCreateAnchor(Pose pose, out XRVps2Anchor anchor)
             {
                 if (!_nativeProviderHandle.IsValidHandle())
                 {
-                    anchor = new XRPersistentAnchor();
+                    anchor = new XRVps2Anchor();
                     return false;
                 }
 
@@ -355,19 +400,19 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 if (!nsdkStatus.IsOk())
                 {
                     Log.Warning($"Failed to create anchor due to error: {nsdkStatus}");
-                    anchor = new XRPersistentAnchor();
+                    anchor = new XRVps2Anchor();
                     return false;
                 }
 
-                anchor = CreateXRPersistentAnchor(anchorIdOut);
+                anchor = CreateXRVps2Anchor(anchorIdOut);
                 return true;
             }
 
-            public override bool TryTrackAnchor(string anchorPayload, out XRPersistentAnchor anchor)
+            public override bool TryTrackAnchor(string anchorPayload, out XRVps2Anchor anchor)
             {
                 if (!_nativeProviderHandle.IsValidHandle())
                 {
-                    anchor = new XRPersistentAnchor();
+                    anchor = new XRVps2Anchor();
                     return false;
                 }
 
@@ -381,21 +426,21 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 if (!nsdkStatus.IsOk())
                 {
                     Log.Warning($"Failed to track anchor due to error: {nsdkStatus}");
-                    anchor = new XRPersistentAnchor();
+                    anchor = new XRVps2Anchor();
                     return false;
                 }
 
-                anchor = CreateXRPersistentAnchor(anchorIdOut);
+                anchor = CreateXRVps2Anchor(anchorIdOut);
                 return true;
             }
 
-            private XRPersistentAnchor CreateXRPersistentAnchor(byte[] anchorIdBuffer)
+            private XRVps2Anchor CreateXRVps2Anchor(byte[] anchorIdBuffer)
             {
                 string anchorId = Encoding.UTF8.GetString(anchorIdBuffer, 0, IApi.NSDK_VPS2_ANCHOR_ID_SIZE);
                 TrackableId trackableId = TrackableIdExtension.FromNativeUuid(anchorId);
                 _trackedAnchorIds.Add(trackableId, anchorId);
 
-                return new XRPersistentAnchor(trackableId);
+                return new XRVps2Anchor(trackableId);
             }
 
             public override bool TryRemoveAnchor(TrackableId trackableId)
@@ -417,10 +462,10 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 return false;
             }
 
-            public override TrackableChanges<XRPersistentAnchor> GetChanges(Allocator allocator)
+            public override TrackableChanges<XRVps2Anchor> GetChanges(Allocator allocator)
             {
-                var added = new List<XRPersistentAnchor>();
-                var updated = new List<XRPersistentAnchor>();
+                var added = new List<XRVps2Anchor>();
+                var updated = new List<XRVps2Anchor>();
                 var removed = new List<TrackableId>();
 
                 var currentAnchorIds = new HashSet<TrackableId>();
@@ -436,17 +481,40 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     }
 
                     var pose = updateOut.pose.FromColumnMajorArray().FromNsdkToUnity();
-                    var anchor = new XRPersistentAnchor(
+
+                    XRGeolocation? geolocation = null;
+                    if (updateOut.hasGeolocation != 0)
+                    {
+                        var orientation = new Quaternion
+                        (
+                            updateOut.geolocationData.orientation_edn_x,
+                            updateOut.geolocationData.orientation_edn_y,
+                            updateOut.geolocationData.orientation_edn_z,
+                            updateOut.geolocationData.orientation_edn_w
+                        );
+
+                        geolocation = new XRGeolocation
+                        {
+                            Latitude = updateOut.geolocationData.latitude,
+                            Longitude = updateOut.geolocationData.longitude,
+                            Altitude = updateOut.geolocationData.altitude,
+                            Heading = updateOut.geolocationData.heading_edn,
+                            OrientationEdn = orientation
+                        };
+                    }
+
+                    var anchor = new XRVps2Anchor(
                         anchorId.Key,
                         new Pose(pose.GetPosition(), pose.rotation),
                         _api.ConvertTrackingStateToUnity(updateOut.trackingState),
                         _api.ConvertTrackingStateReasonToUnity(updateOut.trackingStateReason),
-                        new XRPersistentAnchorPayload(),
+                        new XRVps2AnchorPayload(),
                         updateOut.timestamp,
-                        updateOut.confidence
+                        updateOut.confidence,
+                        geolocation
                     );
 
-                    if (anchor.trackingStateReason == TrackingStateReason.Removed)
+                    if (anchor.trackingStateReason == Vps2AnchorTrackingStateReason.Removed)
                     {
                         removed.Add(anchorId.Key);
                     }
@@ -474,8 +542,8 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 // Update seen anchor IDs for next call
                 _seenAnchorIds = currentAnchorIds;
 
-                var addedChanges = new NativeArray<XRPersistentAnchor>(added.Count, Allocator.Temp);
-                var updatedChanges = new NativeArray<XRPersistentAnchor>(updated.Count, Allocator.Temp);
+                var addedChanges = new NativeArray<XRVps2Anchor>(added.Count, Allocator.Temp);
+                var updatedChanges = new NativeArray<XRVps2Anchor>(updated.Count, Allocator.Temp);
                 var removedChanges = new NativeArray<TrackableId>(removed.Count, Allocator.Temp);
 
                 for (int i = 0; i < added.Count; i++)
@@ -493,7 +561,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     removedChanges[i] = removed[i];
                 }
 
-                return TrackableChanges<XRPersistentAnchor>.CopyFrom
+                return TrackableChanges<XRVps2Anchor>.CopyFrom
                 (
                     addedChanges,
                     updatedChanges,
@@ -504,16 +572,17 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
 
             public override bool GetAnchorPayload(TrackableId trackableId, out string payload)
             {
+                payload = null;
+
                 if (!_nativeProviderHandle.IsValidHandle())
                 {
-                    payload = default;
                     return false;
                 }
 
                 string anchorId = trackableId.ToNsdkHexString();
                 var anchorIdBuffer = Encoding.UTF8.GetBytes(anchorId, 0, IApi.NSDK_VPS2_ANCHOR_ID_SIZE);
                 var nsdkStatus =
-                    _api.GetAnchorPayload(_nativeProviderHandle, anchorIdBuffer, out var ptr, out var size);
+                    _api.GetAnchorPayload(_nativeProviderHandle, anchorIdBuffer, out var ptr, out var size, out var handle);
 
                 if (nsdkStatus.IsOk())
                 {
@@ -525,16 +594,25 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     }
 
                     payload = Encoding.UTF8.GetString(bytes);
-                    return true;
                 }
 
-                payload = default;
-                return false;
+                if (handle.IsValidHandle())
+                {
+                    NsdkExternUtils.ReleaseResource(handle);
+                }
+
+                return payload != null;
             }
 
-            public override List<XRVps2NetworkRequestRecord> GetLatestNetworkRequestRecords()
+            public override List<XRVps2LocalizationRequestRecord> GetLatestLocalizationRequestRecords()
             {
-                _api.GetLatestNetworkRequestRecords
+                var records = new List<XRVps2LocalizationRequestRecord>();
+                if (!_nativeProviderHandle.IsValidHandle())
+                {
+                    return records;
+                }
+
+                _api.GetLatestLocalizationRequestRecords
                 (
                     _nativeProviderHandle,
                     out var recordsPtr,
@@ -542,16 +620,28 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     out var handle
                 ).ThrowExceptionIfNeeded();
 
-                var records = new List<XRVps2NetworkRequestRecord>();
+                if (!(recordsPtr.IsValidHandle() && recordsCount > 0 && handle.IsValidHandle()))
+                {
+                    return records;
+                }
+
+                var recordSize = Marshal.SizeOf<IApi.NsdkVps2NetworkResponseRecord>();
                 for (int i = 0; i < recordsCount; i++)
                 {
-                    var nativeRecord = Marshal.PtrToStructure<IApi.NsdkVps2NetworkResponseRecord>(recordsPtr);
-                    var xrRecord = new XRVps2NetworkRequestRecord
+                    var recordPtr = recordsPtr + i * recordSize;
+                    var nativeRecord = Marshal.PtrToStructure<IApi.NsdkVps2NetworkResponseRecord>(recordPtr);
+
+                    // identifier is a 32-char hex-encoded UUID (same format as anchor IDs)
+                    string hexId = Encoding.UTF8.GetString(
+                        nativeRecord.requestIdentifier, 0, IApi.NSDK_VPS2_ANCHOR_ID_SIZE);
+                    Guid requestId = Guid.TryParse(hexId, out var parsed) ? parsed : Guid.Empty;
+
+                    var xrRecord = new XRVps2LocalizationRequestRecord
                     {
-                        //RequestId = Guid.
-                        Status = (NetworkRequestStatus)nativeRecord.status,
-                        RequestType = (Vps2NetworkRequestType)nativeRecord.type,
-                        ErrorCode = (NetworkError)nativeRecord.error,
+                        RequestId = requestId,
+                        Status = (Vps2LocalizationRequestStatus)nativeRecord.status,
+                        RequestType = (Vps2LocalizationRequestType)nativeRecord.type,
+                        ErrorCode = (Vps2LocalizationError)nativeRecord.error,
                         StartTimeMs = nativeRecord.startTimeMs,
                         EndTimeMs = nativeRecord.endTimeMs,
                         FrameId = nativeRecord.frameId,
@@ -563,15 +653,72 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 return records;
             }
 
-            private static IApi.NsdkVps2Transformer ConvertToNsdk(XRVps2Transformer transformer)
+            public override List<VpsDebuggerDataEvent> GetLatestDebuggerData()
             {
-                return new IApi.NsdkVps2Transformer
+                var events = new List<VpsDebuggerDataEvent>();
+
+                if (!_nativeProviderHandle.IsValidHandle())
                 {
-                    trackingState = (int)transformer.TrackingState,
-                    referenceLatitudeDegrees = transformer.ReferenceLatitude,
-                    referenceLongitudeDegrees = transformer.ReferenceLongitude,
-                    referenceAltitudeMeters = transformer.ReferenceAltitude,
-                    trackingToRelativeLonNegAltLat = transformer.TrackingToEdn.ToColumnMajorArray()
+                    return events;
+                }
+
+                _api.GetLatestDebuggerLogs(
+                    _nativeProviderHandle,
+                    out var logsPtr,
+                    out var count,
+                    out var handle
+                ).ThrowExceptionIfNeeded();
+
+                if (!(logsPtr.IsValidHandle() && count > 0 && handle.IsValidHandle()))
+                {
+                    // Empty, not null
+                    return events;
+                }
+
+                var logs = Marshal.PtrToStringAnsi(logsPtr, count);
+                NsdkExternUtils.ReleaseResource(handle);
+
+                var lines = logs.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var line in lines)
+                {
+                    var debuggerEvent = VpsDebuggerDataEvent.Parser.ParseJson(line);
+                    events.Add(debuggerEvent);
+                }
+
+                return events;
+            }
+
+            public override bool GetSessionId(out string sessionId)
+            {
+                if (!_nativeProviderHandle.IsValidHandle())
+                {
+                    sessionId = null;
+                    return false;
+                }
+
+                var sessionIdOut = new byte[IApi.NSDK_VPS2_SESSION_ID_SIZE];
+                var nsdkStatus = _api.GetSessionId(_nativeProviderHandle, ref sessionIdOut);
+
+                if (!nsdkStatus.IsOk())
+                {
+                    Log.Warning($"Failed to get session id due to error: {nsdkStatus}");
+                    sessionId = null;
+                    return false;
+                }
+
+                sessionId = Encoding.UTF8.GetString(sessionIdOut, 0, IApi.NSDK_VPS2_SESSION_ID_SIZE);
+                return true;
+            }
+
+            private static IApi.NsdkVps2Localization ConvertToNsdk(XRVps2Localization localization)
+            {
+                return new IApi.NsdkVps2Localization
+                {
+                    trackingState = (int)localization.TrackingState,
+                    referenceLatitudeDegrees = localization.ReferenceLatitude,
+                    referenceLongitudeDegrees = localization.ReferenceLongitude,
+                    referenceAltitudeMeters = localization.ReferenceAltitude,
+                    trackingToRelativeLonNegAltLat = localization.TrackingToEdn.ToColumnMajorArray()
                 };
             }
         }

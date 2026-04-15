@@ -99,7 +99,6 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             public IntPtr email;
             public IntPtr status;
             public long created_timestamp;
-            public IntPtr organization_id;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -138,6 +137,25 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             public int status;
             public int error;
             public IntPtr user;  // ARDK_SitesManager_UserInfo* (single item or null)
+            public IntPtr handle;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NativeSiteAssetsInfo
+        {
+            public NativeSiteInfo site;
+            public IntPtr assets;      // ARDK_SitesManager_AssetInfo*
+            public int assets_size;
+            public double distance;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NativeSiteAssetsResult
+        {
+            public int status;
+            public int error;
+            public IntPtr site_assets;  // ARDK_SitesManager_SiteAssetsInfo*
+            public int site_assets_size;
             public IntPtr handle;
         }
 
@@ -200,6 +218,15 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
         [DllImport(NsdkPlugin.Name)]
         internal static extern NsdkStatus ARDK_SitesManager_RequestSelfUserInfo(
             IntPtr nsdk_handle,
+            out ulong request_id_out);
+
+        [DllImport(NsdkPlugin.Name)]
+        private static extern NsdkStatus ARDK_SitesManager_RequestSiteAssetsByLocation(
+            IntPtr nsdk_handle,
+            double lat,
+            double lng,
+            double radius_meters,
+            int asset_type,  // ARDK_SitesManager_AssetType
             out ulong request_id_out);
 
         // ============================================================================
@@ -267,6 +294,14 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             return ARDK_SitesManager_RequestSelfUserInfo(nsdkHandle, out requestId);
         }
 
+        internal static NsdkStatus RequestSiteAssetsByLocation(
+            IntPtr nsdkHandle, double lat, double lng, double radiusMeters, AssetType assetType,
+            out ulong requestId)
+        {
+            return ARDK_SitesManager_RequestSiteAssetsByLocation(
+                nsdkHandle, lat, lng, radiusMeters, (int)assetType, out requestId);
+        }
+
         // ============================================================================
         // Result polling methods
         // ============================================================================
@@ -294,6 +329,12 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             IntPtr nsdk_handle,
             ulong request_id,
             out NativeUserResult result_out);
+
+        [DllImport(NsdkPlugin.Name)]
+        internal static extern NsdkStatus ARDK_SitesManager_GetSiteAssetsResult(
+            IntPtr nsdk_handle,
+            ulong request_id,
+            out NativeSiteAssetsResult result_out);
 
         // ============================================================================
         // Conversion helpers
@@ -419,8 +460,7 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
                 PtrToString(native.last_name) ?? "",
                 PtrToString(native.email) ?? "",
                 PtrToString(native.status) ?? "",
-                native.created_timestamp,
-                PtrToString(native.organization_id)
+                native.created_timestamp
             );
         }
 
@@ -462,6 +502,27 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             {
                 var native = Marshal.PtrToStructure<NativeAssetInfo>(IntPtr.Add(ptr, i * structSize));
                 result[i] = ConvertAsset(native);
+            }
+            return result;
+        }
+
+        internal static SiteAssetsInfo ConvertSiteAssetsInfo(NativeSiteAssetsInfo native)
+        {
+            var site = ConvertSite(native.site);
+            var assets = ConvertAssets(native.assets, native.assets_size);
+            return new SiteAssetsInfo(site, assets, native.distance);
+        }
+
+        internal static SiteAssetsInfo[] ConvertSiteAssets(IntPtr ptr, int count)
+        {
+            if (ptr == IntPtr.Zero || count <= 0) return Array.Empty<SiteAssetsInfo>();
+
+            var result = new SiteAssetsInfo[count];
+            int structSize = Marshal.SizeOf<NativeSiteAssetsInfo>();
+            for (int i = 0; i < count; i++)
+            {
+                var native = Marshal.PtrToStructure<NativeSiteAssetsInfo>(IntPtr.Add(ptr, i * structSize));
+                result[i] = ConvertSiteAssetsInfo(native);
             }
             return result;
         }

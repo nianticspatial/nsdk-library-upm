@@ -1,7 +1,5 @@
 // Copyright Niantic Spatial.
 
-using System;
-
 namespace NianticSpatial.NSDK.AR.API
 {
     // Defined in ardk_status.h
@@ -14,11 +12,5 @@ namespace NianticSpatial.NSDK.AR.API
         NullNsdkHandle,
         FeatureDoesNotExist,
         FeatureAlreadyExists,
-
-        [Obsolete]
-        NoData,
-
-        [Obsolete]
-        InternalError
     }
 }

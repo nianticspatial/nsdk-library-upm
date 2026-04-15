@@ -119,9 +119,6 @@ namespace NianticSpatial.NSDK.AR.Editor.Auth
                 _ = obj.LoadAsync();
             }
 
-            // Keep the auth environment in NsdkSettings in-sync with the auth environment in the editor settings.
-            getNsdkSettings().AuthEnvironment = obj.AuthEnvironment;
-
             return obj;
         }
 
@@ -158,6 +155,10 @@ namespace NianticSpatial.NSDK.AR.Editor.Auth
         private async Task LoadAsync()
         {
             await _store.LoadAsync(this);
+
+            // Keep the auth environment in NsdkSettings in-sync with the auth environment in the editor settings.
+            _getNsdkSettings().AuthEnvironment = AuthEnvironment;
+
             OnLoaded?.Invoke();
         }
     }

@@ -11,16 +11,13 @@ namespace NianticSpatial.NSDK.AR.Loader
 {
     internal class EndpointSettings
     {
-        public string ApiKey { get; set; }
         public string ScanningEndpoint { get; set; }
         public string VpsEndpoint { get; set; }
-        public string VpsCoverageEndpoint { get; set; }
         public string SharedArEndpoint { get; set; }
         public string FastDepthSemanticsEndpoint { get; set; }
         public string DefaultDepthSemanticsEndpoint { get; set; }
         public string SmoothDepthSemanticsEndpoint { get; set; }
         public string ScanningSqcEndpoint { get; set; }
-        public string ObjectDetectionEndpoint { get; set; }
         public string TelemetryEndpoint { get; set; }
         public string TelemetryApiKey { get; set; }
         public string IdentityEndpoint { get; set; }
@@ -33,22 +30,16 @@ namespace NianticSpatial.NSDK.AR.Loader
         {
             EndpointSettings defaultSettings = new EndpointSettings()
             {
-                // Do NOT add api key for default values. But leave it as string.Empty. Not null. Else Unity will crash
-                ApiKey = string.Empty,
-
                 ScanningEndpoint = "https://wayfarer-ugc-api.nianticspatial.com/api/proto/v1/",
                 ScanningSqcEndpoint = "https://armodels.eng.nianticspatial.com/sqc/sqc3_enc.tar.gz",
 
                 SharedArEndpoint = "marsh-prod.nianticspatial.com",
 
                 VpsEndpoint = "https://vps-frontend.nianticspatial.com/web",
-                VpsCoverageEndpoint = "https://vps-coverage-api.nianticspatial.com/",
 
                 DefaultDepthSemanticsEndpoint = "https://armodels.eng.nianticspatial.com/niantic_ca_v1.2.bin",
                 FastDepthSemanticsEndpoint = "https://armodels.eng.nianticspatial.com/niantic_ca_v1.2_fast.bin",
                 SmoothDepthSemanticsEndpoint = "https://armodels.eng.nianticspatial.com/niantic_ca_v1.2_antiflicker.bin",
-
-                ObjectDetectionEndpoint = "https://armodels.eng.nianticspatial.com/niantic_ob_v0.4_full.bin",
 
                 TelemetryEndpoint = "https://analytics.nianticspatial.com",
                 TelemetryApiKey = "b7d03117-f80f-4039-8488-3466633f8639",
@@ -111,16 +102,13 @@ namespace NianticSpatial.NSDK.AR.Loader
 
         internal void CopyFrom(EndpointSettings source)
         {
-            ApiKey = source.ApiKey;
             ScanningEndpoint = source.ScanningEndpoint;
             VpsEndpoint = source.VpsEndpoint;
-            VpsCoverageEndpoint = source.VpsCoverageEndpoint;
             SharedArEndpoint = source.SharedArEndpoint;
             FastDepthSemanticsEndpoint = source.FastDepthSemanticsEndpoint;
             DefaultDepthSemanticsEndpoint = source.DefaultDepthSemanticsEndpoint;
             SmoothDepthSemanticsEndpoint = source.SmoothDepthSemanticsEndpoint;
             ScanningSqcEndpoint = source.ScanningSqcEndpoint;
-            ObjectDetectionEndpoint = source.ObjectDetectionEndpoint;
             TelemetryEndpoint = source.TelemetryEndpoint;
             TelemetryApiKey = source.TelemetryApiKey;
             IdentityEndpoint = source.IdentityEndpoint;

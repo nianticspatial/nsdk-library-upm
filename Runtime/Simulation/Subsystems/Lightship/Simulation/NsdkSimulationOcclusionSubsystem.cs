@@ -22,7 +22,6 @@ namespace NianticSpatial.NSDK.AR.Simulation
         {
             const string id = "Nsdk-Simulation-Occlusion";
 
-#if UNITY_6000_0_OR_NEWER
             var xrOcclusionSubsystemCinfo = new XROcclusionSubsystemDescriptor.Cinfo()
             {
                 id = id,
@@ -36,21 +35,6 @@ namespace NianticSpatial.NSDK.AR.Simulation
             };
 
             XROcclusionSubsystemDescriptor.Register(xrOcclusionSubsystemCinfo);
-#else
-            var xrOcclusionSubsystemCinfo = new XROcclusionSubsystemCinfo()
-            {
-                id = id,
-                providerType = typeof(NsdkSimulationProvider),
-                subsystemTypeOverride = typeof(NsdkSimulationOcclusionSubsystem),
-                humanSegmentationStencilImageSupportedDelegate = () => Supported.Unsupported,
-                humanSegmentationDepthImageSupportedDelegate = () => Supported.Unsupported,
-                environmentDepthImageSupportedDelegate = () => Supported.Supported,
-                environmentDepthConfidenceImageSupportedDelegate = () => Supported.Supported,
-                environmentDepthTemporalSmoothingSupportedDelegate = () => Supported.Unsupported
-            };
-
-            XROcclusionSubsystem.Register(xrOcclusionSubsystemCinfo);
-#endif
         }
 
         private class NsdkSimulationProvider : Provider
@@ -329,12 +313,10 @@ namespace NianticSpatial.NSDK.AR.Simulation
                 }
             }
 
-#if UNITY_6000_0_OR_NEWER
             public override ShaderKeywords GetShaderKeywords() =>
                 _occlusionPreferenceMode == OcclusionPreferenceMode.NoOcclusion
                     ? new ShaderKeywords(disabledKeywords: s_environmentDepthEnabledMaterialKeywords.AsReadOnly())
                     : new ShaderKeywords(enabledKeywords: s_environmentDepthEnabledMaterialKeywords.AsReadOnly());
-#endif
         }
     }
 }

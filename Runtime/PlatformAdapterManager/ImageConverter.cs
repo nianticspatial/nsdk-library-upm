@@ -132,30 +132,6 @@ namespace NianticSpatial.NSDK.AR.PAM
             image.filterMode = ogFilterMode;
         }
 
-        [Obsolete("Is used in deprecated PAM pipeline. Use new ConvertCameraIntrinsics instead, which is more generic.")]
-        public static void ConvertCameraIntrinsics
-        (
-            XRCameraIntrinsics inputIntrinsics,
-            Vector2Int outputResolution,
-            NativeArray<float> destinationBuffer
-        )
-        {
-            var convertedIntrinsics =
-                ConvertCameraIntrinsics
-                (
-                    inputIntrinsics.focalLength,
-                    inputIntrinsics.principalPoint,
-                    inputIntrinsics.resolution,
-                    outputResolution
-                );
-
-            destinationBuffer[0] = convertedIntrinsics.FocalLengthX;
-            destinationBuffer[4] = convertedIntrinsics.FocalLengthY;
-            destinationBuffer[6] = convertedIntrinsics.PrincipalPointX;
-            destinationBuffer[7] = convertedIntrinsics.PrincipalPointY;
-            destinationBuffer[8] = 1;
-        }
-
         // Resizes intrinsics doing first the crop, then the scale.
         // Writes out the result into the destination buffer,
         // flattening the 3x3 matrix into a column-major array

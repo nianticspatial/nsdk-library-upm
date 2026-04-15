@@ -1,16 +1,15 @@
 // Copyright 2026 Niantic Spatial.
 
 using System;
+using System.Linq;
+using Niantic.Lightship.AR.Protobuf;
 using NianticSpatial.NSDK.AR.Common;
 using NianticSpatial.NSDK.AR.Utilities;
 using NianticSpatial.NSDK.AR.XRSubsystems;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using NianticSpatial.NSDK.AR.PersistentAnchors;
-using Unity.Collections;
-using Unity.Collections.LowLevel.Unsafe;
 
-namespace NianticSpatial.NSDK.AR
+namespace NianticSpatial.NSDK.AR.VPS2
 {
     [PublicAPI]
     [DisallowMultipleComponent]
@@ -19,29 +18,44 @@ namespace NianticSpatial.NSDK.AR
         XRVps2Subsystem,
         XRVps2SubsystemDescriptor,
         XRVps2Subsystem.Provider,
-        XRPersistentAnchor,
-        ARPersistentAnchor>
+        XRVps2Anchor,
+        ARVps2Anchor>
     {
+        [Tooltip("The GameObject to use when creating an anchor.  If null, a new GameObject will be created.")]
+        [SerializeField]
+        private GameObject _defaultAnchorGameObject;
+
+        [Header("Configuration")]
         [SerializeField]
         private bool _universalLocalizationEnabled = true;
 
         [SerializeField]
-        private float _universalLocalizationRequestsPerSecond = 4;
+        private float _universalLocalizationRequestsPerSecond = 1;
 
         [SerializeField]
         private bool _vpsMapLocalizationEnabled = true;
 
         [SerializeField]
-        private float _initialVpsRequestsPerSecond = 4;
+        private float _initialVpsRequestsPerSecond = 1;
 
         [SerializeField]
-        private float _continuousVpsRequestsPerSecond = 1;
+        private float _continuousVpsRequestsPerSecond = 0.2f;
 
         [SerializeField]
         private bool _geolocationSmoothingEnabled = true;
 
+        [SerializeField]
+        private bool _deviceMapLocalizationEnabled = false;
+
+        [SerializeField]
+        private int _deviceMapLocalizationFramerate = 10;
+
+        [SerializeField]
+        private bool _vpsDebuggerEnabled = false;
+
         public bool UniversalLocalizationEnabled
         {
+            get => _universalLocalizationEnabled;
             set
             {
                 _universalLocalizationEnabled = value;
@@ -54,6 +68,7 @@ namespace NianticSpatial.NSDK.AR
 
         public float UniversalLocalizationRequestsPerSecond
         {
+            get => _universalLocalizationRequestsPerSecond;
             set
             {
                 _universalLocalizationRequestsPerSecond = value;
@@ -66,6 +81,7 @@ namespace NianticSpatial.NSDK.AR
 
         public bool VpsMapLocalizationEnabled
         {
+            get => _vpsMapLocalizationEnabled;
             set
             {
                 _vpsMapLocalizationEnabled = value;
@@ -78,6 +94,7 @@ namespace NianticSpatial.NSDK.AR
 
         public float InitialVpsRequestsPerSecond
         {
+            get => _initialVpsRequestsPerSecond;
             set
             {
                 _initialVpsRequestsPerSecond = value;
@@ -90,6 +107,7 @@ namespace NianticSpatial.NSDK.AR
 
         public float ContinuousVpsRequestsPerSecond
         {
+            get => _continuousVpsRequestsPerSecond;
             set
             {
                 _continuousVpsRequestsPerSecond = value;
@@ -102,6 +120,7 @@ namespace NianticSpatial.NSDK.AR
 
         public bool GeolocationSmoothingEnabled
         {
+            get => _geolocationSmoothingEnabled;
             set
             {
                 _geolocationSmoothingEnabled = value;
@@ -112,26 +131,80 @@ namespace NianticSpatial.NSDK.AR
             }
         }
 
-        public bool TryGetLatestTransformer(out XRVps2Transformer transformerOut)
+        public bool VpsDebuggerEnabled
+        {
+            get => _vpsDebuggerEnabled;
+            set
+            {
+                _vpsDebuggerEnabled = value;
+                if (subsystem != null)
+                {
+                    subsystem.VpsDebuggerEnabled = value;
+                }
+            }
+        }
+
+        public bool DeviceMapLocalizationEnabled
+        {
+            get => _deviceMapLocalizationEnabled;
+            set
+            {
+                _deviceMapLocalizationEnabled = value;
+                if (subsystem != null)
+                {
+                    subsystem.DeviceMapLocalizationEnabled = value;
+                }
+            }
+        }
+
+        public int DeviceMapLocalizationFramerate
+        {
+            get => _deviceMapLocalizationFramerate;
+            set
+            {
+                _deviceMapLocalizationFramerate = value;
+                if (subsystem != null)
+                {
+                    subsystem.DeviceMapLocalizationFramerate = value;
+                }
+            }
+        }
+
+        protected override GameObject GetPrefab() => _defaultAnchorGameObject;
+        protected override string gameObjectName => "VPS2 Persistent Anchor";
+
+        public event Action<XRVps2LocalizationRequestRecord> LocalizationRequestRecordAdded;
+        public event Action<VpsDebuggerDataEvent> DebuggerDataReceived;
+
+        public bool TryGetLatestLocalization(out XRVps2Localization localizationOut)
         {
             if (subsystem == null)
             {
-                transformerOut = new XRVps2Transformer();
+                localizationOut = new XRVps2Localization();
                 return false;
             }
 
-            var transformer = subsystem.GetLatestTransformer();
-            if (transformer.TrackingState == Vps2TrackingState.Unavailable)
+            var localization = subsystem.GetLatestLocalization();
+            if (localization.TrackingState == Vps2TrackingState.Unavailable)
             {
-                transformerOut = new XRVps2Transformer();
+                localizationOut = new XRVps2Localization();
                 return false;
             }
 
-            transformerOut = transformer;
+            localizationOut = localization;
             return true;
         }
 
-        public bool TryGetGeolocation(XRVps2Transformer transformer, Pose pose, out XRVps2Geolocation geolocationOut)
+        /// <summary>
+        /// Attempts to get the geolocation of the device's last known camera pose.
+        /// </summary>
+        /// <param name="geolocationOut">Receives the geolocation data on success.</param>
+        /// <param name="headingMode">Controls how the heading is derived.
+        /// Use <see cref="HeadingMode.CameraDirection"/> when the device is upright,
+        /// or <see cref="HeadingMode.DeviceTop"/> when flat or for a compass-style heading.</param>
+        /// <returns><c>true</c> if the subsystem is available; otherwise <c>false</c>.</returns>
+        public bool TryGetDeviceGeolocation(out XRVps2Geolocation geolocationOut,
+            HeadingMode headingMode = HeadingMode.CameraDirection)
         {
             if (subsystem == null)
             {
@@ -139,13 +212,13 @@ namespace NianticSpatial.NSDK.AR
                 return false;
             }
 
-            geolocationOut = subsystem.GetGeolocation(transformer, pose);
+            geolocationOut = subsystem.GetDeviceGeolocation(headingMode);
             return true;
         }
 
         public bool TryGetPose
         (
-            XRVps2Transformer transformer,
+            XRVps2Localization localization,
             double latitude,
             double longitude,
             double altitude,
@@ -159,11 +232,11 @@ namespace NianticSpatial.NSDK.AR
                 return false;
             }
 
-            poseOut = subsystem.GetPose(transformer, latitude, longitude, altitude, orientationEdn);
+            poseOut = subsystem.GetPose(localization, latitude, longitude, altitude, orientationEdn);
             return true;
         }
 
-        public bool TryCreateAnchor(Pose localPose, out ARPersistentAnchor anchorOut)
+        public bool TryCreateAnchor(Pose localPose, out ARVps2Anchor anchorOut)
         {
             if (subsystem != null && subsystem.TryCreateAnchor(localPose, out var anchor))
             {
@@ -175,7 +248,7 @@ namespace NianticSpatial.NSDK.AR
             return false;
         }
 
-        public bool TryTrackAnchor(string anchorPayload, out ARPersistentAnchor anchorOut)
+        public bool TryTrackAnchor(string anchorPayload, out ARVps2Anchor anchorOut)
         {
             if (subsystem != null)
             {
@@ -190,7 +263,7 @@ namespace NianticSpatial.NSDK.AR
             return false;
         }
 
-        public bool TryRemoveAnchor(ARPersistentAnchor anchor)
+        public void RemoveAnchor(ARVps2Anchor anchor)
         {
             if (anchor == null)
             {
@@ -199,14 +272,17 @@ namespace NianticSpatial.NSDK.AR
 
             if (subsystem == null)
             {
-                return false;
+                return;
             }
 
-            // TODO
-            return subsystem.TryRemoveAnchor(anchor.trackableId);
+            // Function surfaces log for failure
+            subsystem.TryRemoveAnchor(anchor.trackableId);
+
+            // Safe to call because the function no-ops if anchor is not pending addition
+            DestroyPendingTrackable(anchor.trackableId);
         }
 
-        public bool TryGetAnchorPayload(ARPersistentAnchor anchor, out string payload)
+        public bool TryGetAnchorPayload(ARVps2Anchor anchor, out string payload)
         {
             if (anchor == null)
             {
@@ -222,6 +298,35 @@ namespace NianticSpatial.NSDK.AR
             return subsystem.GetAnchorPayload(anchor.trackableId, out payload);
         }
 
+        public bool GetSessionId(out string sessionId)
+        {
+            if (subsystem == null)
+            {
+                sessionId = null;
+                return false;
+            }
+
+            return subsystem.GetSessionId(out sessionId);
+        }
+
+
+        protected override void OnDisable()
+        {
+            RemoveAllAnchorsImmediate();
+            base.OnDisable();
+        }
+
+        private void RemoveAllAnchorsImmediate()
+        {
+            var trackables = m_Trackables.Values.ToArray();
+            foreach (var trackable in trackables)
+            {
+                m_PendingAdds.Remove(trackable.trackableId);
+                m_Trackables.Remove(trackable.trackableId);
+                subsystem?.TryRemoveAnchor(trackable.trackableId);
+                Destroy(trackable.gameObject);
+            }
+        }
 
         // Callback before the subsystem is started (but after it is created).
         // Pushes the serialized configuration to the subsystem.
@@ -233,19 +338,28 @@ namespace NianticSpatial.NSDK.AR
             subsystem.InitialVpsRequestsPerSecond = _initialVpsRequestsPerSecond;
             subsystem.ContinuousVpsRequestsPerSecond = _continuousVpsRequestsPerSecond;
             subsystem.GeolocationSmoothingEnabled = _geolocationSmoothingEnabled;
+            subsystem.VpsDebuggerEnabled = _vpsDebuggerEnabled;
+            subsystem.DeviceMapLocalizationEnabled = _deviceMapLocalizationEnabled;
+            subsystem.DeviceMapLocalizationFramerate = _deviceMapLocalizationFramerate;
         }
 
-        private new ARPersistentAnchor CreateTrackableImmediate(XRPersistentAnchor xrPersistentAnchor)
+        protected override void Update()
         {
-            var trackableId = xrPersistentAnchor.trackableId;
-            if (base.m_Trackables.TryGetValue(trackableId, out var trackable))
+            base.Update();
+
+            if (subsystem == null) return;
+
+            var newRecords = subsystem.GetLatestLocalizationRequestRecords();
+            foreach (var record in newRecords)
             {
-                return trackable;
+                LocalizationRequestRecordAdded?.Invoke(record);
             }
 
-            return base.CreateTrackableImmediate(xrPersistentAnchor);
+            var newData = subsystem.GetLatestDebuggerData();
+            foreach (var data in newData)
+            {
+                DebuggerDataReceived?.Invoke(data);
+            }
         }
-
-        protected override string gameObjectName => "VPS2 Persistent Anchor";
     }
 }

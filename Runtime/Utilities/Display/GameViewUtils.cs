@@ -1,11 +1,9 @@
 // Copyright 2022-2026 Niantic Spatial.
 
-using System;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 using UnityEngine;
-using UnityEngine.XR.ARSubsystems;
 
 namespace NianticSpatial.NSDK.AR.Utilities
 {
@@ -27,16 +25,5 @@ namespace NianticSpatial.NSDK.AR.Utilities
             return ScreenOrientation.Portrait;
         }
 
-        [Obsolete("Use GetEditorScreenOrientation instead")]
-        // Note: Cannot wrap entire class in #if UNITY_EDITOR because this method was originally defined for
-        // all platforms.
-        public static ScreenOrientation GetGameViewAspectRatio(XRCameraParams cameraParams)
-        {
-#if UNITY_EDITOR
-            return GetEditorScreenOrientation();
-#else
-            return cameraParams.screenOrientation;
-#endif
-        }
     }
 }

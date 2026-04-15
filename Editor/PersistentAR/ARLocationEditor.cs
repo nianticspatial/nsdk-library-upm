@@ -3,9 +3,9 @@
 using System;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.LocationAR;
-using NianticSpatial.NSDK.AR.PersistentAnchors;
+using NianticSpatial.NSDK.AR.VPS2;
 using NianticSpatial.NSDK.AR.Subsystems;
-using NianticSpatial.NSDK.AR.VpsCoverage;
+using NianticSpatial.NSDK.AR.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,14 +38,14 @@ internal class ARLocationEditor : Editor
             new GUIContent
             (
                 "Payload",
-                $"The base 64 string representation of the {nameof(ARPersistentAnchorPayload)} from the provided manifest"
+                $"The base 64 string representation of the {nameof(ARVps2AnchorPayload)} from the provided manifest"
             );
 
         public static readonly GUIContent payloadFromUserLabel =
             new GUIContent
             (
                 "Payload",
-                $"The base 64 string from which to create an {nameof(ARPersistentAnchorPayload)}." +
+                $"The base 64 string from which to create an {nameof(ARVps2AnchorPayload)}." +
                 $"Overriden by the {nameof(ARLocationManifest)}'s payload if one is set."
             );
 
@@ -125,7 +125,7 @@ internal class ARLocationEditor : Editor
             arLocation.AssetGuid = GetAssetGuidFromManifest(_manifest);
 
             arLocation.Payload = _manifest
-                ? new ARPersistentAnchorPayload(_manifest.MeshOriginAnchorPayload)
+                ? new ARVps2AnchorPayload(_manifest.MeshOriginAnchorPayload)
                 : null;
             if (arLocation.MeshContainer)
             {
@@ -240,7 +240,7 @@ internal class ARLocationEditor : Editor
                     Log.Error("Not a valid base 64 string");
                 }
 
-                arLocation.Payload = valid ? new ARPersistentAnchorPayload(payload) : null;
+                arLocation.Payload = valid ? new ARVps2AnchorPayload(payload) : null;
                 EditorUtility.SetDirty(target);
             }
         }

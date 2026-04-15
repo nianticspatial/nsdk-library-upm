@@ -5,20 +5,20 @@ using UnityEngine;
 
 namespace NianticSpatial.NSDK.AR.Mapping.Api
 {
-    internal interface IMapStorageAccessApi : IDisposable
+    internal interface IMapStorageAccessApi
     {
         /// <summary>
-        /// Initialize the map storage feature. Call this before calling any other map storage functions.
+        /// Acquires a reference to the shared map storage access instance,
+        /// creating it if it does not yet exist.
         /// </summary>
-        /// <param name="unityContextHandle">Handle to the Unity context.</param>
-        /// <returns>True if successful, false otherwise.</returns>
-        bool Create(IntPtr unityContextHandle);
+        bool Acquire(IntPtr unityContextHandle);
 
         /// <summary>
-        /// Deinitialize the map storage feature, releasing all its resources.
+        /// Releases this consumer's reference to the shared map storage
+        /// access instance. The underlying resource is destroyed when
+        /// the last reference is released.
         /// </summary>
-        /// <returns>True if successful, false otherwise.</returns>
-        bool Destroy();
+        bool Release();
 
         /// <summary>
         /// Get the current map data.
@@ -63,7 +63,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
         /// </summary>
         /// <param name="anchorPayload">The payload of the anchor, encoded as a base64 string.</param>
         /// <returns>True if successful, false otherwise.</returns>
-        bool CreateRootAnchor(out byte[] anchorPayload);
+        bool CreateRootAnchor(out string anchorPayload);
 
         /// <summary>
         /// Extract the metadata from a map relative to an anchor on the map.
@@ -73,8 +73,7 @@ namespace NianticSpatial.NSDK.AR.Mapping.Api
         /// <param name="mapData">The map to extract the metadata from.</param>
         /// <param name="points">The positions of the feature points in the map.</param>
         /// <param name="errors">The error metric for each of the points in the map.</param>
-        /// <param name="usesLearnedFeatures">Whether the map uses learned features.</param>
         /// <returns>True if successful, false otherwise.</returns>
-        bool ExtractMapMetadataFromAnchor(byte[] anchorPayload, byte[] mapData, out Vector3[] points, out float[] errors, out bool usesLearnedFeatures);
+        bool ExtractMapMetadataFromAnchor(byte[] anchorPayload, byte[] mapData, out Vector3[] points, out float[] errors);
     }
 }

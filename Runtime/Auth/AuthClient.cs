@@ -5,6 +5,7 @@ using NianticSpatial.NSDK.AR.API;
 using NianticSpatial.NSDK.AR.Auth.Api;
 using NianticSpatial.NSDK.AR.Core;
 using NianticSpatial.NSDK.AR.Utilities;
+using NianticSpatial.NSDK.AR.Utilities.Logging;
 
 namespace NianticSpatial.NSDK.AR.Auth
 {
@@ -30,23 +31,6 @@ namespace NianticSpatial.NSDK.AR.Auth
             if (status != NsdkStatus.Ok)
             {
                 throw new InvalidOperationException($"Failed to set access token. Status: {status}");
-            }
-        }
-
-        /// <summary>
-        /// Sets the refresh token so native can refresh access tokens as needed.
-        /// </summary>
-        /// <param name="refreshToken">The refresh token string.</param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown if the NSDK context is not initialized or the operation fails.
-        /// </exception>
-        public static void SetRefreshToken(string refreshToken)
-        {
-            var nsdkHandle = GetNSDKHandle();
-            var status = NativeAuthApi.SetRefreshToken(nsdkHandle, refreshToken);
-            if (status != NsdkStatus.Ok)
-            {
-                throw new InvalidOperationException($"Failed to set refresh token. Status: {status}");
             }
         }
 
@@ -127,6 +111,21 @@ namespace NianticSpatial.NSDK.AR.Auth
                 throw new InvalidOperationException($"Failed to check authorization status. Status: {status}");
             }
             return isAuthorized;
+        }
+
+        /// <summary>
+        /// Clears cached auth tokens from persistent storage without requiring an NSDK context.
+        /// This is the preferred logout path — safe to call before NSDK is initialized or after
+        /// it has been destroyed. Any running session will pick up the cleared tokens on its next
+        /// reconciliation cycle.
+        /// </summary>
+        public static void StaticLogout()
+        {
+            var status = NativeAuthApi.StaticLogout();
+            if (status != NsdkStatus.Ok)
+            {
+                Log.Error($"[Auth] StaticLogout failed with status: {status}");
+            }
         }
 
         private static IntPtr GetNSDKHandle()

@@ -140,14 +140,12 @@ namespace NianticSpatial.NSDK.AR.Utilities.Auth
 
         public string BuildAuthorizationHeader(IAuthSettings settings)
         {
-            // There are two ways to authenticate with the API Gateway: access token and api key (eventually obsolete).
-            // If we have an access token, use it.
             if (!string.IsNullOrEmpty(settings.AccessToken))
             {
                 return $"Bearer {settings.AccessToken}";
             }
 
-            return settings.ApiKey;
+            return string.Empty;
         }
 
         public void LogAnyError(HttpResponseBase response, string context, string inputToken)
@@ -217,6 +215,11 @@ namespace NianticSpatial.NSDK.AR.Utilities.Auth
             // Split the token into its parts: Header, body, and signature. We are only interested in the body (the
             // 2nd part)
             var tokenParts = token.Split('.');
+            if (tokenParts.Length < 2)
+            {
+                throw new ArgumentException($"Token is not a valid JWT (expected at least 2 parts, got {tokenParts.Length}): {token}");
+            }
+
             var body = DecodeBase64Url(tokenParts[1]);
 
             return JsonUtility.FromJson<JwtTokenBody>(body);

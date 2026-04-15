@@ -9,6 +9,7 @@ using NianticSpatial.NSDK.AR.Core;
 using NianticSpatial.NSDK.AR.Sites.Api;
 using NianticSpatial.NSDK.AR.Utilities;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
+using UnityEngine;
 
 namespace NianticSpatial.NSDK.AR.Sites
 {
@@ -24,8 +25,8 @@ namespace NianticSpatial.NSDK.AR.Sites
         private const int DefaultTimeoutMs = 60000;
 
         private IntPtr _nsdkHandle;
-        private bool _isCreated;
         private bool _isDisposed;
+        private CancellationTokenRegistration _exitTokenRegistration;
 
         /// <summary>
         /// Creates a new SitesClient.
@@ -47,7 +48,11 @@ namespace NianticSpatial.NSDK.AR.Sites
                 throw new InvalidOperationException($"Failed to create Sites Manager. Status: {status}");
             }
 
-            _isCreated = true;
+            // Dispose early when the application is quitting (e.g. exiting play mode) so that
+            // the _isDisposed guard in PollForResultAsync prevents native calls into a destroyed context.
+            // Unity's destruction order is non-deterministic, so NsdkUnityContext may be torn down
+            // before SitesClientManager.OnDestroy() calls Dispose().
+            _exitTokenRegistration = Application.exitCancellationToken.Register(Dispose);
         }
 
         /// <summary>
@@ -66,6 +71,7 @@ namespace NianticSpatial.NSDK.AR.Sites
                 return;
             }
             _isDisposed = true;
+            _exitTokenRegistration.Dispose();
 
             // Note: We intentionally do NOT call ARDK_SitesManager_Destroy here.
             // The native NSDK manages component lifecycle - when the NSDK handle is destroyed,
@@ -73,7 +79,6 @@ namespace NianticSpatial.NSDK.AR.Sites
             // Calling Destroy explicitly can crash if NsdkUnityContext is already shut down.
 
             _nsdkHandle = IntPtr.Zero;
-            _isCreated = false;
         }
 
         // ============================================================================
@@ -250,6 +255,38 @@ namespace NianticSpatial.NSDK.AR.Sites
                 requestId, GetAssetResult, AssetResult.Failure, timeoutMs, cancellationToken);
         }
 
+        /// <summary>
+        /// Requests sites and assets near a GPS coordinate.
+        /// </summary>
+        /// <param name="lat">Latitude of the query coordinate, in degrees.</param>
+        /// <param name="lng">Longitude of the query coordinate, in degrees.</param>
+        /// <param name="radiusMeters">Search radius around the coordinate, in meters.</param>
+        /// <param name="assetType">The type of assets to filter results by.</param>
+        /// <param name="timeoutMs">Maximum time to wait for the request to complete.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>The site-assets result ordered by distance.</returns>
+        public async Task<SiteAssetsResult> RequestSiteAssetsByLocationAsync(
+            double lat,
+            double lng,
+            double radiusMeters,
+            AssetType assetType,
+            int timeoutMs = DefaultTimeoutMs,
+            CancellationToken cancellationToken = default)
+        {
+            ThrowIfDisposed();
+
+            var status = NativeSitesApi.RequestSiteAssetsByLocation(
+                _nsdkHandle, lat, lng, radiusMeters, assetType, out var requestId);
+            if (status != NsdkStatus.Ok)
+            {
+                Log.Error($"Failed to request site assets by location. Status: {status}");
+                return SiteAssetsResult.Failure(SitesError.UnexpectedError);
+            }
+
+            return await PollForResultAsync(
+                requestId, GetSiteAssetsResult, SiteAssetsResult.Failure, timeoutMs, cancellationToken);
+        }
+
         // ============================================================================
         // Polling helpers
         // ============================================================================
@@ -305,6 +342,12 @@ namespace NianticSpatial.NSDK.AR.Sites
 
                 if ((DateTime.UtcNow - startTime).TotalMilliseconds > timeoutMs)
                 {
+                    return createFailure(SitesError.UnexpectedError);
+                }
+
+                if (_isDisposed)
+                {
+                    Log.Warning("SitesClient attempted to poll for a network response when it has already been disposed.");
                     return createFailure(SitesError.UnexpectedError);
                 }
 
@@ -481,6 +524,43 @@ namespace NianticSpatial.NSDK.AR.Sites
             }
 
             return PollState<AssetResult>.InProgress();
+        }
+
+        private PollState<SiteAssetsResult> GetSiteAssetsResult(ulong requestId)
+        {
+            var status = NativeSitesApi.ARDK_SitesManager_GetSiteAssetsResult(
+                _nsdkHandle, requestId, out var nativeResult);
+
+            if (status != NsdkStatus.Ok)
+            {
+                return PollState<SiteAssetsResult>.Failed(SitesError.UnexpectedError);
+            }
+
+            var requestStatus = (SitesRequestStatus)nativeResult.status;
+
+            if (requestStatus == SitesRequestStatus.Success)
+            {
+                var entries = NativeSitesApi.ConvertSiteAssets(
+                    nativeResult.site_assets, nativeResult.site_assets_size);
+
+                if (nativeResult.handle != IntPtr.Zero)
+                {
+                    NsdkExternUtils.ReleaseResource(nativeResult.handle);
+                }
+
+                return PollState<SiteAssetsResult>.Success(SiteAssetsResult.Success(entries));
+            }
+
+            if (requestStatus == SitesRequestStatus.Failed)
+            {
+                if (nativeResult.handle != IntPtr.Zero)
+                {
+                    NsdkExternUtils.ReleaseResource(nativeResult.handle);
+                }
+                return PollState<SiteAssetsResult>.Failed((SitesError)nativeResult.error);
+            }
+
+            return PollState<SiteAssetsResult>.InProgress();
         }
 
         private void ThrowIfDisposed()

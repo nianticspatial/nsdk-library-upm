@@ -20,9 +20,9 @@ namespace NianticSpatial.NSDK.AR.Occlusion
         /// <summary>
         /// Message logged when an the semantics subsystem is attempted to be used without a semantics manager.
         /// </summary>
-        private const string k_MissingSemanticSegmentationManagerMessage =
-            "Could not find an active ARSemanticSegmentationManager. " +
-            "Please ensure that an active ARSemanticSegmentationManager is present in the scene.";
+        private const string k_MissingSceneSegmentationManagerMessage =
+            "Could not find an active ARSceneSegmentationManager. " +
+            "Please ensure that an active ARSceneSegmentationManager is present in the scene.";
 
         /// <summary>
         /// Minimum possible value for the optimal occlusion depth.

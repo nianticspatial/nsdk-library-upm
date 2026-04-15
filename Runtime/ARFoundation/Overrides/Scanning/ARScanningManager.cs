@@ -43,8 +43,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -73,8 +73,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -104,8 +104,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -133,8 +133,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -165,8 +165,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -199,8 +199,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -237,8 +237,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -268,8 +268,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -306,8 +306,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -341,8 +341,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -378,8 +378,8 @@ namespace NianticSpatial.NSDK.AR.Scanning
 
                 if (null != subsystem)
                 {
-                    if (subsystem.GetState() != XRScanningState.Ready &&
-                        subsystem.GetState() != XRScanningState.Stopped)
+                    if (subsystem.GetState() != ScanningState.Ready &&
+                        subsystem.GetState() != ScanningState.Stopped)
                     {
                         Log.Error("Scanning is currently in progress. " +
                             "The change will take effect after the current scan is completed.");
@@ -423,7 +423,7 @@ namespace NianticSpatial.NSDK.AR.Scanning
         /// The positions of voxels scanned with the camera.
         /// Each entry in the array corresponds to an entry in <see cref="VoxelColors"/> at the same index.
         /// These values can only be updated when <see cref="EnableVoxelVisualization"/> is true and scanning is
-        /// in the <see cref="XRScanningState.Started"/> state. Call <see cref="RequestVoxelUpdate"/> to update the
+        /// in the <see cref="ScanningState.Started"/> state. Call <see cref="RequestVoxelUpdate"/> to update the
         /// underlying map, and then call <see cref="TryGetVoxelBuffer"/> to populate with the latest values.
         /// </summary>
         public NativeArray<Vector3> VoxelPositions => _voxelPositions;
@@ -434,7 +434,7 @@ namespace NianticSpatial.NSDK.AR.Scanning
         /// The color of each voxel.
         /// Each entry in the array corresponds to an entry in <see cref="VoxelPositions"/> at the same index.
         /// These values can only be updated when <see cref="EnableVoxelVisualization"/> is true and scanning is
-        /// in the <see cref="XRScanningState.Started"/> state. Call <see cref="RequestVoxelUpdate"/> to update the
+        /// in the <see cref="ScanningState.Started"/> state. Call <see cref="RequestVoxelUpdate"/> to update the
         /// underlying map, and then call <see cref="TryGetVoxelBuffer"/> to populate with the latest values.
         /// </summary>
         public NativeArray<Color32> VoxelColors => _voxelColors;
@@ -445,7 +445,7 @@ namespace NianticSpatial.NSDK.AR.Scanning
         /// The normal vector of each voxel.
         /// Each entry in the array corresponds to an entry in <see cref="VoxelPositions"/> at the same index.
         /// These values can only be updated when <see cref="EnableVoxelVisualization"/> is true and scanning is
-        /// in the <see cref="XRScanningState.Started"/> state. Call <see cref="RequestVoxelUpdate"/> to update the
+        /// in the <see cref="ScanningState.Started"/> state. Call <see cref="RequestVoxelUpdate"/> to update the
         /// underlying map, and then call <see cref="TryGetVoxelBuffer"/> to populate with the latest values.
         /// </summary>
         public NativeArray<Vector3> VoxelNormals => _voxelNormals;
@@ -605,7 +605,7 @@ namespace NianticSpatial.NSDK.AR.Scanning
         public async Task SaveScan()
         {
             subsystem.SaveCurrentScan();
-            while (subsystem.GetState() == XRScanningState.Saving)
+            while (subsystem.GetState() == ScanningState.Saving)
             {
                 if (!Application.isPlaying)
                 {

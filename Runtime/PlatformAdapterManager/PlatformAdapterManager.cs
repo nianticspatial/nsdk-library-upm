@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Text;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using Unity.Collections;
 using UnityEngine;
@@ -31,6 +32,9 @@ namespace NianticSpatial.NSDK.AR.PAM
         private ulong? _prevSentTimestamp = null;
 
         private const string TraceCategory = "PlatformAdapterManager";
+
+        private static readonly byte[] CameraRearSensorName = Encoding.UTF8.GetBytes("camera_rear");
+        private static readonly byte[] LidarRearSensorName = Encoding.UTF8.GetBytes("lidar_rear");
 
         public static PlatformAdapterManager Create<TApi, TXRDataAcquirer>
         (
@@ -144,6 +148,10 @@ namespace NianticSpatial.NSDK.AR.PAM
             ProfilerUtility.EventBegin(TraceCategory, traceMethodName + traceReadyFormats);
 
             NsdkFrameData frameData = new NsdkFrameData();
+            NsdkCameraFrameCStruct cameraFrame = new NsdkCameraFrameCStruct();
+            NsdkDepthFrameCStruct depthFrame = new NsdkDepthFrameCStruct();
+            bool includeCameraFrame = false;
+            bool includeDepthFrame = false;
 
             // Populate the compass and GPS data, which updates independently of AR data.
             // Population of AR data must be done after the timestamp check below.
@@ -166,32 +174,37 @@ namespace NianticSpatial.NSDK.AR.PAM
                 _prevSentTimestamp = currTimestamp;
 
                 // Pose
+                // If pose is requested without camera frames, the camera frame will be sent with empty image data.
+                var getPose = (_readyDataFormats & DataFormatFlags.kPose) == DataFormatFlags.kPose;
                 if (_platformDataAcquirer.TryGetCameraPose(out Matrix4x4 cameraToLocal))
                 {
-                    frameData.CameraPose.SetTransform(cameraToLocal.FromUnityToNsdk());
+                    cameraFrame.CameraPose.SetTransform(cameraToLocal.FromUnityToNsdk());
+                    includeCameraFrame |= getPose;
                 }
                 else
                 {
                     // The SAH checks the CameraPose against the Identity transform to validate if
                     // a valid value was received or not
-                    frameData.CameraPose.SetTransform(Matrix4x4.identity.FromUnityToNsdk());
+                    cameraFrame.CameraPose.SetTransform(Matrix4x4.identity.FromUnityToNsdk());
                 }
 
-                frameData.CameraTimestampMs = currTimestamp;
-                frameData.ScreenOrientation = _platformDataAcquirer.GetScreenOrientation().FromUnityToNsdk();
+                cameraFrame.CameraTimestampMs = currTimestamp;
+                var screenOrientation = _platformDataAcquirer.GetScreenOrientation().FromUnityToNsdk();
+                cameraFrame.CameraOrientation = screenOrientation;
                 frameData.TrackingState = _platformDataAcquirer.GetTrackingState().FromUnityToNsdk();
 
                 // Check if we are requesting a camera image
                 var getCameraImage = (_readyDataFormats & DataFormatFlags.kImage) != DataFormatFlags.kNone;
                 if (getCameraImage && _platformDataAcquirer.TryGetCpuImage(out var cpuCamera))
                 {
-                    _platformDataAcquirer.TryGetCameraIntrinsicsCStruct(out frameData.CameraIntrinsics);
-                    frameData.CameraImagePlane0.SetImagePlane(cpuCamera.Planes[0]);
-                    frameData.CameraImagePlane1.SetImagePlane(cpuCamera.Planes[1]);
-                    frameData.CameraImagePlane2.SetImagePlane(cpuCamera.Planes[2]);
-                    frameData.CameraImageFormat = cpuCamera.Format;
-                    frameData.CameraImageWidth = cpuCamera.Width;
-                    frameData.CameraImageHeight = cpuCamera.Height;
+                    includeCameraFrame = true;
+                    _platformDataAcquirer.TryGetCameraIntrinsicsCStruct(out cameraFrame.CameraIntrinsics);
+                    cameraFrame.CameraImagePlane0.SetImagePlane(cpuCamera.Planes[0]);
+                    cameraFrame.CameraImagePlane1.SetImagePlane(cpuCamera.Planes[1]);
+                    cameraFrame.CameraImagePlane2.SetImagePlane(cpuCamera.Planes[2]);
+                    cameraFrame.CameraImageFormat = cpuCamera.Format;
+                    cameraFrame.CameraImageWidth = cpuCamera.Width;
+                    cameraFrame.CameraImageHeight = cpuCamera.Height;
                 }
 
                 // Check if we are requesting a depth image
@@ -199,25 +212,28 @@ namespace NianticSpatial.NSDK.AR.PAM
                 if (getDepthImage &&
                     _platformDataAcquirer.TryGetDepthCpuImage(out var cpuDepth, out var cpuDepthConfidence))
                 {
-                    frameData.DepthDataPtr = cpuDepth.Planes[0].DataPtr;
-                    frameData.DepthDataWidth = cpuDepth.Width;
-                    frameData.DepthDataHeight = cpuDepth.Height;
+                    includeDepthFrame = true;
+                    depthFrame.DepthTimestampMs = currTimestamp;
+                    depthFrame.CameraOrientation = screenOrientation;
+                    depthFrame.DepthImageData = cpuDepth.Planes[0].DataPtr;
+                    depthFrame.DepthImageDataWidth = cpuDepth.Width;
+                    depthFrame.DepthImageDataHeight = cpuDepth.Height;
                     if (cpuDepthConfidence.Planes.Length > 0)
                     {
-                        frameData.DepthConfidencesDataPtr = cpuDepthConfidence.Planes[0].DataPtr;
-                        frameData.DepthAndConfidenceDataLength = cpuDepth.Width * cpuDepth.Height;
+                        depthFrame.DepthConfidenceData = cpuDepthConfidence.Planes[0].DataPtr;
+                        depthFrame.DepthAndConfidenceDataLength = cpuDepth.Width * cpuDepth.Height;
                     }
 
                     // TODO [ARDK-3966]: Move scaling calculation to C++
-                    _platformDataAcquirer.TryGetDepthCameraIntrinsicsCStruct(out frameData.DepthCameraIntrinsics);
+                    _platformDataAcquirer.TryGetDepthCameraIntrinsicsCStruct(out depthFrame.DepthImageIntrinsics);
 
                     if (_platformDataAcquirer.TryGetDepthPose(out var depthPose))
                     {
-                        frameData.DepthCameraPose.SetTransform(depthPose.FromUnityToNsdk());
+                        depthFrame.DepthCameraPose.SetTransform(depthPose.FromUnityToNsdk());
                     }
                     else
                     {
-                        frameData.DepthCameraPose.SetTransform(Matrix4x4.identity.FromUnityToNsdk());
+                        depthFrame.DepthCameraPose.SetTransform(Matrix4x4.identity.FromUnityToNsdk());
                     }
                 }
             }
@@ -232,8 +248,32 @@ namespace NianticSpatial.NSDK.AR.PAM
                 {
                     unsafe
                     {
-                        void* nonMoveablePtr = &frameData;
-                        _api.ARDK_SAH_OnFrame(_nativeHandle, (IntPtr)nonMoveablePtr);
+                        fixed (byte* camNamePtr = CameraRearSensorName)
+                        fixed (byte* lidarNamePtr = LidarRearSensorName)
+                        {
+                            if (includeCameraFrame)
+                            {
+                                cameraFrame.SensorName.Data = (IntPtr)camNamePtr;
+                                cameraFrame.SensorName.DataSize = (uint)CameraRearSensorName.Length;
+                                cameraFrame.DefaultCameraSensor = 1;
+                                NsdkCameraFrameCStruct* cameraFramePtr = &cameraFrame;
+                                frameData.CameraFrames = (IntPtr)cameraFramePtr;
+                                frameData.CameraFramesCount = 1;
+                            }
+
+                            if (includeDepthFrame)
+                            {
+                                depthFrame.SensorName.Data = (IntPtr)lidarNamePtr;
+                                depthFrame.SensorName.DataSize = (uint)LidarRearSensorName.Length;
+                                depthFrame.DefaultDepthSensor = 1;
+                                NsdkDepthFrameCStruct* depthFramePtr = &depthFrame;
+                                frameData.DepthFrames = (IntPtr)depthFramePtr;
+                                frameData.DepthFramesCount = 1;
+                            }
+
+                            void* nonMoveablePtr = &frameData;
+                            _api.ARDK_SAH_OnFrame(_nativeHandle, (IntPtr)nonMoveablePtr);
+                        }
                     }
                 }
                 ProfilerUtility.EventEnd(TraceCategory, nativePamOnFrameEventName);

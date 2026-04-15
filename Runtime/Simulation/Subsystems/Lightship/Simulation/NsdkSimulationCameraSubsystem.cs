@@ -293,7 +293,6 @@ namespace NianticSpatial.NSDK.AR.Simulation
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Register()
         {
-#if UNITY_6000_0_OR_NEWER
             var cInfo = new XRCameraSubsystemDescriptor.Cinfo {
                 id = SubsystemId,
                 providerType = typeof(NsdkSimulationProvider),
@@ -303,18 +302,6 @@ namespace NianticSpatial.NSDK.AR.Simulation
             };
 
             XRCameraSubsystemDescriptor.Register(cInfo);
-#else
-            var cInfo = new XRCameraSubsystemCinfo
-            {
-                id = SubsystemId,
-                providerType = typeof(NsdkSimulationProvider),
-                subsystemTypeOverride = typeof(NsdkSimulationCameraSubsystem),
-                supportsCameraConfigurations = true,
-                supportsCameraImage = true,
-            };
-
-            XRCameraSubsystem.Register(cInfo);
-#endif
 
 
         }

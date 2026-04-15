@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.Core;
 using NianticSpatial.NSDK.AR.Subsystems.Meshing;
-using NianticSpatial.NSDK.AR.Subsystems.ObjectDetection;
+
 using NianticSpatial.NSDK.AR.Subsystems.Occlusion;
 using NianticSpatial.NSDK.AR.Subsystems.Scanning;
-using NianticSpatial.NSDK.AR.Subsystems.Semantics;
-using NianticSpatial.NSDK.AR.Subsystems.PersistentAnchor;
-using NianticSpatial.NSDK.AR.Subsystems.WorldPositioning;
+using NianticSpatial.NSDK.AR.Subsystems.SceneSegmentation;
+using NianticSpatial.NSDK.AR.Subsystems.DeviceMapping;
 using NianticSpatial.NSDK.AR.Subsystems.Vps2;
 using NianticSpatial.NSDK.AR.XRSubsystems;
 using UnityEngine.XR;
@@ -21,13 +20,12 @@ namespace NianticSpatial.NSDK.AR.Loader
     public class NativeLoaderHelper
     {
         protected readonly List<XROcclusionSubsystemDescriptor> OcclusionSubsystemDescriptors = new();
-        protected readonly List<XRPersistentAnchorSubsystemDescriptor> PersistentAnchorSubsystemDescriptors = new();
-        protected readonly List<XRSemanticsSubsystemDescriptor> SemanticsSubsystemDescriptors = new();
+        protected readonly List<XRSceneSegmentationSubsystemDescriptor> SceneSegmentationSubsystemDescriptors = new();
         protected readonly List<XRScanningSubsystemDescriptor> ScanningSubsystemDescriptors = new();
         protected readonly List<XRMeshSubsystemDescriptor> MeshingSubsystemDescriptors = new();
-        protected readonly List<XRObjectDetectionSubsystemDescriptor> ObjectDetectionSubsystemDescriptors = new();
-        protected readonly List<XRWorldPositioningSubsystemDescriptor> WorldPositioningSubsystemDescriptors = new ();
-        protected readonly List<XRVps2SubsystemDescriptor> Vps2SubsystemDescriptors = new ();
+
+protected readonly List<XRVps2SubsystemDescriptor> Vps2SubsystemDescriptors = new ();
+        protected readonly List<XRDeviceMappingSubsystemDescriptor> DeviceMappingSubsystemDescriptors = new();
 
         internal virtual bool Initialize(INsdkInternalLoaderSupport loader, bool isLidarSupported)
         {
@@ -52,17 +50,6 @@ namespace NianticSpatial.NSDK.AR.Loader
                 );
             }
 
-            // Create NSDK Persistent Anchor subsystem
-            if (settings.UseNsdkPersistentAnchor)
-            {
-                Log.Info("Creating " + nameof(NsdkPersistentAnchorSubsystem));
-                loader.CreateSubsystem<XRPersistentAnchorSubsystemDescriptor, XRPersistentAnchorSubsystem>
-                (
-                    PersistentAnchorSubsystemDescriptors,
-                    "Nsdk-PersistentAnchor"
-                );
-            }
-
             // Create VPS2 subsystem
             if (settings.UseNsdkVps2)
             {
@@ -74,14 +61,14 @@ namespace NianticSpatial.NSDK.AR.Loader
                 );
             }
 
-            // Create Lightship Semantics subsystem
-            if (settings.UseNsdkSemanticSegmentation)
+            // Create Lightship Scene Segmentation subsystem
+            if (settings.UseNsdkSceneSegmentation)
             {
-                Log.Info("Creating " + nameof(NsdkSemanticsSubsystem));
-                loader.CreateSubsystem<XRSemanticsSubsystemDescriptor, XRSemanticsSubsystem>
+                Log.Info("Creating " + nameof(NsdkSceneSegmentationSubsystem));
+                loader.CreateSubsystem<XRSceneSegmentationSubsystemDescriptor, XRSceneSegmentationSubsystem>
                 (
-                    SemanticsSubsystemDescriptors,
-                    "Nsdk-Semantics"
+                    SceneSegmentationSubsystemDescriptors,
+                    "Nsdk-SceneSegmentation"
                 );
             }
 
@@ -100,7 +87,7 @@ namespace NianticSpatial.NSDK.AR.Loader
             {
                 // our C# "ghost" creates our meshing module to listen to Unity meshing lifecycle callbacks
                 loader.DestroySubsystem<XRMeshSubsystem>();
-                var meshingProvider = new NsdkMeshingProvider(NsdkUnityContext.UnityContextHandle);
+                NsdkMeshingProvider.Construct(NsdkUnityContext.UnityContextHandle);
 
                 // Create Unity integrated subsystem
                 loader.CreateSubsystem<XRMeshSubsystemDescriptor, XRMeshSubsystem>
@@ -110,24 +97,14 @@ namespace NianticSpatial.NSDK.AR.Loader
                 );
             }
 
-            if (settings.UseNsdkObjectDetection)
+            if (settings.UseNsdkDeviceMapping)
             {
-                Log.Info("Creating " + nameof(NsdkObjectDetectionSubsystem));
-                loader.CreateSubsystem<XRObjectDetectionSubsystemDescriptor, XRObjectDetectionSubsystem>
+                Log.Info("Creating " + nameof(NsdkDeviceMappingSubsystem));
+                loader.CreateSubsystem<XRDeviceMappingSubsystemDescriptor, XRDeviceMappingSubsystem>
                 (
-                    ObjectDetectionSubsystemDescriptors,
-                    "Nsdk-ObjectDetection"
+                    DeviceMappingSubsystemDescriptors,
+                    "NSDK-DeviceMapping"
                 );
-            }
-
-            if (settings.UseNsdkWorldPositioning)
-            {
-                Log.Info("Creating " + nameof(NsdkWorldPositioningSubsystem));
-                loader.CreateSubsystem<XRWorldPositioningSubsystemDescriptor, XRWorldPositioningSubsystem>
-                    (
-                        WorldPositioningSubsystemDescriptors,
-                        "Nsdk-WorldPositioning"
-                    );
             }
 
             return true;
@@ -136,25 +113,23 @@ namespace NianticSpatial.NSDK.AR.Loader
         /// <summary>
         /// Destroys each initialized subsystem.
         /// </summary>
-        /// <returns>Always returns `true`.</returns>
-        internal virtual bool Deinitialize(INsdkInternalLoaderSupport loader)
+        internal virtual void Deinitialize(INsdkInternalLoaderSupport loader)
         {
             Log.Info("Destroying lightship subsystems");
             if (loader == null)
             {
                 Log.Warning("Loader is null. Assuming system is already deinitialized.");
-                return true;
+                return;
             }
 
             // Destroy subsystem does a null check, so will just no-op if these subsystems were not created or already destroyed
-            loader.DestroySubsystem<XRSemanticsSubsystem>();
-            loader.DestroySubsystem<XRPersistentAnchorSubsystem>();
+            loader.DestroySubsystem<XRSceneSegmentationSubsystem>();
             loader.DestroySubsystem<XROcclusionSubsystem>();
             loader.DestroySubsystem<XRScanningSubsystem>();
             loader.DestroySubsystem<XRMeshSubsystem>();
-            loader.DestroySubsystem<XRObjectDetectionSubsystem>();
-            loader.DestroySubsystem<XRWorldPositioningSubsystem>();
+            NsdkMeshingProvider.Reset();
             loader.DestroySubsystem<XRVps2Subsystem>();
+            loader.DestroySubsystem<XRDeviceMappingSubsystem>();
 
             // Unity's native lifecycle handler for integrated subsystems does call Stop() before Shutdown() if
             // the subsystem is running when the latter is called. However, for the XRInputSubsystem, this causes
@@ -170,8 +145,6 @@ namespace NianticSpatial.NSDK.AR.Loader
             loader.DestroySubsystem<XRInputSubsystem>();
 
             NsdkUnityContext.Deinitialize();
-
-            return true;
         }
     }
 }

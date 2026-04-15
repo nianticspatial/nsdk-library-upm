@@ -95,15 +95,15 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
         // This function will try to go to the next forward frame
         public bool TryMoveForward()
         {
-            // we have reached the end of the dataset
-            if (_currentFrameIndex == _dataset.FrameCount - 1 || _currentFrameIndex >= _endFrame)
+            // We have reached the end of the dataset or the user-defined end frame
+            if (_currentFrameIndex >= _endFrame)
             {
                 return false;
             }
 
             _currentFrameIndex++;
 
-            Log.Debug("Playback moved forward to frame " + _dataset.Frames[_currentFrameIndex].Sequence); ;
+            Log.Debug("Playback moved forward to frame " + _dataset.Frames[_currentFrameIndex].Sequence);
             FrameChanged?.Invoke();
 
             return true;
@@ -112,20 +112,29 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
         // This function will try to go to the next backward frame, so the t-1 frame while incrementing the timing offset
         public bool TryMoveBackward()
         {
-            // we have reached the start of the dataset, <= is used for if we are at the initializeld _currentFrameIndex of -1
-            if (_currentFrameIndex <= 0 || _currentFrameIndex <= _startFrame)
+            // We have reached the start of the dataset or the user-defined start frame
+            if (_currentFrameIndex <= _startFrame)
             {
                 return false;
             }
 
+            // To calculate the new timestamp, we need to know the state of the frame we are leaving
+            var previousFrameIndex = _currentFrameIndex;
+            var previousFrameRawTimestamp = _dataset.Frames[previousFrameIndex].TimestampInSeconds;
+            var totalPreviousTimestamp = previousFrameRawTimestamp + _timestampLoopOffset;
+
             _currentFrameIndex--;
 
-            // increase timestamp offset with the difference between this and last played frame
-            var deltaTimeBetweenFrames = _dataset.Frames[_currentFrameIndex + 1].TimestampInSeconds -
-                _dataset.Frames[_currentFrameIndex].TimestampInSeconds;
-            // double that offset because of every frame we go back we have to add the offset once to not go backwards
-            // and then another time to actually move forward in time.
-            _timestampLoopOffset += 2 * deltaTimeBetweenFrames;
+            var currentFrameRawTimestamp = _dataset.Frames[_currentFrameIndex].TimestampInSeconds;
+
+            // The time delta between the two frames in the original dataset
+            var timeDelta = previousFrameRawTimestamp - currentFrameRawTimestamp;
+
+            // The new timestamp should be the last reported timestamp plus the delta
+            var newTotalTimestamp = totalPreviousTimestamp + timeDelta;
+
+            // The offset is the difference between our desired total timestamp and the raw timestamp of the current frame
+            _timestampLoopOffset = newTotalTimestamp - currentFrameRawTimestamp;
 
             Log.Debug("Playback moved back to frame " + _dataset.Frames[_currentFrameIndex].Sequence);
             FrameChanged?.Invoke();
@@ -194,12 +203,20 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
 
         public int GetNextFrameIndex()
         {
-            if (_currentFrameIndex + 1 == _dataset.FrameCount)
+            if (_goingForward)
             {
-                return _loopInfinitely ? _currentFrameIndex - 1 : _currentFrameIndex;
-            }
+                if (_currentFrameIndex >= _endFrame)
+                    return _loopInfinitely ? _currentFrameIndex - 1 : _currentFrameIndex;
 
-            return _currentFrameIndex + 1;
+                return _currentFrameIndex + 1;
+            }
+            else // Moving backwards
+            {
+                if (_currentFrameIndex <= _startFrame)
+                    return _loopInfinitely ? _currentFrameIndex + 1 : _currentFrameIndex;
+
+                return _currentFrameIndex - 1;
+            }
         }
 
         public void Reset()
@@ -214,7 +231,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
         {
             get
             {
-                if (_currentFrameIndex < 0)
+                if (_currentFrameIndex < _startFrame || _currentFrameIndex > _endFrame)
                 {
                     return null;
                 }

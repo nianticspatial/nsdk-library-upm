@@ -2,7 +2,7 @@
 using System;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.LocationAR;
-using NianticSpatial.NSDK.AR.PersistentAnchors;
+using NianticSpatial.NSDK.AR.VPS2;
 using UnityEditor;
 using UnityEditor.UIElements;
 using UnityEngine;
@@ -219,7 +219,7 @@ namespace NianticSpatial.NSDK.AR.Editor.Inspectors
                 new GUIContent
                 (
                     payloadHint,
-                    $"The base 64 string representation of the {nameof(ARPersistentAnchorPayload)}'s data"
+                    $"The base 64 string representation of the {nameof(ARVps2AnchorPayload)}'s data"
                 )
             );
             if (GUILayout.Button(Contents.copyButtonLabel))

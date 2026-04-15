@@ -54,6 +54,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Scanning
             _currentConfiguration.UseEstimatedDepth = config.UseMultidepth;
             _currentConfiguration.FullResolutionEnabled = config.EnableFullResolution;
             _currentConfiguration.FullResolutionFramerate = config.FullResolutionFramerate;
+            _currentConfiguration.RecordAllSensors = config.RecordAllSensors;
         }
 
         public IntPtr TryGetRaycastBuffer

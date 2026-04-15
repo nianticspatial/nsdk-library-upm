@@ -17,16 +17,8 @@ namespace NianticSpatial.NSDK.AR.Loader
         [Tooltip("When enabled, uses the geometry depth from camera z-buffer, instead of NSDK depth prediction")]
         private bool _useZBufferDepth = true;
 
-        [SerializeField]
-        [Tooltip("When enabled, use NSDK Persistent Anchors instead of simulation Persistent Anchors")]
-        private bool _useSimulationPersistentAnchor = true;
-
-        [SerializeField]
-        [Tooltip("Parameters for simulating the persistent anchor subsystem")]
-        NsdkSimulationPersistentAnchorParams _simulationPersistentAnchorParams = new();
-
         /// <summary>
-        /// Layer used for the depth
+        /// Whether to use Z-buffer depth instead of NSDK depth prediction
         /// </summary>
         public bool UseZBufferDepth
         {
@@ -34,39 +26,18 @@ namespace NianticSpatial.NSDK.AR.Loader
             set => _useZBufferDepth = value;
         }
 
-        /// <summary>
-        /// Layer used for the persistent anchor
-        /// </summary>
-        public bool UseSimulationPersistentAnchor
-        {
-            get => _useSimulationPersistentAnchor;
-            set => _useSimulationPersistentAnchor = value;
-        }
-
-        /// <summary>
-        /// Parameters for simulating the persistent anchor subsystem
-        /// </summary>
-        public NsdkSimulationPersistentAnchorParams SimulationPersistentAnchorParams
-        {
-            get => _simulationPersistentAnchorParams;
-        }
-
         internal NsdkSimulationParams()
         {
-            _simulationPersistentAnchorParams = new NsdkSimulationPersistentAnchorParams();
         }
 
         internal NsdkSimulationParams(NsdkSimulationParams source)
         {
-            _simulationPersistentAnchorParams = new NsdkSimulationPersistentAnchorParams();
             CopyFrom(source);
         }
 
         internal void CopyFrom(NsdkSimulationParams source)
         {
             UseZBufferDepth = source._useZBufferDepth;
-            UseSimulationPersistentAnchor = source._useSimulationPersistentAnchor;
-            SimulationPersistentAnchorParams.CopyFrom(source._simulationPersistentAnchorParams);
         }
     }
 }

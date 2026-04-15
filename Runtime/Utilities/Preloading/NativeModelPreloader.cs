@@ -45,19 +45,14 @@ namespace NianticSpatial.NSDK.AR.Utilities.Preloading
             return DownloadModel(Feature.Depth, (byte)depthMode);
         }
 
-        public override PreloaderStatusCode DownloadModel(SemanticsMode semanticsMode)
+        public override PreloaderStatusCode DownloadModel(SceneSegmentationMode sceneSegmentationMode)
         {
-            return DownloadModel(Feature.Semantics, (byte)semanticsMode);
+            return DownloadModel(Feature.Semantics, (byte)sceneSegmentationMode);
         }
 
         public override PreloaderStatusCode DownloadModel(ScanningSQCMode scanningSQCMode)
         {
             return DownloadModel(Feature.ScanningSQC, (byte)scanningSQCMode);
-        }
-
-        public override PreloaderStatusCode DownloadModel(ObjectDetectionMode objectDetectionMode)
-        {
-            return DownloadModel(Feature.ObjectDetection, (byte)objectDetectionMode);
         }
 
         private PreloaderStatusCode DownloadModel(Feature feature, byte mode)
@@ -75,19 +70,14 @@ namespace NianticSpatial.NSDK.AR.Utilities.Preloading
             return RegisterModel(Feature.Depth, (byte)depthMode, filepath);
         }
 
-        public override PreloaderStatusCode RegisterModel(SemanticsMode semanticsMode, string filepath)
+        public override PreloaderStatusCode RegisterModel(SceneSegmentationMode sceneSegmentationMode, string filepath)
         {
-            return RegisterModel(Feature.Semantics, (byte)semanticsMode, filepath);
+            return RegisterModel(Feature.Semantics, (byte)sceneSegmentationMode, filepath);
         }
 
         public override PreloaderStatusCode RegisterModel(ScanningSQCMode scanningSQCMode, string filepath)
         {
             return RegisterModel(Feature.ScanningSQC, (byte)scanningSQCMode, filepath);
-        }
-
-        public override PreloaderStatusCode RegisterModel(ObjectDetectionMode objectDetectionMode, string filepath)
-        {
-            return RegisterModel(Feature.ObjectDetection, (byte)objectDetectionMode, filepath);
         }
 
         private PreloaderStatusCode RegisterModel(Feature feature, byte mode, string filepath)
@@ -105,19 +95,14 @@ namespace NianticSpatial.NSDK.AR.Utilities.Preloading
             return CurrentProgress(Feature.Depth, (byte)depthMode, out progress);
         }
 
-        public override PreloaderStatusCode CurrentProgress(SemanticsMode semanticsMode, out float progress)
+        public override PreloaderStatusCode CurrentProgress(SceneSegmentationMode sceneSegmentationMode, out float progress)
         {
-            return CurrentProgress(Feature.Semantics, (byte)semanticsMode, out progress);
+            return CurrentProgress(Feature.Semantics, (byte)sceneSegmentationMode, out progress);
         }
 
         public override PreloaderStatusCode CurrentProgress(ScanningSQCMode scanningSQCMode, out float progress)
         {
             return CurrentProgress(Feature.ScanningSQC, (byte)scanningSQCMode, out progress);
-        }
-
-        public override PreloaderStatusCode CurrentProgress(ObjectDetectionMode objectDetectionMode, out float progress)
-        {
-            return CurrentProgress(Feature.ObjectDetection, (byte)objectDetectionMode, out progress);
         }
 
         private PreloaderStatusCode CurrentProgress(Feature feature, byte mode, out float progress)
@@ -136,19 +121,14 @@ namespace NianticSpatial.NSDK.AR.Utilities.Preloading
             return ExistsInCache(Feature.Depth, (byte)depthMode);
         }
 
-        public override bool ExistsInCache(SemanticsMode semanticsMode)
+        public override bool ExistsInCache(SceneSegmentationMode sceneSegmentationMode)
         {
-            return ExistsInCache(Feature.Semantics, (byte)semanticsMode);
+            return ExistsInCache(Feature.Semantics, (byte)sceneSegmentationMode);
         }
 
         public override bool ExistsInCache(ScanningSQCMode scanningSQCMode)
         {
             return ExistsInCache(Feature.ScanningSQC, (byte)scanningSQCMode);
-        }
-
-        public override bool ExistsInCache(ObjectDetectionMode objectDetectionMode)
-        {
-            return ExistsInCache(Feature.ObjectDetection, (byte)objectDetectionMode);
         }
 
         private bool ExistsInCache(Feature feature, byte mode)
@@ -166,19 +146,14 @@ namespace NianticSpatial.NSDK.AR.Utilities.Preloading
             return ClearFromCache(Feature.Depth, (byte)depthMode);
         }
 
-        public override bool ClearFromCache(SemanticsMode semanticsMode)
+        public override bool ClearFromCache(SceneSegmentationMode sceneSegmentationMode)
         {
-            return ClearFromCache(Feature.Semantics, (byte)semanticsMode);
+            return ClearFromCache(Feature.Semantics, (byte)sceneSegmentationMode);
         }
 
         public override bool ClearFromCache(ScanningSQCMode scanningSQCMode)
         {
             return ClearFromCache(Feature.ScanningSQC, (byte)scanningSQCMode);
-        }
-
-        public override bool ClearFromCache(ObjectDetectionMode objectDetectionMode)
-        {
-            return ClearFromCache(Feature.ObjectDetection, (byte)objectDetectionMode);
         }
 
         private bool ClearFromCache(Feature feature, byte mode)

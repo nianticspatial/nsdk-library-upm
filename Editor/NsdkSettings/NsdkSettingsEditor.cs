@@ -45,7 +45,6 @@ namespace NianticSpatial.NSDK.AR.Editor
                 )
             };
 
-            public static readonly GUIContent apiKeyLabel = new GUIContent("API Key");
             public static readonly GUIContent enabledLabel = new GUIContent("Enabled");
             public static readonly GUIContent preferLidarLabel = new GUIContent("Prefer LiDAR if Available");
             public static readonly GUIContent environmentViewLabel = new GUIContent("Environment Prefab");
@@ -78,8 +77,6 @@ namespace NianticSpatial.NSDK.AR.Editor
                 );
 
             public static readonly GUIContent useZBufferDepthInSimulationLabel = new GUIContent("Use Z-Buffer Depth");
-            public static readonly GUIContent useNsdkPersistentAnchorInSimulationLabel =
-                new GUIContent("Use NSDK Persistent Anchors");
 
             private static GUIStyle _sdkEnabledStyle;
 
@@ -150,16 +147,13 @@ namespace NianticSpatial.NSDK.AR.Editor
         private SerializedObject _nsdkSettings;
         private SerializedObject _authBuildSettings;
 
-        private SerializedProperty _apiKeyProperty;
         private SerializedProperty _useNsdkDepthProperty;
         private SerializedProperty _useNsdkMeshingProperty;
         private SerializedProperty _preferLidarIfAvailableProperty;
-        private SerializedProperty _useNsdkPersistentAnchorProperty;
         private SerializedProperty _useNsdkVps2Property;
-        private SerializedProperty _useNsdkSemanticSegmentationProperty;
+        private SerializedProperty _useNsdkSceneSegmentationProperty;
         private SerializedProperty _useNsdkScanningProperty;
-        private SerializedProperty _useNsdkObjectDetectionProperty;
-        private SerializedProperty _useNsdkWorldPositioningProperty;
+        private SerializedProperty _useNsdkDeviceMappingProperty;
         private SerializedProperty _locationAndCompassDataSourceProperty;
         private SerializedProperty _spoofLocationInfoProperty;
         private SerializedProperty _spoofCompassInfoProperty;
@@ -167,9 +161,8 @@ namespace NianticSpatial.NSDK.AR.Editor
         private SerializedProperty _fileLogLevelProperty;
         private SerializedProperty _stdOutLogLevelProperty;
         private SerializedProperty _useZBufferDepthInSimulationProperty;
-        private SerializedProperty _useSimulationPersistentAnchorInSimulationProperty;
-        private SerializedProperty _nsdkPersistentAnchorParamsProperty;
         private SerializedProperty _useDeveloperAuthenticationProperty;
+        private SerializedProperty _accessTokenOverrideProperty;
         private IPlaybackSettingsEditor[] _playbackSettingsEditors;
         private Texture _enabledIcon;
         private Texture _disabledIcon;
@@ -178,20 +171,15 @@ namespace NianticSpatial.NSDK.AR.Editor
         {
             _nsdkSettings = new SerializedObject(NsdkSettings.Instance);
             _authBuildSettings = new SerializedObject(NsdkSettings.Instance.AuthBuildSettings);
-            _apiKeyProperty = _nsdkSettings.FindProperty("_apiKey");
 
             _useNsdkDepthProperty = _nsdkSettings.FindProperty("_useNsdkDepth");
             _useNsdkMeshingProperty = _nsdkSettings.FindProperty("_useNsdkMeshing");
             _preferLidarIfAvailableProperty = _nsdkSettings.FindProperty("_preferLidarIfAvailable");
-            _useNsdkPersistentAnchorProperty = _nsdkSettings.FindProperty("_useNsdkPersistentAnchor");
             _useNsdkVps2Property = _nsdkSettings.FindProperty("_useNsdkVps2");
-            _useNsdkSemanticSegmentationProperty =
-                _nsdkSettings.FindProperty("_useNsdkSemanticSegmentation");
+            _useNsdkSceneSegmentationProperty =
+                _nsdkSettings.FindProperty("_useNsdkSceneSegmentation");
             _useNsdkScanningProperty = _nsdkSettings.FindProperty("_useNsdkScanning");
-            _useNsdkObjectDetectionProperty =
-                _nsdkSettings.FindProperty("_useNsdkObjectDetection");
-            _useNsdkWorldPositioningProperty = _nsdkSettings.FindProperty("_useNsdkWorldPositioning");
-
+            _useNsdkDeviceMappingProperty = _nsdkSettings.FindProperty("_useNsdkDeviceMapping");
             _locationAndCompassDataSourceProperty = _nsdkSettings.FindProperty("_locationAndCompassDataSource");
             _spoofLocationInfoProperty = _nsdkSettings.FindProperty("_spoofLocationInfo");
             _spoofCompassInfoProperty = _nsdkSettings.FindProperty("_spoofCompassInfo");
@@ -202,15 +190,13 @@ namespace NianticSpatial.NSDK.AR.Editor
 
             // Simulation sub-properties
             _useZBufferDepthInSimulationProperty = _nsdkSettings.FindProperty("_nsdkSimulationParams._useZBufferDepth");
-            _useSimulationPersistentAnchorInSimulationProperty = _nsdkSettings.FindProperty("_nsdkSimulationParams._useSimulationPersistentAnchor");
-            _nsdkPersistentAnchorParamsProperty = _nsdkSettings.FindProperty("_nsdkSimulationParams._simulationPersistentAnchorParams");
-
             _playbackSettingsEditors =
                 new IPlaybackSettingsEditor[] { new EditorPlaybackSettingsEditor(), new DevicePlaybackSettingsEditor() };
 
             _enabledIcon = EditorGUIUtility.IconContent("TestPassed").image;
             _disabledIcon = EditorGUIUtility.IconContent("Warning").image;
             _useDeveloperAuthenticationProperty = _authBuildSettings.FindProperty("_useDeveloperAuthentication");
+            _accessTokenOverrideProperty = _authBuildSettings.FindProperty("_accessTokenOverride");
         }
 
         public override void OnInspectorGUI()
@@ -224,7 +210,7 @@ namespace NianticSpatial.NSDK.AR.Editor
                 EditorGUI.BeginDisabledGroup(Application.isPlaying);
 
                 // -- Put new NSDK settings here --
-                DrawLNsdkSettings();
+                DrawNsdkSettings();
 
                 EditorGUILayout.Space(20);
                 DrawPlaybackSettings();
@@ -249,7 +235,7 @@ namespace NianticSpatial.NSDK.AR.Editor
 
         private CancellationTokenSource _loginCts = new();
 
-        private void DrawLNsdkSettings()
+        private void DrawNsdkSettings()
         {
             EditorGUIUtility.labelWidth = 220;
 
@@ -272,28 +258,28 @@ namespace NianticSpatial.NSDK.AR.Editor
 
             EditorGUILayout.LabelField("Credentials", EditorStyles.boldLabel);
 
-            var loginInProgress = AuthEditorLoginCommand.Instance.InProgress;
-            var isLoggedInOrInProgress = IsLoggedIn()|| loginInProgress;
-#if NIANTICSPATIAL_NSDK_APIKEY_ENABLED
-            var apiKeySet = !string.IsNullOrEmpty(NsdkSettings.Instance.ApiKey);
-            using (new EditorGUI.DisabledScope(isLoggedInOrInProgress && !apiKeySet))
-            {
-                EditorGUILayout.PropertyField(_apiKeyProperty, Contents.apiKeyLabel);
+            EditorGUILayout.PropertyField(
+                _accessTokenOverrideProperty,
+                new GUIContent(
+                    "Niantic Spatial Access Token",
+                    "When set, this access token takes priority over developer authentication " +
+                    "and will be embedded in builds instead of developer auth tokens."));
 
-                var navigateToNsdk = GUILayout.Button("Get API Key", GUILayout.Width(125));
-                if (navigateToNsdk)
-                {
-                    Application.OpenURL("https://lightship.dev/account/projects");
-                }
+            var accessTokenValue = _accessTokenOverrideProperty.stringValue;
+            var hasAccessToken = !string.IsNullOrEmpty(accessTokenValue);
+
+            if (hasAccessToken && !IsValidJwt(accessTokenValue))
+            {
+                EditorGUILayout.HelpBox(
+                    "Not a valid JWT. Ensure the token was issued from the Niantic Spatial Scaniverse portal " +
+                    "and copied in full.",
+                    MessageType.Warning);
             }
 
-            // Disable login UI and developer authentication option if API key has been set:
-            using (new EditorGUI.DisabledScope(apiKeySet && !isLoggedInOrInProgress))
-#endif
-            {
-                DrawLoginUI();
-                EditorGUILayout.PropertyField(_useDeveloperAuthenticationProperty);
-            }
+            EditorGUI.BeginDisabledGroup(hasAccessToken);
+            DrawLoginUI();
+            EditorGUILayout.PropertyField(_useDeveloperAuthenticationProperty);
+            EditorGUI.EndDisabledGroup();
 #if NIANTICSPATIAL_NSDK_AUTH_DEBUG
             var editorSettings = AuthEditorSettings.Instance;
             var settings = AuthEditorBuildSettings.Instance;
@@ -386,7 +372,7 @@ namespace NianticSpatial.NSDK.AR.Editor
             EditorGUILayout.Space(10);
             EditorGUILayout.LabelField("Semantic Segmentation", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField
-                (_useNsdkSemanticSegmentationProperty, Contents.enabledLabel);
+                (_useNsdkSceneSegmentationProperty, Contents.enabledLabel);
 
 
             // Meshing settings
@@ -395,16 +381,6 @@ namespace NianticSpatial.NSDK.AR.Editor
             EditorGUILayout.PropertyField(_useNsdkMeshingProperty, Contents.enabledLabel);
             EditorGUI.indentLevel++;
             // Put Meshing sub-settings here
-            EditorGUI.indentLevel--;
-
-            // Persistent Anchors settings
-            EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Persistent Anchors", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField
-                (_useNsdkPersistentAnchorProperty, Contents.enabledLabel);
-
-            EditorGUI.indentLevel++;
-            // Put Persistent Anchors sub-settings here
             EditorGUI.indentLevel--;
 
             // VPS2 settings
@@ -425,23 +401,12 @@ namespace NianticSpatial.NSDK.AR.Editor
             // Put Scanning sub-settings here
             EditorGUI.indentLevel--;
 
-            // Object Detection settings
+            // Device Mapping settings
             EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Object Detection", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField
-                (_useNsdkObjectDetectionProperty, Contents.enabledLabel);
-
+            EditorGUILayout.LabelField("Device Mapping", EditorStyles.boldLabel);
+            EditorGUILayout.PropertyField(_useNsdkDeviceMappingProperty, Contents.enabledLabel);
             EditorGUI.indentLevel++;
-            // Put Object Detection sub-settings here
-            EditorGUI.indentLevel--;
-
-            // World Positioning settings
-            EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("World Positioning System", EditorStyles.boldLabel);
-            EditorGUILayout.PropertyField(_useNsdkWorldPositioningProperty, Contents.enabledLabel);
-
-            EditorGUI.indentLevel++;
-            // Put World Positioning sub-settings here
+            // Put Device Mapping sub-settings here
             EditorGUI.indentLevel--;
 
             EditorGUILayout.Space(10);
@@ -513,6 +478,41 @@ namespace NianticSpatial.NSDK.AR.Editor
             var editorSettings = AuthEditorSettings.Instance;
             return !string.IsNullOrEmpty(editorSettings.EditorRefreshToken) &&
                 !AuthGatewayUtils.Instance.IsAccessExpired(editorSettings.EditorRefreshExpiresAt, DateTime.UtcNow);
+        }
+
+        private static bool IsValidJwt(string token)
+        {
+            var parts = token.Split('.');
+            if (parts.Length != 3)
+            {
+                return false;
+            }
+
+            // Verify the header and payload are valid base64url
+            for (int i = 0; i < 2; i++)
+            {
+                if (string.IsNullOrEmpty(parts[i]))
+                {
+                    return false;
+                }
+
+                try
+                {
+                    var base64 = parts[i].Replace('-', '+').Replace('_', '/');
+                    switch (base64.Length % 4)
+                    {
+                        case 2: base64 += "=="; break;
+                        case 3: base64 += "="; break;
+                    }
+                    Convert.FromBase64String(base64);
+                }
+                catch (FormatException)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private void DrawToken(string context, string token, int expiresAt)
@@ -634,25 +634,6 @@ namespace NianticSpatial.NSDK.AR.Editor
                 _useZBufferDepthInSimulationProperty,
                 Contents.useZBufferDepthInSimulationLabel
             );
-
-            // Persistent anchors (currently forcing the use of the simulation mock system)
-            EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("Persistent Anchors", EditorStyles.boldLabel);
-            // EditorGUILayout.PropertyField
-            // (
-            //     _useSimulationPersistentAnchorInSimulationProperty,
-            //     Contents.useNsdkPersistentAnchorInSimulationLabel
-            // );
-            //
-            // EditorGUI.indentLevel++;
-            if (_useSimulationPersistentAnchorInSimulationProperty.boolValue) // always true
-            {
-                // Persistent anchor sub-settings
-                EditorGUIUtility.labelWidth = 285;
-                EditorGUILayout.PropertyField
-                    (_nsdkPersistentAnchorParamsProperty, GUILayout.ExpandWidth(true));
-            }
-            // EditorGUI.indentLevel--;
 
             EditorGUILayout.Space(10);
             EditorGUI.EndDisabledGroup();

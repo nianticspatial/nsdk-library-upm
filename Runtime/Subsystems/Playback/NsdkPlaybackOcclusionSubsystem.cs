@@ -29,8 +29,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
             Log.Info("NsdkPlaybackOcclusionSubsystem.Register");
             const string id = "Lightship-Playback-Occlusion";
 
-#if UNITY_6000_0_OR_NEWER
-
             var xrOcclusionSubsystemCinfo = new XROcclusionSubsystemDescriptor.Cinfo()
             {
                 id = id,
@@ -44,21 +42,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
             };
 
             XROcclusionSubsystemDescriptor.Register(xrOcclusionSubsystemCinfo);
-#else
-            var xrOcclusionSubsystemCinfo = new XROcclusionSubsystemCinfo()
-            {
-                id = id,
-                providerType = typeof(NsdkPlaybackProvider),
-                subsystemTypeOverride = typeof(NsdkPlaybackOcclusionSubsystem),
-                humanSegmentationStencilImageSupportedDelegate = () => Supported.Unsupported,
-                humanSegmentationDepthImageSupportedDelegate = () => Supported.Unsupported,
-                environmentDepthImageSupportedDelegate = () => Supported.Supported,
-                environmentDepthConfidenceImageSupportedDelegate = () => Supported.Supported,
-                environmentDepthTemporalSmoothingSupportedDelegate = () => Supported.Unsupported
-            };
-
-            XROcclusionSubsystem.Register(xrOcclusionSubsystemCinfo);
-#endif
 
 
         }

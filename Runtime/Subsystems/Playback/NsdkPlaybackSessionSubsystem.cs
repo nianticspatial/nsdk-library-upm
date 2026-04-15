@@ -32,12 +32,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
                 supportsMatchFrameRate = true,
             };
 
-#if UNITY_6000_0_OR_NEWER
             XRSessionSubsystemDescriptor.Register(info);
-#else
-
-            XRSessionSubsystemDescriptor.RegisterDescriptor(info);
-#endif
 
 
         }

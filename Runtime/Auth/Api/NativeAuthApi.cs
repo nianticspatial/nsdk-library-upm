@@ -43,11 +43,6 @@ namespace NianticSpatial.NSDK.AR.Auth.Api
             NsdkString access_token);
 
         [DllImport(NsdkPlugin.Name)]
-        private static extern NsdkStatus ARDK_AuthManager_SetRefreshToken(
-            IntPtr nsdk_handle,
-            NsdkString refresh_token);
-
-        [DllImport(NsdkPlugin.Name)]
         private static extern NsdkStatus ARDK_AuthManager_GetAccessAuthInfo(
             IntPtr nsdk_handle,
             out NativeAuthInfo auth_info_out);
@@ -62,6 +57,9 @@ namespace NianticSpatial.NSDK.AR.Auth.Api
         private static extern NsdkStatus ARDK_AuthManager_IsAuthorized(
             IntPtr nsdk_handle,
             out bool is_authorized_out);
+
+        [DllImport(NsdkPlugin.Name)]
+        private static extern NsdkStatus ARDK_AuthManager_StaticLogout();
 
         // ============================================================================
         // Wrapper methods that handle string marshaling
@@ -78,20 +76,6 @@ namespace NianticSpatial.NSDK.AR.Auth.Api
             using (var managedString = new ManagedNsdkString(accessToken))
             {
                 return ARDK_AuthManager_SetAccessToken(nsdkHandle, managedString.ToNsdkString());
-            }
-        }
-
-        /// <summary>
-        /// Sets the refresh token so native can refresh access tokens as needed.
-        /// </summary>
-        /// <param name="nsdkHandle">Handle to the NSDK object.</param>
-        /// <param name="refreshToken">The refresh token string.</param>
-        /// <returns>Status indicating success or failure.</returns>
-        internal static NsdkStatus SetRefreshToken(IntPtr nsdkHandle, string refreshToken)
-        {
-            using (var managedString = new ManagedNsdkString(refreshToken))
-            {
-                return ARDK_AuthManager_SetRefreshToken(nsdkHandle, managedString.ToNsdkString());
             }
         }
 
@@ -129,6 +113,15 @@ namespace NianticSpatial.NSDK.AR.Auth.Api
         internal static NsdkStatus IsAuthorized(IntPtr nsdkHandle, out bool isAuthorized)
         {
             return ARDK_AuthManager_IsAuthorized(nsdkHandle, out isAuthorized);
+        }
+
+        /// <summary>
+        /// Clears cached auth tokens from persistent storage without requiring an NSDK context.
+        /// Call this on logout — safe to use before NSDK is initialized or after it is destroyed.
+        /// </summary>
+        internal static NsdkStatus StaticLogout()
+        {
+            return ARDK_AuthManager_StaticLogout();
         }
 
         // ============================================================================

@@ -20,9 +20,6 @@ namespace NianticSpatial.NSDK.AR.Utilities.Preloading
         [Description("No model specified")]
         Unspecified = 0,
 
-        [Obsolete("For custom model files, please register to one of the existing modes (Fast, Medium or Smooth).")]
-        Custom = 1,
-
         /// <summary>
         /// Depth will be generated at the fastest resolution.
         /// </summary>
@@ -47,16 +44,13 @@ namespace NianticSpatial.NSDK.AR.Utilities.Preloading
     /// The NSDK semantic segmentation model to use.
     /// </summary>
     [PublicAPI]
-    public enum SemanticsMode : byte
+    public enum SceneSegmentationMode : byte
     {
         /// <summary>
         /// The default model will be used, if applicable.
         /// </summary>
         [Description("No model specified")]
         Unspecified = 0,
-
-        [Obsolete("For custom model files, please register to one of the existing modes (Fast, Medium or Smooth).")]
-        Custom = 1,
 
         /// <summary>
         /// Semantic segmentation will be generated at the fastest resolution.
@@ -90,16 +84,4 @@ namespace NianticSpatial.NSDK.AR.Utilities.Preloading
         Default = 0,
     }
 
-    /// <summary>
-    /// The NSDK object detection model to use.
-    /// </summary>
-    [PublicAPI]
-    public enum ObjectDetectionMode : byte
-    {
-        /// <summary>
-        /// The default model will be used.
-        /// </summary>
-        [Description("Default model")]
-        Default = 0,
-    }
 }

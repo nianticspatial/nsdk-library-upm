@@ -10,7 +10,6 @@ using NianticSpatial.NSDK.AR.Subsystems.Common;
 using NianticSpatial.NSDK.AR.Utilities;
 using NianticSpatial.NSDK.AR.Utilities.Textures;
 using NianticSpatial.NSDK.Utilities.UnityAssets;
-using Niantic.Platform.Analytics.Telemetry;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.XR.CoreUtils.Collections;
@@ -44,7 +43,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
             Log.Info("NsdkPlaybackCameraSubsystem.Register");
             const string id = "Nsdk-Playback-Camera";
 
-#if UNITY_6000_0_OR_NEWER
             var info = new XRCameraSubsystemDescriptor.Cinfo
             {
                 id = id,
@@ -67,33 +65,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
                 supportsWorldTrackingHDRLightEstimation = false
             };
 
-             XRCameraSubsystemDescriptor.Register(info);
-
-#else
-            var info = new XRCameraSubsystemCinfo
-            {
-                id = id,
-                providerType = typeof(NsdkPlaybackProvider),
-                subsystemTypeOverride = typeof(NsdkPlaybackCameraSubsystem),
-                supportsAverageBrightness = false,
-                supportsAverageColorTemperature = false,
-                supportsColorCorrection = false,
-                supportsDisplayMatrix = true,
-                supportsProjectionMatrix = true,
-                supportsTimestamp = true,
-                supportsCameraConfigurations = false,
-                supportsCameraImage = true,
-                supportsAverageIntensityInLumens = false,
-                supportsFocusModes = true,
-                supportsCameraGrain = false,
-                supportsFaceTrackingAmbientIntensityLightEstimation = false,
-                supportsFaceTrackingHDRLightEstimation = false,
-                supportsWorldTrackingAmbientIntensityLightEstimation = false,
-                supportsWorldTrackingHDRLightEstimation = false
-            };
-
-            XRCameraSubsystem.Register(info);
-#endif
+            XRCameraSubsystemDescriptor.Register(info);
         }
 
         void IPlaybackDatasetUser.SetPlaybackDatasetReader(PlaybackDatasetReader reader)
@@ -428,12 +400,10 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
                 disabledKeywords = _legacyRPDisabledMaterialKeywords;
             }
 
-#if UNITY_6000_0_OR_NEWER
             public override ShaderKeywords GetShaderKeywords() => new(
                 enabledKeywords: _legacyRPEnabledMaterialKeywords.AsReadOnly(),
                 disabledKeywords: _legacyRPDisabledMaterialKeywords.AsReadOnly()
             );
-#endif
 
             private void UpdateCachedCurrentFrameInfo(PlaybackDataset.FrameMetadata frame)
             {

@@ -7,6 +7,9 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
     /// </summary>
     public struct XRVps2Geolocation
     {
+        /// The tracking state indicating availability and quality of the geolocation data.
+        public Vps2TrackingState TrackingState;
+
         /// Device location and heading.
         public XRGeolocation Geolocation;
 

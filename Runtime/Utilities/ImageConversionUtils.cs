@@ -422,11 +422,7 @@ namespace NianticSpatial.NSDK.AR.Common
 
         private static bool IsSampleFormatSupported(GraphicsFormat format)
         {
-#if UNITY_6000_0_OR_NEWER
             if (!SystemInfo.IsFormatSupported(format, GraphicsFormatUsage.Sample))
-#else
-            if (!SystemInfo.IsFormatSupported(format, FormatUsage.Sample))
-#endif
             {
                 Log.Error($"Graphics format {format} for sampling is not supported on this platform.");
                 return false;
@@ -437,11 +433,7 @@ namespace NianticSpatial.NSDK.AR.Common
 
         private static bool IsRenderFormatSupported(GraphicsFormat format)
         {
-#if UNITY_6000_0_OR_NEWER
             if (!SystemInfo.IsFormatSupported(format, GraphicsFormatUsage.Render))
-#else
-            if (!SystemInfo.IsFormatSupported(format, FormatUsage.Render))
-#endif
             {
                 Log.Error($"Graphics format {format} for rendering is not supported on this platform.");
                 return false;
