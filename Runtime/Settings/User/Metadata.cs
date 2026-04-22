@@ -23,7 +23,7 @@ namespace NianticSpatial.NSDK.AR.Settings
     [PublicAPI]
     public static class Metadata
     {
-        private const string NsdkVersion = "4.0.0-26041500";
+        private const string NsdkVersion = "4.1.0-c.279345";
 
         // NSDK Renaming TODO: These ardk variables are also defined in the c++ project and protobufs,
         // and will need to be updated when those do

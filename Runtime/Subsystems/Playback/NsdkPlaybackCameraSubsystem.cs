@@ -405,6 +405,13 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
                 disabledKeywords: _legacyRPDisabledMaterialKeywords.AsReadOnly()
             );
 
+#if ARF_6_1_OR_NEWER
+            public override XRShaderKeywords GetShaderKeywords2() => new(
+                enabledKeywords: new ReadOnlyList<string>(_legacyRPEnabledMaterialKeywords),
+                disabledKeywords: new ReadOnlyList<string>(_legacyRPDisabledMaterialKeywords)
+            );
+#endif
+
             private void UpdateCachedCurrentFrameInfo(PlaybackDataset.FrameMetadata frame)
             {
                 if (_currentFrame.Id != frame.Sequence)
