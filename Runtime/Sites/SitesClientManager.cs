@@ -79,6 +79,7 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         /// <summary>
         /// Gets information for the currently authenticated user.
+        /// To fetch organizations, consider using <see cref="GetSelfOrganizationInfoAsync"/> instead.
         /// </summary>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The user result.</returns>
@@ -91,6 +92,22 @@ namespace NianticSpatial.NSDK.AR.Sites
             }
 
             return _sitesClient.RequestSelfUserInfoAsync(_requestTimeoutSeconds * 1000, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets organizations for the current authenticated session.
+        /// </summary>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>The organization result.</returns>
+        public Task<OrganizationResult> GetSelfOrganizationInfoAsync(CancellationToken cancellationToken = default)
+        {
+            if (_sitesClient == null)
+            {
+                Log.Error("SitesClient is not initialized");
+                return Task.FromResult(OrganizationResult.Failure(SitesError.UnexpectedError));
+            }
+
+            return _sitesClient.RequestSelfOrganizationInfoAsync(_requestTimeoutSeconds * 1000, cancellationToken);
         }
 
         /// <summary>
@@ -116,6 +133,7 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         /// <summary>
         /// Gets all organizations for a user.
+        /// Consider using <see cref="GetSelfOrganizationInfoAsync"/> instead.
         /// </summary>
         /// <param name="userId">The user ID to query organizations for.</param>
         /// <param name="cancellationToken">Token to cancel the operation.</param>

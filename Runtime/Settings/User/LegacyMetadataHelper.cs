@@ -23,7 +23,8 @@ namespace NianticSpatial.NSDK.AR.Settings
                 Metadata.ClientId,
                 Metadata.Version,
                 Metadata.AppInstanceId,
-                requestId
+                requestId,
+                Metadata.DevEnvironment
             );
             return metadata;
         }
@@ -41,6 +42,7 @@ namespace NianticSpatial.NSDK.AR.Settings
             public string ardk_version;
             public string ardk_app_instance_id;
             public string request_id;
+            public string dev_environment;
 
             public ARCommonMetadataStruct
             (
@@ -52,7 +54,8 @@ namespace NianticSpatial.NSDK.AR.Settings
                 string clientID,
                 string ardkVersion,
                 string ardkAppInstanceID,
-                string requestID
+                string requestID,
+                string devEnvironment
             )
             {
                 application_id = applicationID;
@@ -64,6 +67,7 @@ namespace NianticSpatial.NSDK.AR.Settings
                 ardk_version = ardkVersion;
                 ardk_app_instance_id = ardkAppInstanceID;
                 request_id = requestID;
+                dev_environment = devEnvironment;
             }
         }
     }

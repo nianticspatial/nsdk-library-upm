@@ -25,7 +25,7 @@ namespace Niantic.ARDK.AR.Protobuf {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CjZhcmdlby9hcmRrLW5leHQvY29tbW9uL3Byb3Rvcy9hcl9jb21tb25fbWV0",
-            "YWRhdGEucHJvdG8SDW5hci50ZWxlbWV0cnki6AIKEEFSQ29tbW9uTWV0YWRh",
+            "YWRhdGEucHJvdG8SDW5hci50ZWxlbWV0cnkitAMKEEFSQ29tbW9uTWV0YWRh",
             "dGESJQoOYXBwbGljYXRpb25faWQYASABKAlSDWFwcGxpY2F0aW9uSWQSGgoI",
             "cGxhdGZvcm0YAiABKAlSCHBsYXRmb3JtEiIKDG1hbnVmYWN0dXJlchgDIAEo",
             "CVIMbWFudWZhY3R1cmVyEiEKDGRldmljZV9tb2RlbBgEIAEoCVILZGV2aWNl",
@@ -33,13 +33,15 @@ namespace Niantic.ARDK.AR.Protobuf {
             "IAEoCVIIY2xpZW50SWQSIQoMZGV2ZWxvcGVyX2lkGAcgASgJUgtkZXZlbG9w",
             "ZXJJZBIhCgxhcmRrX3ZlcnNpb24YCCABKAlSC2FyZGtWZXJzaW9uEi8KFGFy",
             "ZGtfYXBwX2luc3RhbmNlX2lkGAkgASgJUhFhcmRrQXBwSW5zdGFuY2VJZBId",
-            "CgpyZXF1ZXN0X2lkGAogASgJUglyZXF1ZXN0SWRCVgohY29tLm5pYW50aWNw",
-            "cm9qZWN0LmFyZGsudGVsZW1ldHJ5WhZuaWFudGljL2FyZGsvdGVsZW1ldHJ5",
-            "qgIYTmlhbnRpYy5BUkRLLkFSLlByb3RvYnVmYgZwcm90bzM="));
+            "CgpyZXF1ZXN0X2lkGAogASgJUglyZXF1ZXN0SWQSJwoPZGV2X2Vudmlyb25t",
+            "ZW50GAsgASgJUg5kZXZFbnZpcm9ubWVudBIhCgxkZXZfcGxhdGZvcm0YDCAB",
+            "KAlSC2RldlBsYXRmb3JtQlYKIWNvbS5uaWFudGljcHJvamVjdC5hcmRrLnRl",
+            "bGVtZXRyeVoWbmlhbnRpYy9hcmRrL3RlbGVtZXRyeaoCGE5pYW50aWMuQVJE",
+            "Sy5BUi5Qcm90b2J1ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.ARCommonMetadata), global::Niantic.ARDK.AR.Protobuf.ARCommonMetadata.Parser, new[]{ "ApplicationId", "Platform", "Manufacturer", "DeviceModel", "UserId", "ClientId", "DeveloperId", "ArdkVersion", "ArdkAppInstanceId", "RequestId" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.ARCommonMetadata), global::Niantic.ARDK.AR.Protobuf.ARCommonMetadata.Parser, new[]{ "ApplicationId", "Platform", "Manufacturer", "DeviceModel", "UserId", "ClientId", "DeveloperId", "ArdkVersion", "ArdkAppInstanceId", "RequestId", "DevEnvironment", "DevPlatform" }, null, null, null, null)
           }));
     }
     #endregion
@@ -91,6 +93,8 @@ namespace Niantic.ARDK.AR.Protobuf {
       ardkVersion_ = other.ardkVersion_;
       ardkAppInstanceId_ = other.ardkAppInstanceId_;
       requestId_ = other.requestId_;
+      devEnvironment_ = other.devEnvironment_;
+      devPlatform_ = other.devPlatform_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -220,6 +224,30 @@ namespace Niantic.ARDK.AR.Protobuf {
       }
     }
 
+    /// <summary>Field number for the "dev_environment" field.</summary>
+    public const int DevEnvironmentFieldNumber = 11;
+    private string devEnvironment_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DevEnvironment {
+      get { return devEnvironment_; }
+      set {
+        devEnvironment_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "dev_platform" field.</summary>
+    public const int DevPlatformFieldNumber = 12;
+    private string devPlatform_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DevPlatform {
+      get { return devPlatform_; }
+      set {
+        devPlatform_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -245,6 +273,8 @@ namespace Niantic.ARDK.AR.Protobuf {
       if (ArdkVersion != other.ArdkVersion) return false;
       if (ArdkAppInstanceId != other.ArdkAppInstanceId) return false;
       if (RequestId != other.RequestId) return false;
+      if (DevEnvironment != other.DevEnvironment) return false;
+      if (DevPlatform != other.DevPlatform) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -262,6 +292,8 @@ namespace Niantic.ARDK.AR.Protobuf {
       if (ArdkVersion.Length != 0) hash ^= ArdkVersion.GetHashCode();
       if (ArdkAppInstanceId.Length != 0) hash ^= ArdkAppInstanceId.GetHashCode();
       if (RequestId.Length != 0) hash ^= RequestId.GetHashCode();
+      if (DevEnvironment.Length != 0) hash ^= DevEnvironment.GetHashCode();
+      if (DevPlatform.Length != 0) hash ^= DevPlatform.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -320,6 +352,14 @@ namespace Niantic.ARDK.AR.Protobuf {
         output.WriteRawTag(82);
         output.WriteString(RequestId);
       }
+      if (DevEnvironment.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(DevEnvironment);
+      }
+      if (DevPlatform.Length != 0) {
+        output.WriteRawTag(98);
+        output.WriteString(DevPlatform);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -370,6 +410,14 @@ namespace Niantic.ARDK.AR.Protobuf {
         output.WriteRawTag(82);
         output.WriteString(RequestId);
       }
+      if (DevEnvironment.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(DevEnvironment);
+      }
+      if (DevPlatform.Length != 0) {
+        output.WriteRawTag(98);
+        output.WriteString(DevPlatform);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -409,6 +457,12 @@ namespace Niantic.ARDK.AR.Protobuf {
       }
       if (RequestId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(RequestId);
+      }
+      if (DevEnvironment.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DevEnvironment);
+      }
+      if (DevPlatform.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DevPlatform);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -451,6 +505,12 @@ namespace Niantic.ARDK.AR.Protobuf {
       }
       if (other.RequestId.Length != 0) {
         RequestId = other.RequestId;
+      }
+      if (other.DevEnvironment.Length != 0) {
+        DevEnvironment = other.DevEnvironment;
+      }
+      if (other.DevPlatform.Length != 0) {
+        DevPlatform = other.DevPlatform;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -507,6 +567,14 @@ namespace Niantic.ARDK.AR.Protobuf {
             RequestId = input.ReadString();
             break;
           }
+          case 90: {
+            DevEnvironment = input.ReadString();
+            break;
+          }
+          case 98: {
+            DevPlatform = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -560,6 +628,14 @@ namespace Niantic.ARDK.AR.Protobuf {
           }
           case 82: {
             RequestId = input.ReadString();
+            break;
+          }
+          case 90: {
+            DevEnvironment = input.ReadString();
+            break;
+          }
+          case 98: {
+            DevPlatform = input.ReadString();
             break;
           }
         }

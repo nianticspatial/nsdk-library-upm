@@ -103,6 +103,7 @@ namespace NianticSpatial.NSDK.AR.Core
 #else
                 AltitudeIsMeanSeaLevel = false,
 #endif
+                DevEnvironment = Metadata.DevEnvironment,
             };
 
             UnityContextHandle = NativeApi.Lightship_ARDK_Unity_Context_Create(false, ref deviceInfo, ref s_environmentConfig, ref s_userConfig);
@@ -394,6 +395,7 @@ namespace NianticSpatial.NSDK.AR.Core
             public string AppInstanceId;
             public bool DeviceLidarSupported;
             public bool AltitudeIsMeanSeaLevel;
+            public string DevEnvironment;
         }
     }
 }

@@ -87,6 +87,7 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         /// <summary>
         /// Requests information for the currently authenticated user.
+        /// To fetch organizations, consider using <see cref="RequestSelfOrganizationInfoAsync"/> instead.
         /// </summary>
         /// <param name="timeoutMs">Maximum time to wait for the request to complete.</param>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
@@ -106,6 +107,29 @@ namespace NianticSpatial.NSDK.AR.Sites
 
             return await PollForResultAsync(
                 requestId, GetUserResult, UserResult.Failure, timeoutMs, cancellationToken);
+        }
+
+        /// <summary>
+        /// Requests organizations for the current authenticated session.
+        /// </summary>
+        /// <param name="timeoutMs">Maximum time to wait for the request to complete.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>The organization result.</returns>
+        public async Task<OrganizationResult> RequestSelfOrganizationInfoAsync(
+            int timeoutMs = DefaultTimeoutMs,
+            CancellationToken cancellationToken = default)
+        {
+            ThrowIfDisposed();
+
+            var status = NativeSitesApi.RequestSelfOrganizationInfo(_nsdkHandle, out var requestId);
+            if (status != NsdkStatus.Ok)
+            {
+                Log.Error($"Failed to request self organization info. Status: {status}");
+                return OrganizationResult.Failure(SitesError.UnexpectedError);
+            }
+
+            return await PollForResultAsync(
+                requestId, GetOrganizationResult, OrganizationResult.Failure, timeoutMs, cancellationToken);
         }
 
         /// <summary>
@@ -131,6 +155,7 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         /// <summary>
         /// Requests all organizations for a user.
+        /// Consider using <see cref="RequestSelfOrganizationInfoAsync"/> instead.
         /// </summary>
         public async Task<OrganizationResult> RequestOrganizationsForUserAsync(
             string userId,

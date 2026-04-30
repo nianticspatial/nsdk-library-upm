@@ -17,24 +17,24 @@ namespace NianticSpatial.NSDK.AR.Telemetry
         /// <returns>False if publishing was already started.</returns>
         public static bool TryStart(string environment)
         {
-            // Platform strings are parsed by ParseTelemetryPlatform in telemetry_publishing_api.cc.
-            // Keep these values in sync with that function and TelemetryPlatformToIdValue in
+            // Dev platform strings are parsed by ParseTelemetryDevPlatform in telemetry_publishing_api.cc.
+            // Keep these values in sync with that function and TelemetryDevPlatformToIdValue in
             // telemetry_publisher.cc.
-            string platform;
+            string devPlatform;
 
 #if UNITY_EDITOR
-            platform = "unity editor";
+            devPlatform = "unity editor";
 #elif UNITY_ANDROID
-            platform = "unity android";
+            devPlatform = "unity android";
 #elif UNITY_IOS
-            platform = "unity ios";
+            devPlatform = "unity ios";
 #else
             // Non-Unity mobile targets (e.g. standalone): empty string maps to kUnknown,
-            // so the platform field is omitted from telemetry id fields.
-            platform = string.Empty;
+            // so the dev_platform id field is omitted from telemetry id fields.
+            devPlatform = string.Empty;
 #endif
 
-            return Native.TelemetryPublishingStart(environment ?? string.Empty, platform);
+            return Native.TelemetryPublishingStart(environment ?? string.Empty, devPlatform);
         }
 
         public static void Stop()
@@ -48,7 +48,7 @@ namespace NianticSpatial.NSDK.AR.Telemetry
             [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TelemetryPublishingStart(
                 [MarshalAs(UnmanagedType.LPUTF8Str)] string environment,
-                [MarshalAs(UnmanagedType.LPUTF8Str)] string platform);
+                [MarshalAs(UnmanagedType.LPUTF8Str)] string devPlatform);
 
             [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_TelemetryPublishing_Stop")]
             public static extern void TelemetryPublishingStop();

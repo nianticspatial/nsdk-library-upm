@@ -221,6 +221,11 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             out ulong request_id_out);
 
         [DllImport(NsdkPlugin.Name)]
+        internal static extern NsdkStatus ARDK_SitesManager_RequestSelfOrganizationInfo(
+            IntPtr nsdk_handle,
+            out ulong request_id_out);
+
+        [DllImport(NsdkPlugin.Name)]
         private static extern NsdkStatus ARDK_SitesManager_RequestSiteAssetsByLocation(
             IntPtr nsdk_handle,
             double lat,
@@ -292,6 +297,11 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
         internal static NsdkStatus RequestSelfUserInfo(IntPtr nsdkHandle, out ulong requestId)
         {
             return ARDK_SitesManager_RequestSelfUserInfo(nsdkHandle, out requestId);
+        }
+
+        internal static NsdkStatus RequestSelfOrganizationInfo(IntPtr nsdkHandle, out ulong requestId)
+        {
+            return ARDK_SitesManager_RequestSelfOrganizationInfo(nsdkHandle, out requestId);
         }
 
         internal static NsdkStatus RequestSiteAssetsByLocation(

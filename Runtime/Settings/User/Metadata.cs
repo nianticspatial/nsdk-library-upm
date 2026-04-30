@@ -23,7 +23,7 @@ namespace NianticSpatial.NSDK.AR.Settings
     [PublicAPI]
     public static class Metadata
     {
-        private const string NsdkVersion = "4.0.0-26041500";
+        private const string NsdkVersion = "4.0.1-26042802";
 
         // NSDK Renaming TODO: These ardk variables are also defined in the c++ project and protobufs,
         // and will need to be updated when those do
@@ -45,6 +45,7 @@ namespace NianticSpatial.NSDK.AR.Settings
             DeviceModel = SystemInfo.deviceModel;
             Version = NsdkVersion;
             AppInstanceId = Guid.NewGuid().ToString();
+            DevEnvironment = GetDevEnvironment();
             AgeLevel = ARClientEnvelope.Types.AgeLevel.Unknown;
 
             s_isUnityContextInitialized = false;
@@ -82,6 +83,7 @@ namespace NianticSpatial.NSDK.AR.Settings
         internal static string ClientId { get; private set; }
         internal static string DeviceModel { get; }
         internal static string AppInstanceId { get; }
+        internal static string DevEnvironment { get; }
         // TODO: Remove UserId as no longer used
         internal static string UserId { get; private set; }
         internal static string AccessToken { get; private set; }
@@ -118,6 +120,7 @@ namespace NianticSpatial.NSDK.AR.Settings
                 RequestId = requestId ?? "",
                 DeviceModel = DeviceModel ?? "",
                 UserId = UserId ?? "",
+                DevEnvironment = DevEnvironment ?? "",
             };
 
             return commonMetadata;
@@ -233,6 +236,16 @@ namespace NianticSpatial.NSDK.AR.Settings
 
             // Other
             return Application.platform.ToString();
+        }
+
+        private static string GetDevEnvironment()
+        {
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+                return "windows";
+            if (Application.platform == RuntimePlatform.OSXEditor)
+                return "macos";
+            // LinuxEditor is not supported by NSDK.
+            return "";
         }
 
         private static string ConvertToBase64(string stringToConvert)
