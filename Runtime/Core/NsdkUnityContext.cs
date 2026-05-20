@@ -72,7 +72,6 @@ namespace NianticSpatial.NSDK.AR.Core
                 SmoothSemanticsEndpoint = settings.EndpointSettings.SmoothDepthSemanticsEndpoint,
 
                 TelemetryEndpoint = "",
-                TelemetryKey = "",
                 BevEndpoint = settings.EndpointSettings.BevEndpoint,
                 GeographiclibGeoidEndpoint = settings.EndpointSettings.GeographiclibGeoidEndpoint,
             };
@@ -369,7 +368,6 @@ namespace NianticSpatial.NSDK.AR.Core
             public string ScanningSqcEndpoint;
             public string ObjectDetectionEndpoint;
             public string TelemetryEndpoint;
-            public string TelemetryKey;
             public string BevEndpoint;
             public string GeographiclibGeoidEndpoint;
         }

@@ -19,7 +19,6 @@ namespace NianticSpatial.NSDK.AR.Loader
         public string SmoothDepthSemanticsEndpoint { get; set; }
         public string ScanningSqcEndpoint { get; set; }
         public string TelemetryEndpoint { get; set; }
-        public string TelemetryApiKey { get; set; }
         public string IdentityEndpoint { get; set; }
         public string BevEndpoint { get; set; }
         public string PortalEndpoint { get; set; }
@@ -42,7 +41,6 @@ namespace NianticSpatial.NSDK.AR.Loader
                 SmoothDepthSemanticsEndpoint = "https://armodels.eng.nianticspatial.com/niantic_ca_v1.2_antiflicker.bin",
 
                 TelemetryEndpoint = "https://analytics.nianticspatial.com",
-                TelemetryApiKey = "b7d03117-f80f-4039-8488-3466633f8639",
                 IdentityEndpoint = AuthEnvironment.Instance.GetIdentityEndpoint(defaultAuthEnvironment),
 
                 PortalEndpoint = "https://portal-backend-api.nianticspatial.com/api/v1/",
@@ -110,7 +108,6 @@ namespace NianticSpatial.NSDK.AR.Loader
             SmoothDepthSemanticsEndpoint = source.SmoothDepthSemanticsEndpoint;
             ScanningSqcEndpoint = source.ScanningSqcEndpoint;
             TelemetryEndpoint = source.TelemetryEndpoint;
-            TelemetryApiKey = source.TelemetryApiKey;
             IdentityEndpoint = source.IdentityEndpoint;
             BevEndpoint = source.BevEndpoint;
             PortalEndpoint = source.PortalEndpoint;

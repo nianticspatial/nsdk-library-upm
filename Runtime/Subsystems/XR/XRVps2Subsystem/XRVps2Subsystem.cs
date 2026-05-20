@@ -100,6 +100,38 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         }
 
         /// <summary>
+        /// Timeout in milliseconds for universal localization requests.
+        /// Responses in uncached areas may take 60+ seconds; subsequent requests are typically under 1 second.
+        /// Pass 0 to use the default value (90000 ms).
+        /// </summary>
+        public int UniversalLocalizationRequestTimeoutMs
+        {
+            set => provider.UniversalLocalizationRequestTimeoutMs = value;
+        }
+
+        /// <summary>
+        /// Maximum number of concurrent localization requests per target.
+        /// Limits how many in-flight cloud localization requests can be active for a single target
+        /// simultaneously. Pass 0 to use the default value (2).
+        /// </summary>
+        public uint MaxRequestsInTransitPerTarget
+        {
+            set => provider.MaxRequestsInTransitPerTarget = value;
+        }
+
+        /// <summary>
+        /// Distance gate in meters for anchor candidate filtering when geo-corrected.
+        /// Nodes farther than this distance from the device are skipped during anchor localization.
+        /// When only GPS is available (no geo-correction), the effective gate is 2x this value.
+        /// Pass 0 to use the default value (50 meters geo-corrected, 100 meters GPS-only).
+        /// Pass -1 to disable the distance check entirely.
+        /// </summary>
+        public float AnchorDistanceGateMeters
+        {
+            set => provider.AnchorDistanceGateMeters = value;
+        }
+
+        /// <summary>
         /// Get the latest VPS2 localization. The localization contains the metadata required to perform bidirectional
         /// conversions between the application’s AR tracking space and the global coordinate system
         /// (lat/lng/alt/heading).
@@ -270,6 +302,21 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
             }
 
             public virtual bool VpsDebuggerEnabled
+            {
+                set => throw new NotSupportedException();
+            }
+
+            public virtual int UniversalLocalizationRequestTimeoutMs
+            {
+                set => throw new NotSupportedException();
+            }
+
+            public virtual uint MaxRequestsInTransitPerTarget
+            {
+                set => throw new NotSupportedException();
+            }
+
+            public virtual float AnchorDistanceGateMeters
             {
                 set => throw new NotSupportedException();
             }

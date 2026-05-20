@@ -39,11 +39,6 @@ namespace NianticSpatial.NSDK.AR.Loader
             get => EndpointSettings.SmoothDepthSemanticsEndpoint;
         }
 
-        internal string TelemetryApiKey
-        {
-            get => EndpointSettings.TelemetryApiKey;
-        }
-
         internal string TelemetryEndpoint
         {
             get => EndpointSettings.TelemetryEndpoint;

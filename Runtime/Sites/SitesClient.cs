@@ -24,7 +24,6 @@ namespace NianticSpatial.NSDK.AR.Sites
         private const int DefaultPollingIntervalMs = 100;
         private const int DefaultTimeoutMs = 60000;
 
-        private IntPtr _nsdkHandle;
         private bool _isDisposed;
         private CancellationTokenRegistration _exitTokenRegistration;
 
@@ -36,13 +35,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         /// </exception>
         public SitesClient()
         {
-            _nsdkHandle = NsdkUnityContext.GetNSDKHandle(NsdkUnityContext.UnityContextHandle);
-            if (_nsdkHandle == IntPtr.Zero)
+            if (!TryGetNSDKHandle(out var handle))
             {
                 throw new InvalidOperationException("NSDK context is not initialized. Cannot create SitesClient.");
             }
 
-            var status = NativeSitesApi.ARDK_SitesManager_Create(_nsdkHandle);
+            var status = NativeSitesApi.ARDK_SitesManager_Create(handle);
             if (status != NsdkStatus.Ok && status != NsdkStatus.FeatureAlreadyExists)
             {
                 throw new InvalidOperationException($"Failed to create Sites Manager. Status: {status}");
@@ -77,8 +75,6 @@ namespace NianticSpatial.NSDK.AR.Sites
             // The native NSDK manages component lifecycle - when the NSDK handle is destroyed,
             // all its components (including SitesManager) are automatically released.
             // Calling Destroy explicitly can crash if NsdkUnityContext is already shut down.
-
-            _nsdkHandle = IntPtr.Zero;
         }
 
         // ============================================================================
@@ -98,7 +94,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestSelfUserInfo(_nsdkHandle, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestSelfUserInfo(handle, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request self user info. Status: {status}");
@@ -121,7 +122,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestSelfOrganizationInfo(_nsdkHandle, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestSelfOrganizationInfo(handle, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request self organization info. Status: {status}");
@@ -142,7 +148,13 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestUserInfo(_nsdkHandle, userId, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+
+            var status = NativeSitesApi.RequestUserInfo(handle, userId, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request user info. Status: {status}");
@@ -164,7 +176,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestOrganizationsForUser(_nsdkHandle, userId, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestOrganizationsForUser(handle, userId, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request organizations for user. Status: {status}");
@@ -185,7 +202,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestOrganizationInfo(_nsdkHandle, orgId, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestOrganizationInfo(handle, orgId, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request organization info. Status: {status}");
@@ -206,7 +228,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestSitesForOrganization(_nsdkHandle, orgId, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestSitesForOrganization(handle, orgId, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request sites for organization. Status: {status}");
@@ -227,7 +254,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestSiteInfo(_nsdkHandle, siteId, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestSiteInfo(handle, siteId, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request site info. Status: {status}");
@@ -248,7 +280,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestAssetsForSite(_nsdkHandle, siteId, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestAssetsForSite(handle, siteId, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request assets for site. Status: {status}");
@@ -269,7 +306,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
-            var status = NativeSitesApi.RequestAssetInfo(_nsdkHandle, assetId, out var requestId);
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestAssetInfo(handle, assetId, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request asset info. Status: {status}");
@@ -300,8 +342,13 @@ namespace NianticSpatial.NSDK.AR.Sites
         {
             ThrowIfDisposed();
 
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
             var status = NativeSitesApi.RequestSiteAssetsByLocation(
-                _nsdkHandle, lat, lng, radiusMeters, assetType, out var requestId);
+                handle, lat, lng, radiusMeters, assetType, out var requestId);
             if (status != NsdkStatus.Ok)
             {
                 Log.Error($"Failed to request site assets by location. Status: {status}");
@@ -315,6 +362,21 @@ namespace NianticSpatial.NSDK.AR.Sites
         // ============================================================================
         // Polling helpers
         // ============================================================================
+
+        /// <summary>
+        /// Try to get NSDK handle and check validity. Since this class's life cycle is not tied to NSDK
+        /// handle/context, we should get the handle every time calling to native API.
+        /// </summary>
+        private bool TryGetNSDKHandle(out IntPtr handle)
+        {
+            handle = NsdkUnityContext.GetNSDKHandle(NsdkUnityContext.UnityContextHandle);
+            if (!handle.IsValidHandle())
+            {
+                Log.Error("NSDK context is not initialized.");
+                return false;
+            }
+            return true;
+        }
 
         /// <summary>
         /// Result state from a single poll attempt.
@@ -395,8 +457,13 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         private PollState<UserResult> GetUserResult(ulong requestId)
         {
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                return PollState<UserResult>.Failed(SitesError.UnexpectedError);
+            }
+
             var status = NativeSitesApi.ARDK_SitesManager_GetUserResult(
-                _nsdkHandle, requestId, out var nativeResult);
+                handle, requestId, out var nativeResult);
 
             if (status != NsdkStatus.Ok)
             {
@@ -444,8 +511,13 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         private PollState<OrganizationResult> GetOrganizationResult(ulong requestId)
         {
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                return PollState<OrganizationResult>.Failed(SitesError.UnexpectedError);
+            }
+
             var status = NativeSitesApi.ARDK_SitesManager_GetOrganizationResult(
-                _nsdkHandle, requestId, out var nativeResult);
+                handle, requestId, out var nativeResult);
 
             if (status != NsdkStatus.Ok)
             {
@@ -481,8 +553,13 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         private PollState<SiteResult> GetSiteResult(ulong requestId)
         {
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                return PollState<SiteResult>.Failed(SitesError.UnexpectedError);
+            }
+
             var status = NativeSitesApi.ARDK_SitesManager_GetSiteResult(
-                _nsdkHandle, requestId, out var nativeResult);
+                handle, requestId, out var nativeResult);
 
             if (status != NsdkStatus.Ok)
             {
@@ -517,8 +594,13 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         private PollState<AssetResult> GetAssetResult(ulong requestId)
         {
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                return PollState<AssetResult>.Failed(SitesError.UnexpectedError);
+            }
+
             var status = NativeSitesApi.ARDK_SitesManager_GetAssetResult(
-                _nsdkHandle, requestId, out var nativeResult);
+                handle, requestId, out var nativeResult);
 
             if (status != NsdkStatus.Ok)
             {
@@ -553,8 +635,13 @@ namespace NianticSpatial.NSDK.AR.Sites
 
         private PollState<SiteAssetsResult> GetSiteAssetsResult(ulong requestId)
         {
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                return PollState<SiteAssetsResult>.Failed(SitesError.UnexpectedError);
+            }
+
             var status = NativeSitesApi.ARDK_SitesManager_GetSiteAssetsResult(
-                _nsdkHandle, requestId, out var nativeResult);
+                handle, requestId, out var nativeResult);
 
             if (status != NsdkStatus.Ok)
             {

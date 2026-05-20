@@ -12,6 +12,7 @@ namespace NianticSpatial.NSDK.AR.Utilities.Logging
         void ChangeStdoutLoggerLogLevel(IntPtr unityContext, LogLevel level);
         void ChangeFileLoggerLogLevel(IntPtr unityContext, LogLevel level);
         void ChangeUnityLoggerLogLevel(IntPtr unityContext, LogLevel level);
+        void SetThrottleEnabled(bool enabled);
     }
 
     internal class NativeApi : IApi
@@ -36,6 +37,11 @@ namespace NianticSpatial.NSDK.AR.Utilities.Logging
             Lightship_ARDK_Unity_Set_Callback_Log_Level(unityContext, level);
         }
 
+        public void SetThrottleEnabled(bool enabled)
+        {
+            Lightship_ARDK_Unity_Set_Throttle_Enabled(enabled);
+        }
+
         [DllImport(NsdkPlugin.Name)]
         private static extern void Lightship_ARDK_Unity_Log(LogLevel level, string log, string fileName, int fileLine, string funcname);
 
@@ -47,6 +53,9 @@ namespace NianticSpatial.NSDK.AR.Utilities.Logging
 
         [DllImport(NsdkPlugin.Name)]
         private static extern void Lightship_ARDK_Unity_Set_Callback_Log_Level(IntPtr unityContext, LogLevel level);
+
+        [DllImport(NsdkPlugin.Name)]
+        private static extern void Lightship_ARDK_Unity_Set_Throttle_Enabled(bool enabled);
 
     }
 }

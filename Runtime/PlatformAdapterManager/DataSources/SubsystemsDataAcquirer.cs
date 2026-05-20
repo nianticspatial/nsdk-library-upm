@@ -120,9 +120,16 @@ namespace NianticSpatial.NSDK.AR.PAM
                 );
             }
 
+            FlushMemory();
+        }
+
+        public override void FlushMemory()
+        {
             _cameraCpuImage.Dispose();
             _depthCpuImage.Dispose();
             _depthConfidenceCpuImage.Dispose();
+
+            base.FlushMemory();
         }
 
         // Uses the XRGeneralSettings.instance singleton to connect to all subsystem references.
@@ -242,7 +249,6 @@ namespace NianticSpatial.NSDK.AR.PAM
 
         public override bool TryGetCpuImage(out NsdkCpuImage cpuImage)
         {
-            _cameraCpuImage.Dispose(); // TODO(bevangelista) Avoid silently releasing resources on TryGets
             cpuImage = default;
 
             return _cameraSubsystem.TryAcquireLatestCpuImage(out _cameraCpuImage) &&
@@ -255,8 +261,6 @@ namespace NianticSpatial.NSDK.AR.PAM
             out NsdkCpuImage confidenceCpuImage
         )
         {
-            _depthCpuImage.Dispose();              // TODO(bevangelista) Avoid silently releasing resources on TryGets
-            _depthConfidenceCpuImage.Dispose();    // TODO(bevangelista) Avoid silently releasing resources on TryGets
             depthCpuImage = default;
             confidenceCpuImage = default;
 

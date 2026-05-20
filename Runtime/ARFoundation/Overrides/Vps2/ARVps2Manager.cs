@@ -53,6 +53,16 @@ namespace NianticSpatial.NSDK.AR.VPS2
         [SerializeField]
         private bool _vpsDebuggerEnabled = false;
 
+        [Tooltip("Maximum concurrent localization requests per target. 0 = default (2).")]
+        [SerializeField]
+        private uint _maxRequestsInTransitPerTarget = 0;
+
+        [Tooltip("Distance gate in meters for anchor candidate filtering when geo-corrected. " +
+            "GPS-only gate is 2x this value. 0 = default (50m), -1 = disabled.")]
+        [SerializeField]
+        private float _anchorDistanceGateMeters = 0;
+
+
         public bool UniversalLocalizationEnabled
         {
             get => _universalLocalizationEnabled;
@@ -166,6 +176,43 @@ namespace NianticSpatial.NSDK.AR.VPS2
                 if (subsystem != null)
                 {
                     subsystem.DeviceMapLocalizationFramerate = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Maximum number of concurrent localization requests per target.
+        /// Pass 0 to use the default value (2).
+        /// </summary>
+        public uint MaxRequestsInTransitPerTarget
+        {
+            get => _maxRequestsInTransitPerTarget;
+            set
+            {
+                _maxRequestsInTransitPerTarget = value;
+                if (subsystem != null)
+                {
+                    subsystem.MaxRequestsInTransitPerTarget = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Distance gate in meters for anchor candidate filtering when geo-corrected.
+        /// Nodes farther than this distance from the device are skipped during anchor localization.
+        /// When only GPS is available (no geo-correction), the effective gate is 2x this value.
+        /// Pass 0 to use the default value (50 meters geo-corrected, 100 meters GPS-only).
+        /// Pass -1 to disable the distance check entirely.
+        /// </summary>
+        public float AnchorDistanceGateMeters
+        {
+            get => _anchorDistanceGateMeters;
+            set
+            {
+                _anchorDistanceGateMeters = value;
+                if (subsystem != null)
+                {
+                    subsystem.AnchorDistanceGateMeters = value;
                 }
             }
         }
@@ -341,6 +388,8 @@ namespace NianticSpatial.NSDK.AR.VPS2
             subsystem.VpsDebuggerEnabled = _vpsDebuggerEnabled;
             subsystem.DeviceMapLocalizationEnabled = _deviceMapLocalizationEnabled;
             subsystem.DeviceMapLocalizationFramerate = _deviceMapLocalizationFramerate;
+            subsystem.MaxRequestsInTransitPerTarget = _maxRequestsInTransitPerTarget;
+            subsystem.AnchorDistanceGateMeters = _anchorDistanceGateMeters;
         }
 
         protected override void Update()

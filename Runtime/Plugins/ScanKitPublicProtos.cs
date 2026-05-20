@@ -38,7 +38,7 @@ namespace Niantic.ARDK.AR.Protobuf {
             "ZXhwb3N1cmUSJgoFcmFuZ2UYByABKAsyEC5EZXB0aFJhbmdlUHJvdG9SBXJh",
             "bmdlEhgKB3F1YWxpdHkYCCABKAJSB3F1YWxpdHkSJAoOaXNfbGFyZ2VfaW1h",
             "Z2UYCSABKAhSDGlzTGFyZ2VJbWFnZRIlCg50cmFja2luZ19zdGF0ZRgKIAEo",
-            "BVINdHJhY2tpbmdTdGF0ZSK9BAoRU2Nhbk1ldGFkYXRhUHJvdG8SDgoCaWQY",
+            "BVINdHJhY2tpbmdTdGF0ZSLpBAoRU2Nhbk1ldGFkYXRhUHJvdG8SDgoCaWQY",
             "ASABKAlSAmlkEi8KCmltYWdlX3NpemUYAiABKAsyEC5SYXN0ZXJTaXplUHJv",
             "dG9SCWltYWdlU2l6ZRIvCgpkZXB0aF9zaXplGAMgASgLMhAuUmFzdGVyU2l6",
             "ZVByb3RvUglkZXB0aFNpemUSJwoPc3RhcnRfdGltZXN0YW1wGAQgASgBUg5z",
@@ -51,43 +51,44 @@ namespace Niantic.ARDK.AR.Protobuf {
             "IQoMbmF0aXZlX2RlcHRoGAwgASgIUgtuYXRpdmVEZXB0aBIWCgZvcmlnaW4Y",
             "DSADKAJSBm9yaWdpbhInCg9nbG9iYWxfcm90YXRpb24YDiADKAJSDmdsb2Jh",
             "bFJvdGF0aW9uEikKEHJlY29yZGVyX3ZlcnNpb24YECABKAVSD3JlY29yZGVy",
-            "VmVyc2lvbiKPAQoRQ2FtZXJhUGFyYW1zUHJvdG8SFAoFd2lkdGgYASABKAVS",
-            "BXdpZHRoEhYKBmhlaWdodBgCIAEoBVIGaGVpZ2h0Eg4KAmZ4GAMgASgCUgJm",
-            "eBIOCgJmeRgHIAEoAlICZnkSDgoCcHgYBCABKAJSAnB4Eg4KAnB5GAUgASgC",
-            "UgJweRIMCgFrGAYgASgCUgFrIlQKFEFmZmluZVRyYW5zZm9ybVByb3RvEhoK",
-            "CHJvdGF0aW9uGAEgAygCUghyb3RhdGlvbhIgCgt0cmFuc2xhdGlvbhgCIAMo",
-            "AlILdHJhbnNsYXRpb24ilAQKDUxvY2F0aW9uUHJvdG8SHAoJdGltZXN0YW1w",
-            "GAEgASgBUgl0aW1lc3RhbXASGgoIbGF0aXR1ZGUYAiABKAFSCGxhdGl0dWRl",
-            "EhwKCWxvbmdpdHVkZRgDIAEoAVIJbG9uZ2l0dWRlEhoKCGFjY3VyYWN5GAQg",
-            "ASgCUghhY2N1cmFjeRIpChBlbGV2YXRpb25fbWV0ZXJzGAUgASgCUg9lbGV2",
-            "YXRpb25NZXRlcnMSLQoSZWxldmF0aW9uX2FjY3VyYWN5GAYgASgCUhFlbGV2",
-            "YXRpb25BY2N1cmFjeRInCg9oZWFkaW5nX2RlZ3JlZXMYByABKAJSDmhlYWRp",
-            "bmdEZWdyZWVzEikKEGhlYWRpbmdfYWNjdXJhY3kYCCABKAJSD2hlYWRpbmdB",
-            "Y2N1cmFjeRIrChFoZWFkaW5nX3RpbWVzdGFtcBgJIAEoAVIQaGVhZGluZ1Rp",
-            "bWVzdGFtcBItChJwb3NpdGlvbl90aW1lc3RhbXAYCiABKAFSEXBvc2l0aW9u",
-            "VGltZXN0YW1wEisKEmhlYWRpbmdfcmF3X2RhdGFfeBgLIAEoAlIPaGVhZGlu",
-            "Z1Jhd0RhdGFYEisKEmhlYWRpbmdfcmF3X2RhdGFfeRgMIAEoAlIPaGVhZGlu",
-            "Z1Jhd0RhdGFZEisKEmhlYWRpbmdfcmF3X2RhdGFfehgNIAEoAlIPaGVhZGlu",
-            "Z1Jhd0RhdGFaIp8BChZTaWduYWxBY2Nlc3NQb2ludFByb3RvEhQKBWJzc2lk",
-            "GAEgASgJUgVic3NpZBISCgRyc3NpGAIgASgFUgRyc3NpEjYKBHR5cGUYAyAB",
-            "KA4yIi5TaWduYWxBY2Nlc3NQb2ludFByb3RvLlNpZ25hbFR5cGVSBHR5cGUi",
-            "IwoKU2lnbmFsVHlwZRILCgdVTktOT1dOEAASCAoEV0lGSRABIksKC1NpZ25h",
-            "bFByb3RvEjwKDWFjY2Vzc19wb2ludHMYASADKAsyFy5TaWduYWxBY2Nlc3NQ",
-            "b2ludFByb3RvUgxhY2Nlc3NQb2ludHMiRQoRRXhwb3N1cmVJbmZvUHJvdG8S",
-            "GAoHc2h1dHRlchgBIAEoAlIHc2h1dHRlchIWCgZvZmZzZXQYAiABKAJSBm9m",
-            "ZnNldCI3Cg9EZXB0aFJhbmdlUHJvdG8SEgoEbmVhchgBIAEoAlIEbmVhchIQ",
-            "CgNmYXIYAiABKAJSA2ZhciI/Cg9SYXN0ZXJTaXplUHJvdG8SFAoFd2lkdGgY",
-            "ASABKAVSBXdpZHRoEhYKBmhlaWdodBgCIAEoBVIGaGVpZ2h0IoQBChBCb3Vu",
-            "ZGluZ0JveFByb3RvEhEKBGxvX3gYASABKAJSA2xvWBIRCgRsb195GAIgASgC",
-            "UgNsb1kSEQoEbG9fehgDIAEoAlIDbG9aEhEKBGhpX3gYBCABKAJSA2hpWBIR",
-            "CgRoaV95GAUgASgCUgNoaVkSEQoEaGlfehgGIAEoAlIDaGlaQhuqAhhOaWFu",
-            "dGljLkFSREsuQVIuUHJvdG9idWZiBnByb3RvMw=="));
+            "VmVyc2lvbhIqChFtdWx0aV9zZW5zb3Jfc3luYxgRIAEoCFIPbXVsdGlTZW5z",
+            "b3JTeW5jIo8BChFDYW1lcmFQYXJhbXNQcm90bxIUCgV3aWR0aBgBIAEoBVIF",
+            "d2lkdGgSFgoGaGVpZ2h0GAIgASgFUgZoZWlnaHQSDgoCZngYAyABKAJSAmZ4",
+            "Eg4KAmZ5GAcgASgCUgJmeRIOCgJweBgEIAEoAlICcHgSDgoCcHkYBSABKAJS",
+            "AnB5EgwKAWsYBiABKAJSAWsiVAoUQWZmaW5lVHJhbnNmb3JtUHJvdG8SGgoI",
+            "cm90YXRpb24YASADKAJSCHJvdGF0aW9uEiAKC3RyYW5zbGF0aW9uGAIgAygC",
+            "Ugt0cmFuc2xhdGlvbiKUBAoNTG9jYXRpb25Qcm90bxIcCgl0aW1lc3RhbXAY",
+            "ASABKAFSCXRpbWVzdGFtcBIaCghsYXRpdHVkZRgCIAEoAVIIbGF0aXR1ZGUS",
+            "HAoJbG9uZ2l0dWRlGAMgASgBUglsb25naXR1ZGUSGgoIYWNjdXJhY3kYBCAB",
+            "KAJSCGFjY3VyYWN5EikKEGVsZXZhdGlvbl9tZXRlcnMYBSABKAJSD2VsZXZh",
+            "dGlvbk1ldGVycxItChJlbGV2YXRpb25fYWNjdXJhY3kYBiABKAJSEWVsZXZh",
+            "dGlvbkFjY3VyYWN5EicKD2hlYWRpbmdfZGVncmVlcxgHIAEoAlIOaGVhZGlu",
+            "Z0RlZ3JlZXMSKQoQaGVhZGluZ19hY2N1cmFjeRgIIAEoAlIPaGVhZGluZ0Fj",
+            "Y3VyYWN5EisKEWhlYWRpbmdfdGltZXN0YW1wGAkgASgBUhBoZWFkaW5nVGlt",
+            "ZXN0YW1wEi0KEnBvc2l0aW9uX3RpbWVzdGFtcBgKIAEoAVIRcG9zaXRpb25U",
+            "aW1lc3RhbXASKwoSaGVhZGluZ19yYXdfZGF0YV94GAsgASgCUg9oZWFkaW5n",
+            "UmF3RGF0YVgSKwoSaGVhZGluZ19yYXdfZGF0YV95GAwgASgCUg9oZWFkaW5n",
+            "UmF3RGF0YVkSKwoSaGVhZGluZ19yYXdfZGF0YV96GA0gASgCUg9oZWFkaW5n",
+            "UmF3RGF0YVoinwEKFlNpZ25hbEFjY2Vzc1BvaW50UHJvdG8SFAoFYnNzaWQY",
+            "ASABKAlSBWJzc2lkEhIKBHJzc2kYAiABKAVSBHJzc2kSNgoEdHlwZRgDIAEo",
+            "DjIiLlNpZ25hbEFjY2Vzc1BvaW50UHJvdG8uU2lnbmFsVHlwZVIEdHlwZSIj",
+            "CgpTaWduYWxUeXBlEgsKB1VOS05PV04QABIICgRXSUZJEAEiSwoLU2lnbmFs",
+            "UHJvdG8SPAoNYWNjZXNzX3BvaW50cxgBIAMoCzIXLlNpZ25hbEFjY2Vzc1Bv",
+            "aW50UHJvdG9SDGFjY2Vzc1BvaW50cyJFChFFeHBvc3VyZUluZm9Qcm90bxIY",
+            "CgdzaHV0dGVyGAEgASgCUgdzaHV0dGVyEhYKBm9mZnNldBgCIAEoAlIGb2Zm",
+            "c2V0IjcKD0RlcHRoUmFuZ2VQcm90bxISCgRuZWFyGAEgASgCUgRuZWFyEhAK",
+            "A2ZhchgCIAEoAlIDZmFyIj8KD1Jhc3RlclNpemVQcm90bxIUCgV3aWR0aBgB",
+            "IAEoBVIFd2lkdGgSFgoGaGVpZ2h0GAIgASgFUgZoZWlnaHQihAEKEEJvdW5k",
+            "aW5nQm94UHJvdG8SEQoEbG9feBgBIAEoAlIDbG9YEhEKBGxvX3kYAiABKAJS",
+            "A2xvWRIRCgRsb196GAMgASgCUgNsb1oSEQoEaGlfeBgEIAEoAlIDaGlYEhEK",
+            "BGhpX3kYBSABKAJSA2hpWRIRCgRoaV96GAYgASgCUgNoaVpCG6oCGE5pYW50",
+            "aWMuQVJESy5BUi5Qcm90b2J1ZmIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.FramesProto), global::Niantic.ARDK.AR.Protobuf.FramesProto.Parser, new[]{ "Id", "Frames", "Anchors", "Locations", "Keyframes" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.FrameProto), global::Niantic.ARDK.AR.Protobuf.FrameProto.Parser, new[]{ "Id", "Anchor", "Timestamp", "Camera", "Transform", "Exposure", "Range", "Quality", "IsLargeImage", "TrackingState" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.ScanMetadataProto), global::Niantic.ARDK.AR.Protobuf.ScanMetadataProto.Parser, new[]{ "Id", "ImageSize", "DepthSize", "StartTimestamp", "TimezoneOffset", "AppName", "PlatformName", "ModelName", "ManufacturerName", "Poi", "Recorder", "UserJson", "NativeDepth", "Origin", "GlobalRotation", "RecorderVersion" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.ScanMetadataProto), global::Niantic.ARDK.AR.Protobuf.ScanMetadataProto.Parser, new[]{ "Id", "ImageSize", "DepthSize", "StartTimestamp", "TimezoneOffset", "AppName", "PlatformName", "ModelName", "ManufacturerName", "Poi", "Recorder", "UserJson", "NativeDepth", "Origin", "GlobalRotation", "RecorderVersion", "MultiSensorSync" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.CameraParamsProto), global::Niantic.ARDK.AR.Protobuf.CameraParamsProto.Parser, new[]{ "Width", "Height", "Fx", "Fy", "Px", "Py", "K" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.AffineTransformProto), global::Niantic.ARDK.AR.Protobuf.AffineTransformProto.Parser, new[]{ "Rotation", "Translation" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.ARDK.AR.Protobuf.LocationProto), global::Niantic.ARDK.AR.Protobuf.LocationProto.Parser, new[]{ "Timestamp", "Latitude", "Longitude", "Accuracy", "ElevationMeters", "ElevationAccuracy", "HeadingDegrees", "HeadingAccuracy", "HeadingTimestamp", "PositionTimestamp", "HeadingRawDataX", "HeadingRawDataY", "HeadingRawDataZ" }, null, null, null, null),
@@ -1007,6 +1008,7 @@ namespace Niantic.ARDK.AR.Protobuf {
       origin_ = other.origin_.Clone();
       globalRotation_ = other.globalRotation_.Clone();
       recorderVersion_ = other.recorderVersion_;
+      multiSensorSync_ = other.multiSensorSync_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1206,6 +1208,18 @@ namespace Niantic.ARDK.AR.Protobuf {
       }
     }
 
+    /// <summary>Field number for the "multi_sensor_sync" field.</summary>
+    public const int MultiSensorSyncFieldNumber = 17;
+    private bool multiSensorSync_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool MultiSensorSync {
+      get { return multiSensorSync_; }
+      set {
+        multiSensorSync_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1237,6 +1251,7 @@ namespace Niantic.ARDK.AR.Protobuf {
       if(!origin_.Equals(other.origin_)) return false;
       if(!globalRotation_.Equals(other.globalRotation_)) return false;
       if (RecorderVersion != other.RecorderVersion) return false;
+      if (MultiSensorSync != other.MultiSensorSync) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1260,6 +1275,7 @@ namespace Niantic.ARDK.AR.Protobuf {
       hash ^= origin_.GetHashCode();
       hash ^= globalRotation_.GetHashCode();
       if (RecorderVersion != 0) hash ^= RecorderVersion.GetHashCode();
+      if (MultiSensorSync != false) hash ^= MultiSensorSync.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1336,6 +1352,10 @@ namespace Niantic.ARDK.AR.Protobuf {
         output.WriteRawTag(128, 1);
         output.WriteInt32(RecorderVersion);
       }
+      if (MultiSensorSync != false) {
+        output.WriteRawTag(136, 1);
+        output.WriteBool(MultiSensorSync);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1404,6 +1424,10 @@ namespace Niantic.ARDK.AR.Protobuf {
         output.WriteRawTag(128, 1);
         output.WriteInt32(RecorderVersion);
       }
+      if (MultiSensorSync != false) {
+        output.WriteRawTag(136, 1);
+        output.WriteBool(MultiSensorSync);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1457,6 +1481,9 @@ namespace Niantic.ARDK.AR.Protobuf {
       size += globalRotation_.CalculateSize(_repeated_globalRotation_codec);
       if (RecorderVersion != 0) {
         size += 2 + pb::CodedOutputStream.ComputeInt32Size(RecorderVersion);
+      }
+      if (MultiSensorSync != false) {
+        size += 2 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1519,6 +1546,9 @@ namespace Niantic.ARDK.AR.Protobuf {
       globalRotation_.Add(other.globalRotation_);
       if (other.RecorderVersion != 0) {
         RecorderVersion = other.RecorderVersion;
+      }
+      if (other.MultiSensorSync != false) {
+        MultiSensorSync = other.MultiSensorSync;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1607,6 +1637,10 @@ namespace Niantic.ARDK.AR.Protobuf {
             RecorderVersion = input.ReadInt32();
             break;
           }
+          case 136: {
+            MultiSensorSync = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -1692,6 +1726,10 @@ namespace Niantic.ARDK.AR.Protobuf {
           }
           case 128: {
             RecorderVersion = input.ReadInt32();
+            break;
+          }
+          case 136: {
+            MultiSensorSync = input.ReadBool();
             break;
           }
         }

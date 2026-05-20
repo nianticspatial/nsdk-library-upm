@@ -53,6 +53,9 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
             private bool _deviceMapLocalizationEnabled = false;
             private int _deviceMapLocalizationFramerate = 0;
             private bool _vpsDebuggerEnabled = false;
+            private int _universalLocalizationRequestTimeoutMs = 0;
+            private uint _maxRequestsInTransitPerTarget = 0;
+            private float _anchorDistanceGateMeters = 0;
 
             private bool _configDirty;
 
@@ -183,6 +186,42 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 }
             }
 
+            public override int UniversalLocalizationRequestTimeoutMs
+            {
+                set
+                {
+                    if (_universalLocalizationRequestTimeoutMs != value)
+                    {
+                        _universalLocalizationRequestTimeoutMs = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override uint MaxRequestsInTransitPerTarget
+            {
+                set
+                {
+                    if (_maxRequestsInTransitPerTarget != value)
+                    {
+                        _maxRequestsInTransitPerTarget = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override float AnchorDistanceGateMeters
+            {
+                set
+                {
+                    if (!Mathf.Approximately(_anchorDistanceGateMeters, value))
+                    {
+                        _anchorDistanceGateMeters = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
             public NsdkProvider() : this(new NativeApi()) { }
             public NsdkProvider(IApi api)
             {
@@ -284,7 +323,10 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     geolocationSmoothingEnabled = _geolocationSmoothingEnabled,
                     deviceMapLocalizationEnabled = _deviceMapLocalizationEnabled,
                     deviceMapLocalizationFramerate = _deviceMapLocalizationFramerate,
-                    vpsDebuggerEnabled = _vpsDebuggerEnabled
+                    vpsDebuggerEnabled = _vpsDebuggerEnabled,
+                    universalLocalizationRequestTimeoutMs = _universalLocalizationRequestTimeoutMs,
+                    maxRequestsInTransitPerTarget = _maxRequestsInTransitPerTarget,
+                    anchorDistanceGateMeters = _anchorDistanceGateMeters
                 };
 
                 _api.Configure(_nativeProviderHandle, config).ThrowExceptionIfNeeded();

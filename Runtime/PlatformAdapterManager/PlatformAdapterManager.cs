@@ -195,16 +195,16 @@ namespace NianticSpatial.NSDK.AR.PAM
 
                 // Check if we are requesting a camera image
                 var getCameraImage = (_readyDataFormats & DataFormatFlags.kImage) != DataFormatFlags.kNone;
-                if (getCameraImage && _platformDataAcquirer.TryGetCpuImage(out var cpuCamera))
+                if (getCameraImage && _platformDataAcquirer.TryGetCpuImage(out var cpuImage))
                 {
                     includeCameraFrame = true;
                     _platformDataAcquirer.TryGetCameraIntrinsicsCStruct(out cameraFrame.CameraIntrinsics);
-                    cameraFrame.CameraImagePlane0.SetImagePlane(cpuCamera.Planes[0]);
-                    cameraFrame.CameraImagePlane1.SetImagePlane(cpuCamera.Planes[1]);
-                    cameraFrame.CameraImagePlane2.SetImagePlane(cpuCamera.Planes[2]);
-                    cameraFrame.CameraImageFormat = cpuCamera.Format;
-                    cameraFrame.CameraImageWidth = cpuCamera.Width;
-                    cameraFrame.CameraImageHeight = cpuCamera.Height;
+                    cameraFrame.CameraImagePlane0.SetImagePlane(cpuImage.Planes[0]);
+                    cameraFrame.CameraImagePlane1.SetImagePlane(cpuImage.Planes[1]);
+                    cameraFrame.CameraImagePlane2.SetImagePlane(cpuImage.Planes[2]);
+                    cameraFrame.CameraImageFormat = cpuImage.Format;
+                    cameraFrame.CameraImageWidth = cpuImage.Width;
+                    cameraFrame.CameraImageHeight = cpuImage.Height;
                 }
 
                 // Check if we are requesting a depth image
@@ -298,6 +298,7 @@ namespace NianticSpatial.NSDK.AR.PAM
                 }
             }
 
+            _platformDataAcquirer.FlushMemory();
             ProfilerUtility.EventEnd(TraceCategory, traceMethodName);
         }
     }
