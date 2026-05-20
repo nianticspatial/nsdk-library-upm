@@ -40,6 +40,17 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             public bool deviceMapLocalizationEnabled;
 
             public int deviceMapLocalizationFramerate;
+
+            // Layout padding: keeps this struct in sync with ARDK_VPS2_Config which has
+            // aerial_localization_enabled at this position. Always false from Unity.
+            [MarshalAs(UnmanagedType.U1)]
+            private bool aerialLocalizationEnabled;
+
+            public int universalLocalizationRequestTimeoutMs;
+
+            public uint maxRequestsInTransitPerTarget;
+
+            public float anchorDistanceGateMeters;
         }
 
         // Defined in ardk_vps2_localization.h

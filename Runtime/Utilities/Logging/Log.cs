@@ -167,6 +167,17 @@ namespace NianticSpatial.NSDK.AR.Utilities.Logging
         }
 
         /// <summary>
+        /// Enables or disables per-callsite log throttling globally.
+        /// When disabled, all throttled callsites log unconditionally — useful for debugging noisy per-frame logs.
+        /// Throttling is enabled by default.
+        /// </summary>
+        /// <param name="enabled">True to enable throttling (default), false to disable.</param>
+        public static void SetThrottleEnabled(bool enabled)
+        {
+            s_api.SetThrottleEnabled(enabled);
+        }
+
+        /// <summary>
         /// Change the api for testing
         /// </summary>
         /// <param name="api">the mock impl to be provided here</param>

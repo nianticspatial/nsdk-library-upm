@@ -11,6 +11,8 @@ namespace NianticSpatial.NSDK.AR.PAM
     {
         public abstract bool TryToBeReady();
 
+        public virtual void FlushMemory() { }
+
         public abstract bool TryGetCameraTimestampMs(out double timestampMs);
 
         public abstract bool TryGetCameraPose(out Matrix4x4 pose);
