@@ -51,6 +51,24 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             public uint maxRequestsInTransitPerTarget;
 
             public float anchorDistanceGateMeters;
+
+            // Layout padding: keeps this struct in sync with ARDK_VPS2_Config's nested
+            // ARDK_VPS2_InternalConfig sub-struct. Not exposed to Unity callers — those
+            // fields are intentionally internal and only the Python and ROS2 SDKs mirror
+            // them. Always zero-initialized from Unity.
+            private NsdkVps2InternalConfig _internal;
+        }
+
+        // Layout-only mirror of ARDK_VPS2_InternalConfig. Marked private so it never
+        // becomes part of the Unity public API surface.
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NsdkVps2InternalConfig
+        {
+            private int _wpsPriorMode;
+            private float _wpsPriorDistanceThreshold;
+            private float _wpsGnssFramerate;
+            private float _wpsPoseFramerate;
+            private float _bevConfidenceThreshold;
         }
 
         // Defined in ardk_vps2_localization.h

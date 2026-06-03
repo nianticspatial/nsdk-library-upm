@@ -78,10 +78,6 @@ namespace NianticSpatial.NSDK.AR.Core
 
             s_userConfig = new UserConfig
             {
-                // TODO: ARDK-7769 Remove ApiKey when it is removed from underlying C API
-                ApiKey = string.Empty,
-                // Refresh token is not set — token refresh is handled entirely in C#.
-                // The RefreshToken field in UserConfig is kept for C ABI compatibility only.
                 AccessToken = settings.AccessToken,
                 FeatureFlagFilePath = string.IsNullOrEmpty(featureFlagFilePath) ? GetFeatureFlagPath() : featureFlagFilePath,
             };
@@ -127,7 +123,7 @@ namespace NianticSpatial.NSDK.AR.Core
                 // Native process-wide sink drain (ardk::TelemetryPublisher); independent of C# TelemetryService.
                 try
                 {
-                    if (!TelemetryPublishingNative.TryStart(settings.AuthEnvironment.ToString()))
+                    if (!TelemetryPublishingNative.TryStart())
                     {
                         Log.Debug("Native telemetry publishing was already started.");
                     }
@@ -376,9 +372,7 @@ namespace NianticSpatial.NSDK.AR.Core
         [StructLayout(LayoutKind.Sequential)]
         private struct UserConfig
         {
-            public string ApiKey;
             public string AccessToken;
-            public string RefreshToken;
             public string FeatureFlagFilePath;
         }
 

@@ -11,10 +11,10 @@ namespace NianticSpatial.NSDK.AR.Utilities.Http
         ProtocolError, // all 4xx and 5xx => see Gateway
 
         // From API Gateway
-        /// No API key specified
-        ApiKeyMissing = 400,
+        /// No authorization credentials specified
+        AuthMissing = 400,
 
-        /// API key is not valid
+        /// Authorization credentials are not valid
         Forbidden = 403,
 
         /// Too many requests in a short time triggered Rate Limiting

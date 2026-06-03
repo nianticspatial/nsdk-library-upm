@@ -12,10 +12,8 @@ namespace NianticSpatial.NSDK.AR.Telemetry
     /// </summary>
     public static class TelemetryPublishingNative
     {
-        /// <param name="environment">Telemetry ingest environment (e.g. from <c>AuthEnvironmentType</c> via
-        /// <c>ToString()</c>: Dev, Staging, Production).</param>
         /// <returns>False if publishing was already started.</returns>
-        public static bool TryStart(string environment)
+        public static bool TryStart()
         {
             // Dev platform strings are parsed by ParseTelemetryDevPlatform in telemetry_publishing_api.cc.
             // Keep these values in sync with that function and TelemetryDevPlatformToIdValue in
@@ -34,7 +32,7 @@ namespace NianticSpatial.NSDK.AR.Telemetry
             devPlatform = string.Empty;
 #endif
 
-            return Native.TelemetryPublishingStart(environment ?? string.Empty, devPlatform);
+            return Native.TelemetryPublishingStart(devPlatform);
         }
 
         public static void Stop()
@@ -47,7 +45,6 @@ namespace NianticSpatial.NSDK.AR.Telemetry
             [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_TelemetryPublishing_Start")]
             [return: MarshalAs(UnmanagedType.I1)]
             public static extern bool TelemetryPublishingStart(
-                [MarshalAs(UnmanagedType.LPUTF8Str)] string environment,
                 [MarshalAs(UnmanagedType.LPUTF8Str)] string devPlatform);
 
             [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_TelemetryPublishing_Stop")]

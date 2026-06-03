@@ -1,7 +1,7 @@
 {
   "name": "com.nianticspatial.nsdk",
   "displayName": "Niantic Spatial Development Kit AR Plugin",
-  "version": "4.1.0-26051913",
+  "version": "4.2.0-c.319965",
   "unity": "2021.3",
   "description": "Provides native Niantic Spatial Development Kit integration for use with Unity's multi-platform XR API.\n* NSDK is a trademark of Niantic Spatial Inc., registered in the U.S. and other countries and regions. \n Samples available at https://github.com/nianticspatial/nsdk-samples-csharp",
   "keywords": [

@@ -80,6 +80,11 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// <summary>The frame was rejected because the camera is pointing at the ground or sky
         /// (no horizon crossing).</summary>
         BadCameraAngle,
+
+        /// <summary>The frame was rejected before dispatch because no valid geolocation prior was
+        /// available — the GPS reading was NaN or a placeholder and no other valid prior (e.g. a
+        /// WPS estimate) could be substituted.</summary>
+        NoValidPrior,
     }
 
     /// <summary>

@@ -32,6 +32,8 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
     private SerializedProperty _deviceMapLocalizationEnabled;
     private SerializedProperty _deviceMapLocalizationFramerate;
     private SerializedProperty _vpsDebuggerEnabled;
+    private SerializedProperty _maxRequestsInTransitPerTarget;
+    private SerializedProperty _anchorDistanceGateMeters;
 
     static _ARLocationManagerEditor()
     {
@@ -86,6 +88,8 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
             EditorGUILayout.PropertyField(_deviceMapLocalizationEnabled);
             EditorGUILayout.PropertyField(_deviceMapLocalizationFramerate);
             EditorGUILayout.PropertyField(_vpsDebuggerEnabled);
+            EditorGUILayout.PropertyField(_maxRequestsInTransitPerTarget);
+            EditorGUILayout.PropertyField(_anchorDistanceGateMeters);
         }
 
         EditorGUILayout.Space();
@@ -316,6 +320,8 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
         _deviceMapLocalizationEnabled = serializedObject.FindProperty("_deviceMapLocalizationEnabled");
         _deviceMapLocalizationFramerate = serializedObject.FindProperty("_deviceMapLocalizationFramerate");
         _vpsDebuggerEnabled = serializedObject.FindProperty("_vpsDebuggerEnabled");
+        _maxRequestsInTransitPerTarget = serializedObject.FindProperty("_maxRequestsInTransitPerTarget");
+        _anchorDistanceGateMeters = serializedObject.FindProperty("_anchorDistanceGateMeters");
     }
 }
 #endif

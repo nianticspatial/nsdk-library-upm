@@ -23,7 +23,7 @@ namespace NianticSpatial.NSDK.AR.Settings
     [PublicAPI]
     public static class Metadata
     {
-        private const string NsdkVersion = "4.1.0-26051913";
+        private const string NsdkVersion = "4.2.0-c.319965";
 
         // NSDK Renaming TODO: These ardk variables are also defined in the c++ project and protobufs,
         // and will need to be updated when those do
@@ -46,7 +46,6 @@ namespace NianticSpatial.NSDK.AR.Settings
             Version = NsdkVersion;
             AppInstanceId = Guid.NewGuid().ToString();
             DevEnvironment = GetDevEnvironment();
-            AgeLevel = ARClientEnvelope.Types.AgeLevel.Unknown;
 
             s_isUnityContextInitialized = false;
             NsdkUnityContext.OnUnityContextHandleInitialized += () =>
@@ -87,7 +86,6 @@ namespace NianticSpatial.NSDK.AR.Settings
         // TODO: Remove UserId as no longer used
         internal static string UserId { get; private set; }
         internal static string AccessToken { get; private set; }
-        internal static ARClientEnvelope.Types.AgeLevel AgeLevel { get; private set; }
 
         internal static Dictionary<string, string> GetApiGatewayHeaders(string requestId = null)
         {
@@ -132,28 +130,27 @@ namespace NianticSpatial.NSDK.AR.Settings
 
             ARClientEnvelope clientEnvelope = new ARClientEnvelope()
             {
-                AgeLevel = AgeLevel,
                 ArCommonMetadata = GetArCommonMetadata(requestId),
             };
 
             return JsonFormatter.Default.Format(clientEnvelope);
         }
 
-        internal static void SetUserId(string userId)
+        internal static void SetUserInfo(string userId)
         {
 #if NIANTICSPATIAL_NSDK_AR_LOADER_ENABLED
             RunUnityContextCheck();
 
             userId = GetSanitizedUserId(userId);
-            Lightship_ARDK_Unity_CoreContext_SetUserId(NsdkUnityContext.UnityContextHandle, userId);
+            Lightship_ARDK_Unity_CoreContext_SetUserInfo(NsdkUnityContext.UnityContextHandle, userId);
 
             UserId = userId;
 #endif
         }
 
-        internal static void ClearUserId()
+        internal static void ClearUserInfo()
         {
-            SetUserId(string.Empty);
+            SetUserInfo(string.Empty);
         }
 
         /// <summary>
@@ -173,7 +170,6 @@ namespace NianticSpatial.NSDK.AR.Settings
             AccessToken = accessToken;
 #endif
         }
-
 
         /// <summary>
         /// For desktops, returns SystemInfo.deviceUniqueIdentifier since it will not change for the device.
@@ -392,7 +388,7 @@ namespace NianticSpatial.NSDK.AR.Settings
         }
 
         [DllImport(NsdkPlugin.Name)]
-        private static extern void Lightship_ARDK_Unity_CoreContext_SetUserId(IntPtr unityContext, string userId);
+        private static extern void Lightship_ARDK_Unity_CoreContext_SetUserInfo(IntPtr unityContext, string userId);
 
         [DllImport(NsdkPlugin.Name)]
         internal static extern void Lightship_ARDK_Unity_CoreContext_GetOrGenerateClientId(IntPtr unityContext, StringBuilder clientIdOut, int clientIdOutSize);

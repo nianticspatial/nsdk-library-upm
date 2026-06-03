@@ -9,6 +9,6 @@ namespace NianticSpatial.NSDK.AR.API
         NullArdkHandle,
         DoesNotExist,
         ConfigurationFailed,
-        BadApiKey
+        BadAuth
     }
 }
