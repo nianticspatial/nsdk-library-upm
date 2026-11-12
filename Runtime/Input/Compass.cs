@@ -1,11 +1,10 @@
 // Copyright 2022-2026 Niantic Spatial.
 
+using NianticSpatial.NSDK.AR.API;
 using NianticSpatial.NSDK.AR.Loader;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.Subsystems.Playback;
 using UnityEngine;
-using UnityEngine.InputSystem.Interactions;
-using UnityEngine.XR.Management;
 
 namespace NianticSpatial.NSDK.AR
 {
@@ -41,10 +40,16 @@ namespace NianticSpatial.NSDK.AR
         ///   <para>Timestamp when the heading was last time updated. (Read Only)</para>
         /// </summary>
         /// <remarks>
-        /// Android: The time elapsed is represented in nanoseconds since the device was last turned on.
+        /// Android: The time elapsed is represented in seconds since the device was last turned on (monotonic).
         /// iOS: The time elapsed is represented in seconds since the Unix epoch January 1, 1970.
         /// </remarks>
         public double timestamp => ActiveProvider.timestamp;
+
+        /// <summary>
+        ///   Clock that <see cref="timestamp"/> is measured against. For playback this comes from the
+        ///   dataset (its explicit base or recorded platform); for live sensors it's the runtime OS.
+        /// </summary>
+        internal NsdkClockBase timestampBase => ActiveProvider.timestampBase;
 
         /// <summary>
         ///   <para>Used to enable or disable compass. Note, that if you want Input.compass.trueHeading property to contain a valid value, you must also enable location updates by calling Input.location.Start().</para>
@@ -86,6 +91,7 @@ namespace NianticSpatial.NSDK.AR
             float headingAccuracy { get; }
             Vector3 rawVector { get; }
             double timestamp { get; }
+            NsdkClockBase timestampBase { get; }
 
             bool IsHeadingUpdatesEnabled();
             void SetHeadingUpdatesEnabled(bool value);
@@ -126,6 +132,7 @@ namespace NianticSpatial.NSDK.AR
             public float headingAccuracy => ActiveSensorsProvider.headingAccuracy;
             public Vector3 rawVector => ActiveSensorsProvider.rawVector;
             public double timestamp => ActiveSensorsProvider.timestamp;
+            public NsdkClockBase timestampBase => ActiveSensorsProvider.timestampBase;
             public bool IsHeadingUpdatesEnabled() => ActiveSensorsProvider.IsHeadingUpdatesEnabled();
             public void SetHeadingUpdatesEnabled(bool value) => ActiveSensorsProvider.SetHeadingUpdatesEnabled(value);
 
@@ -174,6 +181,10 @@ namespace NianticSpatial.NSDK.AR
             {
                 get { return CheckForValidData() ? _lastData.HeadingTimestamp : 0; }
             }
+
+            // Base comes from the recorded dataset (explicit field or its platform), not the runtime device.
+            public NsdkClockBase timestampBase =>
+                _datasetReader?.GetCompassTimestampBase() ?? NsdkClockBase.Epoch;
 
             public bool HasPlaybackDatasetReader => _datasetReader != null;
 
@@ -227,6 +238,9 @@ namespace NianticSpatial.NSDK.AR
             public float headingAccuracy => UnityEngine.Input.compass.headingAccuracy;
             public Vector3 rawVector => UnityEngine.Input.compass.rawVector;
             public double timestamp => UnityEngine.Input.compass.timestamp;
+            public NsdkClockBase timestampBase => Application.platform == RuntimePlatform.Android
+                ? NsdkClockBase.Monotonic
+                : NsdkClockBase.Epoch;
 
             public bool IsHeadingUpdatesEnabled() => UnityEngine.Input.compass.enabled;
 
@@ -264,6 +278,9 @@ namespace NianticSpatial.NSDK.AR
             {
                 get { return CheckForValidData() ? _spoofInfo.Timestamp : 0; }
             }
+
+            // Simple implementation which matches spoof location timestamp
+            public NsdkClockBase timestampBase => NsdkClockBase.Epoch;
 
             public bool IsHeadingUpdatesEnabled() => _enabled;
 

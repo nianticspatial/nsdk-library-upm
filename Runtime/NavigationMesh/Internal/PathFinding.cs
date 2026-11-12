@@ -365,9 +365,11 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh.Internal
       return true;
     }
 
+    /// <summary>
     /// Traces a path from a pre-computed PathNode collection.
-    /// @param nodesA collection containing parental relationships.
-    /// @param traceStart The source node of the trace.
+    /// </summary>
+    /// <param name="nodes">A collection containing parental relationships.</param>
+    /// <param name="traceStart">The source node of the trace.</param>
     private List<Waypoint> GeneratePath(HashSet<PathFindingNode> nodes, PathFindingNode traceStart)
     {
       var path = new List<Waypoint>();

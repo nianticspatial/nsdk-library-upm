@@ -134,7 +134,11 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Camera
         public override void Start() => NativeApi.Start(_nativeHandle);
 
         /// <inheritdoc />
-        public override void Stop() => NativeApi.Stop(_nativeHandle);
+        public override void Stop()
+        {
+            NativeApi.Stop(_nativeHandle);
+            LastImageTimestampMs = 0;
+        }
 
         /// <summary>
         /// Get the latest native camera image.

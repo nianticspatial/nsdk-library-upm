@@ -49,9 +49,11 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh
         return _children;
       }
 
+      /// <summary>
       /// Allocates a new quad.
-      /// @param origin The center of the quad.
-      /// @param rank Determines the number of subdivisions possible (rank - 1)
+      /// </summary>
+      /// <param name="origin">The center of the quad.</param>
+      /// <param name="rank">Determines the number of subdivisions possible (rank - 1)</param>
       public Quad(Vector2Int origin, int rank)
       {
         // Minimum rank is 1 (stores 4 items)
@@ -192,9 +194,11 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh
         return result;
       }
 
+      /// <summary>
       /// Returns elements of this quad within the specified boundaries.
-      /// @param withinBounds The enclosing boundaries.
-      /// @returns A new list of stored elements within the specified bounds.
+      /// </summary>
+      /// <param name="withinBounds">The enclosing boundaries.</param>
+      /// <returns>A new list of stored elements within the specified bounds.</returns>
       public IEnumerable<GridNode> GetElements(Bounds withinBounds)
       {
         var result = new List<GridNode>();

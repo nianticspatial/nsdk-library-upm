@@ -1,6 +1,7 @@
 // Copyright 2022-2026 Niantic Spatial.
 using System;
 using System.Runtime.InteropServices;
+using NianticSpatial.NSDK.AR.API;
 
 namespace NianticSpatial.NSDK.AR.PAM
 {
@@ -62,9 +63,12 @@ namespace NianticSpatial.NSDK.AR.PAM
     [StructLayout(LayoutKind.Sequential)]
     internal struct CompassDataCStruct
     {
-        // Compass data timestamp in milliseconds since epoch
+        // Compass data timestamp in milliseconds, measured against the clock reported by TimestampBase.
         // Zero, if this data was not captured
         public ulong TimestampMs;
+
+        // Clock that TimestampMs is measured against.
+        public NsdkClockBase TimestampBase;
 
         // Accuracy of heading reading in degrees.
         public float HeadingAccuracy;
@@ -202,7 +206,7 @@ namespace NianticSpatial.NSDK.AR.PAM
     [StructLayout(LayoutKind.Sequential)]
     internal struct NsdkCameraFrameCStruct
     {
-        // Camera pose and image timestamp in milliseconds since epoch
+        // Camera pose and image timestamp in monotonic milliseconds (e.g. since device boot)
         // Note, this is not strictly the exact timestamp for all devices as of May 2024 (e.g. Magic Leap)
         public ulong CameraTimestampMs;
 
@@ -237,7 +241,7 @@ namespace NianticSpatial.NSDK.AR.PAM
     [StructLayout(LayoutKind.Sequential)]
     internal struct NsdkDepthFrameCStruct
     {
-        // Depth frame timestamp in milliseconds since epoch
+        // Depth frame timestamp in monotonic milliseconds (e.g. since device boot)
         public ulong DepthTimestampMs;
 
         // Platform depth data (float buffer)

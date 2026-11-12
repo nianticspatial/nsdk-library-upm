@@ -18,6 +18,12 @@ namespace NianticSpatial.NSDK.AR.LocationAR
     /// When you start tracking an ARLocation, and aim your phone's camera at the physical location,
     /// the digital content that you child to the ARLocation will appear in the physical world.
     /// </summary>
+    /// <remarks>
+    /// An <see cref="ARLocation"/> names its place with an anchor payload, the legacy way of
+    /// targeting a map. New work should localize by site ID with
+    /// <see cref="ARVps2Manager.TryLocalize(string)"/>, or by coordinate with its lat/long
+    /// overload, and use anchors only for the app's own content.
+    /// </remarks>
     [PublicAPI("apiref/Niantic/Lightship/AR/LocationAR/ARLocationManager/")]
     public class ARLocationManager : ARVps2Manager
     {

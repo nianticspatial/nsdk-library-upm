@@ -8,7 +8,6 @@ using NianticSpatial.NSDK.AR.Subsystems.Playback;
 using Unity.EditorCoroutines.Editor;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Video;
 
 namespace NianticSpatial.NSDK.AR.Editor
 {
@@ -62,8 +61,6 @@ namespace NianticSpatial.NSDK.AR.Editor
         private bool _previewTexturesLoaded;
         private bool _allTexturesLoaded;
 
-        private bool _drawPreviewStartFrame = false;
-        private bool _drawPreviewEndFrame = false;
         private bool _onlyLoadPreviews = false;
 
         private const int PreviewLengthThreshold = 1800;
@@ -83,18 +80,51 @@ namespace NianticSpatial.NSDK.AR.Editor
 
         private EditorCoroutine _loadFrameTexturesCoroutine;
 
-        private VideoPlayer _videoPlayer;
-        private RenderTexture _videoRenderTexture;
-        private GameObject _videoPlayerObject;
-        private bool _isExtractingVideo = false;
-        private bool _frameReady = false;
 
-        private Texture2D _backgroundTexture;
 
-        private Texture2D _overlayTexture;
+        private bool _watchingPlayMode;
+
+        /// <summary>Stops preview loading and releases the native dataset handle.</summary>
+        internal void Release()
+        {
+            if (_watchingPlayMode)
+            {
+                EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+                _watchingPlayMode = false;
+            }
+
+            CloseDataset();
+        }
+
+        private void CloseDataset()
+        {
+            if (_loadFrameTexturesCoroutine != null)
+            {
+                EditorCoroutineUtility.StopCoroutine(_loadFrameTexturesCoroutine);
+                _loadFrameTexturesCoroutine = null;
+            }
+
+            _dataset?.Close();
+            _dataset = null;
+        }
+
+        // Unity destroys textures created during play mode when it exits; reopening rebuilds them.
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (state == PlayModeStateChange.EnteredEditMode)
+            {
+                CloseDataset();
+            }
+        }
 
         public void DrawGUI()
         {
+            if (!_watchingPlayMode)
+            {
+                EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+                _watchingPlayMode = true;
+            }
+
             var currUsedPlayback = PlaybackSettings.UsePlayback;
             var newUsePlayback = EditorGUILayout.Toggle(Contents.UsePlaybackLabel, currUsedPlayback);
             if (newUsePlayback != currUsedPlayback)
@@ -109,19 +139,17 @@ namespace NianticSpatial.NSDK.AR.Editor
 
                 if (string.IsNullOrEmpty(PlaybackSettings.PlaybackDatasetPath))
                 {
+                    _dataset?.Close();
                     _dataset = null;
                     _previewTexturesLoaded = false;
                     _allTexturesLoaded = false;
                     _onlyLoadPreviews = false;
                     _frameTextures = null;
-
-                    // Clean up video extraction if in progress
-                    CleanupVideoPlayer();
-                    _isExtractingVideo = false;
                 }
                 else if (_dataset == null || wasPathUpdated)
                 {
-                    _dataset = PlaybackDatasetLoader.Load(PlaybackSettings.PlaybackDatasetPath);
+                    _dataset?.Close();
+                    _dataset = PlaybackDataset.Open(PlaybackSettings.PlaybackDatasetPath);
                     _previewTexturesLoaded = false;
                     _allTexturesLoaded = false;
                     _onlyLoadPreviews = false;
@@ -131,19 +159,12 @@ namespace NianticSpatial.NSDK.AR.Editor
                         EditorCoroutineUtility.StopCoroutine(_loadFrameTexturesCoroutine);
                     }
 
-                    // Clean up video extraction if in progress
-                    CleanupVideoPlayer();
-                    _isExtractingVideo = false;
-
                     _loadFrameTexturesCoroutine = EditorCoroutineUtility.StartCoroutine(LoadFrameTextures(), this);
                 }
 
                 if (_dataset != null)
                 {
-                    var dummyLayout = EditorGUILayout.GetControlRect(
-                        GUILayout.ExpandWidth(true),
-                        GUILayout.ExpandHeight(true));
-                    DrawTrimToolGUI(wasPathUpdated, dummyLayout);
+                    DrawTrimToolGUI(wasPathUpdated);
                 }
                 else
                 {
@@ -213,265 +234,139 @@ namespace NianticSpatial.NSDK.AR.Editor
             return wasPathUpdated;
         }
 
-        private void DrawTrimToolGUI(bool wasPathUpdated, Rect window)
+        private const float TimelineHeight = 72f;
+        private const float TimelinePadding = 4f;
+
+        private void DrawTrimToolGUI(bool wasPathUpdated)
         {
-            if (_dataset == null)
+            var maxFrame = _dataset.FrameCount - 1;
+            if (maxFrame < 1)
             {
                 return;
             }
 
-            var startFrame = wasPathUpdated ? 0f : PlaybackSettings.StartFrame;
-            var maxFrame = _dataset.FrameCount - 1;
-            var endFrame = wasPathUpdated ? maxFrame : (float)PlaybackSettings.EndFrame;
-            var aspectRatio = (float)_dataset.Resolution.x / (float)_dataset.Resolution.y;
-
-            switch (_dataset.Frames[0].Orientation)
+            int startFrame;
+            int endFrame;
+            if (wasPathUpdated)
             {
-                case ScreenOrientation.Portrait:
-                case ScreenOrientation.PortraitUpsideDown:
-                    aspectRatio = 1.0f / aspectRatio;
-                    break;
-                case ScreenOrientation.LandscapeLeft:
-                case ScreenOrientation.LandscapeRight:
-                case ScreenOrientation.AutoRotation:
-                case ScreenOrientation.Unknown:
-                default:
-                    break;
-            }
-
-            if (Mathf.Approximately(endFrame, -1))
-            {
+                startFrame = 0;
                 endFrame = maxFrame;
             }
-
-            startFrame = Mathf.RoundToInt(Mathf.Clamp(startFrame, 0, endFrame - 1));
-            endFrame = Mathf.RoundToInt(Mathf.Clamp(endFrame, startFrame + 1, maxFrame));
-
-            if (_backgroundTexture == null)
-                _backgroundTexture = MakeTex(2, 2, new Color(0.2f, 0.2f, 0.2f, 1.0f));
-
-            if (_overlayTexture == null)
-                _overlayTexture = MakeTex(84, 84, new Color(Color.gray.r, Color.gray.g, Color.gray.b, 0.6f));
-
-            EditorGUILayout.BeginVertical(GUILayout.ExpandWidth(true));
+            else
             {
-                var darkGrayBackground = new GUIStyle(GUI.skin.box)
-                {
-                    normal =
-                    {
-                        background = _backgroundTexture
-                    }
-                };
-
-                EditorGUILayout.BeginHorizontal();
-                {
-                    EditorGUILayout.Space(8, false);
-                    EditorGUILayout.BeginVertical();
-                    {
-                        var imageHeight = 64;
-                        var imageWidth = Mathf.RoundToInt(imageHeight * aspectRatio);
-
-                        var framesToSkip = _dataset.FrameCount <= PreviewFrameCount ?
-                            1 :
-                            _dataset.FrameCount / PreviewFrameCount;
-
-                        var newImageCount = Mathf.Max(_dataset.FrameCount, PreviewFrameCount);
-
-                        float spacing = ((window.width - 16) - (newImageCount * imageWidth)) / (newImageCount - 1);
-
-                        var overlayStyle = new GUIStyle()
-                        {
-                            stretchHeight = true,
-                            stretchWidth = true,
-                            normal =
-                        {
-                            background = _overlayTexture
-                        }
-                        };
-
-                        // Timeline
-                        Rect timeline = DrawTimeline(window, darkGrayBackground, framesToSkip, imageWidth, imageHeight, spacing, aspectRatio);
-
-                        var startOverlayWidth = timeline.width * (startFrame / maxFrame);
-                        var endOverlayWidth = timeline.width * ((maxFrame - endFrame) / maxFrame);
-
-                        // Overlays
-                        DrawOverlays(timeline, startOverlayWidth, overlayStyle, endOverlayWidth);
-
-                        if (_isExtractingVideo)
-                        {
-                            EditorGUILayout.HelpBox($"Extracting frames from video... ({_loadProgress:F2}%)", MessageType.Info);
-                        }
-                        else if (!_allTexturesLoaded)
-                        {
-                            EditorGUILayout.HelpBox($"Loading playback dataset... ({_loadProgress:F2}%)", MessageType.Info);
-                        }
-
-                        // Slider
-                        startFrame = DrawSlider(startFrame, maxFrame, timeline, imageWidth, aspectRatio, ref endFrame);
-
-                        // Timestamps
-                        DrawTimestamps(startFrame, endFrame);
-                    }
-                    EditorGUILayout.EndVertical();
-                    EditorGUILayout.Space(8, false);
-                }
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.Space(10);
+                startFrame = PlaybackSettings.StartFrame;
+                endFrame = PlaybackSettings.EndFrame < 0 ? maxFrame : PlaybackSettings.EndFrame;
             }
-            EditorGUILayout.EndVertical();
 
-            // Apply changes to the settings object
-            if (GUI.changed)
+            startFrame = Mathf.Clamp(startFrame, 0, maxFrame - 1);
+            endFrame = Mathf.Clamp(endFrame, startFrame + 1, maxFrame);
+
+            EditorGUILayout.Space(4);
+
+            // Timeline, shading and slider share one rect so frame positions line up.
+            var timeline = GUILayoutUtility.GetRect(0, TimelineHeight, GUILayout.ExpandWidth(true));
+            if (Event.current.type == EventType.Repaint)
             {
-                PlaybackSettings.StartFrame = (int)startFrame;
-                PlaybackSettings.EndFrame = (int)endFrame;
+                EditorGUI.DrawRect(timeline, new Color(0.15f, 0.15f, 0.15f, 1f));
+                DrawThumbnails(timeline, maxFrame);
+
+                var shade = new Color(0f, 0f, 0f, 0.6f);
+                var startX = FrameToX(timeline, startFrame, maxFrame);
+                var endX = FrameToX(timeline, endFrame, maxFrame);
+                EditorGUI.DrawRect(new Rect(timeline.x, timeline.y, startX - timeline.x, timeline.height), shade);
+                EditorGUI.DrawRect(new Rect(endX, timeline.y, timeline.xMax - endX, timeline.height), shade);
+
+                var marker = new Color(1f, 0.8f, 0.2f, 1f);
+                EditorGUI.DrawRect(new Rect(startX - 1, timeline.y, 2, timeline.height), marker);
+                EditorGUI.DrawRect(new Rect(endX - 1, timeline.y, 2, timeline.height), marker);
+            }
+
+            var sliderRect = GUILayoutUtility.GetRect(0, EditorGUIUtility.singleLineHeight, GUILayout.ExpandWidth(true));
+            float sliderStart = startFrame;
+            float sliderEnd = endFrame;
+            EditorGUI.MinMaxSlider(sliderRect, ref sliderStart, ref sliderEnd, 0, maxFrame);
+            if (!Mathf.Approximately(sliderStart, startFrame) || !Mathf.Approximately(sliderEnd, endFrame))
+            {
+                startFrame = Mathf.RoundToInt(sliderStart);
+                endFrame = Mathf.RoundToInt(sliderEnd);
+            }
+
+            startFrame = Mathf.Clamp(startFrame, 0, maxFrame - 1);
+            endFrame = Mathf.Clamp(endFrame, startFrame + 1, maxFrame);
+
+            var duration = _dataset.Frames[endFrame].TimestampInSeconds - _dataset.Frames[startFrame].TimestampInSeconds;
+            EditorGUILayout.LabelField(
+                $"Playing frames {startFrame}–{endFrame} of {_dataset.FrameCount} ({duration:F1} s)",
+                EditorStyles.miniLabel);
+
+            if (!_allTexturesLoaded)
+            {
+                EditorGUILayout.HelpBox($"Loading playback dataset... ({_loadProgress:F2}%)", MessageType.Info);
+            }
+
+            EditorGUILayout.Space(6);
+
+            if (startFrame != PlaybackSettings.StartFrame || endFrame != PlaybackSettings.EndFrame)
+            {
+                PlaybackSettings.StartFrame = startFrame;
+                PlaybackSettings.EndFrame = endFrame;
                 MarkSettingsDirty();
             }
         }
 
-        private static void DrawOverlays(
-            Rect timeline,
-            float startOverlayWidth,
-            GUIStyle overlayStyle,
-            float endOverlayWidth)
+        private static float FrameToX(Rect timeline, int frame, int maxFrame)
         {
-            GUI.Box(new Rect(timeline.position, new Vector2(startOverlayWidth, 84)), GUIContent.none, overlayStyle);
-            GUI.Box(new Rect(timeline.position + new Vector2(timeline.width - endOverlayWidth, 0), new Vector2(endOverlayWidth, 84)), GUIContent.none, overlayStyle);
+            return timeline.x + timeline.width * frame / maxFrame;
         }
 
-        private void DrawTimestamps(float startFrame, float endFrame)
+        private void DrawThumbnails(Rect timeline, int maxFrame)
         {
-            EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+            if (_frameTextures == null)
             {
-                var startTime = _dataset.Frames[Mathf.RoundToInt(startFrame)].TimestampInSeconds - _dataset.Frames[0].TimestampInSeconds;
-                var endTime = _dataset.Frames[Mathf.RoundToInt(endFrame)].TimestampInSeconds - _dataset.Frames[0].TimestampInSeconds;
-
-                GUILayout.Label(TimeSpan.FromSeconds(startTime).ToString(@"mm\:ss\:ff"), GUILayout.Width(60));
-                EditorGUILayout.Space();
-                GUILayout.Label(TimeSpan.FromSeconds(endTime).ToString(@"mm\:ss\:ff"),
-                    new GUIStyle(GUI.skin.label)
-                    {
-                        alignment = TextAnchor.MiddleRight
-                    },
-                    GUILayout.Width(60));
+                return;
             }
-            EditorGUILayout.EndHorizontal();
+
+            var thumbHeight = timeline.height - 2 * TimelinePadding;
+            var aspect = ThumbnailAspect();
+            var thumbWidth = thumbHeight * aspect;
+            var slots = Mathf.Clamp(Mathf.FloorToInt(timeline.width / thumbWidth), 1, _dataset.FrameCount);
+            var slotWidth = timeline.width / slots;
+
+            for (var slot = 0; slot < slots; slot++)
+            {
+                var frame = slots == 1 ? 0 : Mathf.RoundToInt((float)slot * maxFrame / (slots - 1));
+                var texture = _frameTextures[GetTextureFrame(frame)];
+                if (texture == null)
+                {
+                    continue;
+                }
+
+                var rect = new Rect(
+                    timeline.x + slot * slotWidth + (slotWidth - thumbWidth) / 2,
+                    timeline.y + TimelinePadding,
+                    thumbWidth,
+                    thumbHeight);
+                GUI.DrawTexture(rect, texture, ScaleMode.ScaleToFit);
+            }
         }
 
-        private float DrawSlider(
-            float startFrame,
-            int maxFrame,
-            Rect timeline,
-            int imageWidth,
-            float aspectRatio,
-            ref float endFrame)
+        private float ThumbnailAspect()
         {
-            EditorGUILayout.BeginHorizontal(GUILayout.ExpandWidth(true));
+            foreach (var texture in _frameTextures)
             {
-                var prevStartFrame = startFrame;
-                var prevEndFrame = endFrame;
-
-                // Display the min and max frame sliders
-                EditorGUILayout.MinMaxSlider(
-                    ref startFrame,
-                    ref endFrame,
-                    0,
-                    maxFrame,
-                    GUILayout.ExpandWidth(true)
-                );
-
-                // Ensure startFrame and endFrame are within valid range
-                startFrame = Mathf.RoundToInt(Mathf.Clamp(startFrame, 0, endFrame - 1));
-                endFrame = Mathf.RoundToInt(Mathf.Clamp(endFrame, startFrame + 1, maxFrame));
-
-                // Only draw the preview frames once they're loaded
-                if (_allTexturesLoaded)
+                if (texture != null)
                 {
-                    IEnumerator DrawPreviewStartFrame()
-                    {
-                        _drawPreviewStartFrame = true;
-                        yield return new EditorWaitForSeconds(1.0f);
-                        _drawPreviewStartFrame = false;
-                    }
-
-                    IEnumerator DrawPreviewEndFrame()
-                    {
-                        _drawPreviewEndFrame = true;
-                        yield return new EditorWaitForSeconds(1.0f);
-                        _drawPreviewEndFrame = false;
-                    }
-
-                    if (!Mathf.Approximately(startFrame, prevStartFrame) && !_drawPreviewStartFrame)
-                    {
-                        EditorCoroutineUtility.StartCoroutine(DrawPreviewStartFrame(), this);
-                    }
-
-                    if (_drawPreviewStartFrame)
-                    {
-                        var imageX = timeline.width * startFrame / maxFrame;
-                        var rect = new Rect(timeline.position + new Vector2(imageX, -150f), new Vector2(imageWidth * 2.5f, (imageWidth / aspectRatio) * 2.5f));
-
-                        GUI.DrawTexture(rect, _frameTextures[GetTextureFrame(Mathf.RoundToInt(startFrame))], ScaleMode.ScaleToFit);
-                    }
-
-                    if (!Mathf.Approximately(endFrame, prevEndFrame) && !_drawPreviewEndFrame)
-                    {
-                        EditorCoroutineUtility.StartCoroutine(DrawPreviewEndFrame(), this);
-                    }
-
-                    if (_drawPreviewEndFrame)
-                    {
-                        var imageX = timeline.width * endFrame / maxFrame;
-                        var rect = new Rect(timeline.position + new Vector2(imageX, -150f), new Vector2(imageWidth * 2.5f, (imageWidth / aspectRatio) * 2.5f));
-
-                        GUI.DrawTexture(rect, _frameTextures[GetTextureFrame(Mathf.RoundToInt(endFrame))], ScaleMode.ScaleToFit);
-                    }
+                    return (float)texture.width / texture.height;
                 }
             }
-            EditorGUILayout.EndHorizontal();
-            return startFrame;
-        }
 
-        private Rect DrawTimeline(
-            Rect window,
-            GUIStyle darkGrayBackground,
-            int framesToSkip,
-            int imageWidth,
-            int imageHeight,
-            float spacing,
-            float aspectRatio)
-        {
-            var timeline = EditorGUILayout.BeginHorizontal(darkGrayBackground, GUILayout.Height(84), GUILayout.ExpandWidth(true));
-            {
-                EditorGUILayout.Space(0.01f, true);
-
-                if (_frameTextures != null)
-                {
-                    for (int i = 0; i < _dataset.FrameCount; i += framesToSkip)
-                    {
-                        var frameTexture = _frameTextures[GetTextureFrame(i)];
-
-                        if (frameTexture != null)
-                        {
-                            float xPos = i * (imageWidth + spacing);
-                            GUI.DrawTexture(new Rect(window.x + 20 + xPos, window.y + 36, imageWidth, imageHeight), frameTexture, ScaleMode.ScaleToFit);
-                        }
-                    }
-                }
-            }
-            EditorGUILayout.EndHorizontal();
-            return timeline;
+            return 1f;
         }
 
         private void LoadFrameImage(int datasetIndex)
         {
             var frame = _dataset.Frames[datasetIndex];
-            byte[] fileData = File.ReadAllBytes(
-                Path.Combine(
-                    PlaybackSettings.PlaybackDatasetPath,
-                    frame.ImagePath));
+            byte[] fileData = _dataset.ReadImage(datasetIndex);
 
             ProcessFrameTexture(fileData, frame, datasetIndex);
         }
@@ -528,19 +423,6 @@ namespace NianticSpatial.NSDK.AR.Editor
             _frameTextures[GetTextureFrame(datasetIndex)] = rotatedTexture;
         }
 
-        private Texture2D MakeTex(int width, int height, Color col)
-        {
-            Color[] pix = new Color[width * height];
-            for (int i = 0; i < pix.Length; i++)
-            {
-                pix[i] = col;
-            }
-            Texture2D result = new Texture2D(width, height);
-            result.SetPixels(pix);
-            result.Apply();
-            return result;
-        }
-
         private IEnumerator LoadAllFrames()
         {
             // Load all textures
@@ -587,8 +469,6 @@ namespace NianticSpatial.NSDK.AR.Editor
                 yield break;
             }
 
-            yield return ExtractVideoFramesIfNeeded();
-
             // If the dataset is too long, only load the previews
             int frameCount = _dataset.FrameCount;
             if (_dataset.FrameCount > PreviewLengthThreshold)
@@ -620,166 +500,6 @@ namespace NianticSpatial.NSDK.AR.Editor
 
             // If dataset.FrameCount doesn't evenly divide by PreviewFrameCount, ensure the remainder corresponds to the final preview frame
             return Math.Clamp((datasetFrame / framesToSkip), 0, PreviewFrameCount - 1);
-        }
-
-        private IEnumerator ExtractVideoFramesIfNeeded()
-        {
-            if (_dataset == null || _dataset.FrameCount == 0)
-                yield break;
-
-            bool anyFramesMissing = false;
-            foreach (var frame in _dataset.Frames)
-            {
-                var imagePath = Path.Combine(PlaybackSettings.PlaybackDatasetPath, frame.ImagePath);
-                if (!File.Exists(imagePath))
-                {
-                    anyFramesMissing = true;
-                    break;
-                }
-            }
-
-            if (!anyFramesMissing)
-            {
-                yield break;
-            }
-
-            var videoPath = Path.Combine(PlaybackSettings.PlaybackDatasetPath, "video.mp4");
-            if (!File.Exists(videoPath))
-            {
-                yield break;
-            }
-
-            yield return ExtractAllVideoFrames(videoPath);
-        }
-
-        private IEnumerator ExtractAllVideoFrames(string videoPath)
-        {
-            _isExtractingVideo = true;
-
-            SetupVideoPlayer(videoPath);
-            _videoPlayer.Prepare();
-            while (!_videoPlayer.isPrepared)
-            {
-                yield return null;
-            }
-
-            int videoWidth = (int)_videoPlayer.width;
-            int videoHeight = (int)_videoPlayer.height;
-
-            if (_videoRenderTexture != null)
-                _videoRenderTexture.Release();
-
-            _videoRenderTexture = new RenderTexture(videoWidth, videoHeight, 0);
-            _videoPlayer.targetTexture = _videoRenderTexture;
-
-            for (int frameIndex = 0; frameIndex < _dataset.FrameCount; frameIndex++)
-            {
-                yield return ExtractSingleVideoFrame(frameIndex);
-
-                _loadProgress = (float)frameIndex / _dataset.FrameCount * 100.0f;
-
-                // Yield periodically for UI updates
-                if (frameIndex % 5 == 0)
-                {
-                    yield return null;
-                }
-            }
-
-            // Cleanup
-            CleanupVideoPlayer();
-            _isExtractingVideo = false;
-        }
-
-        private void SetupVideoPlayer(string videoPath)
-        {
-            _videoPlayerObject = new GameObject("VideoFrameExtractor");
-            _videoPlayerObject.hideFlags = HideFlags.HideAndDontSave;
-            _videoPlayer = _videoPlayerObject.AddComponent<VideoPlayer>();
-            _videoPlayer.source = VideoSource.Url;
-            _videoPlayer.url = videoPath;
-            _videoPlayer.renderMode = VideoRenderMode.RenderTexture;
-            _videoPlayer.isLooping = false;
-            _videoPlayer.playOnAwake = false;
-            _videoPlayer.skipOnDrop = false;
-            _videoPlayer.sendFrameReadyEvents = true;
-            _videoPlayer.frameReady += OnFrameReady;
-        }
-
-        private void OnFrameReady(VideoPlayer player, long frameIdx)
-        {
-            _frameReady = true;
-        }
-
-        private IEnumerator ExtractSingleVideoFrame(int frameIndex)
-        {
-            _frameReady = false;
-            if (frameIndex == 0)
-            {
-                _videoPlayer.Play();
-                _videoPlayer.Pause();
-            }
-            _videoPlayer.frame = frameIndex;
-            while (!_frameReady)
-            {
-                yield return null;
-            }
-            RenderTexture.active = _videoRenderTexture;
-            Texture2D frameTexture = new Texture2D(_videoRenderTexture.width, _videoRenderTexture.height, TextureFormat.RGB24, false);
-            frameTexture.ReadPixels(new Rect(0, 0, _videoRenderTexture.width, _videoRenderTexture.height), 0, 0);
-            frameTexture.Apply();
-            RenderTexture.active = null;
-
-            byte[] jpgData = frameTexture.EncodeToJPG(95);
-
-            var frame = _dataset.Frames[frameIndex];
-            var imagePath = Path.Combine(PlaybackSettings.PlaybackDatasetPath, frame.ImagePath);
-
-            var directory = Path.GetDirectoryName(imagePath);
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            File.WriteAllBytes(imagePath, jpgData);
-            if (Application.isEditor)
-            {
-                UnityEngine.Object.DestroyImmediate(frameTexture);
-            }
-            else
-            {
-                UnityEngine.Object.Destroy(frameTexture);
-            }
-        }
-
-        private void CleanupVideoPlayer()
-        {
-            if (_videoPlayer != null)
-            {
-                _videoPlayer.frameReady -= OnFrameReady;
-            }
-
-            if (_videoRenderTexture != null)
-            {
-                _videoRenderTexture.Release();
-                _videoRenderTexture = null;
-            }
-
-            if (_videoPlayerObject != null)
-            {
-                if (Application.isEditor)
-                {
-                    UnityEngine.Object.DestroyImmediate(_videoPlayerObject);
-                }
-                else
-                {
-                    UnityEngine.Object.Destroy(_videoPlayerObject);
-                }
-
-                _videoPlayerObject = null;
-                _videoPlayer = null;
-            }
-
-            _frameReady = false;
         }
     }
 }

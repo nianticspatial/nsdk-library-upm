@@ -15,6 +15,12 @@ namespace NianticSpatial.NSDK.AR.LocationAR
         /// <summary>
         /// The payload associated with the ARLocation
         /// </summary>
+        /// <remarks>
+        /// Identifying a place by anchor payload is the legacy mechanism: an anchor is tied
+        /// to the site asset it was created against, so it will not resolve against a
+        /// different site or a different asset of the same site. New work should target a
+        /// map by site ID with <c>ARVps2Manager.TryLocalize(string)</c>.
+        /// </remarks>
         public ARVps2AnchorPayload Payload;
 
         [SerializeField]

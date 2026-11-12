@@ -16,7 +16,7 @@ namespace NianticSpatial.NSDK.AR.Sites
     /// <summary>
     /// Client for interacting with the Sites Manager service.
     /// Provides methods to query organizational hierarchy data including users,
-    /// organizations, sites, and assets.
+    /// organizations, sites, assets, and scans.
     /// </summary>
     [PublicAPI]
     public class SitesClient : IDisposable
@@ -331,12 +331,48 @@ namespace NianticSpatial.NSDK.AR.Sites
         /// <param name="assetType">The type of assets to filter results by.</param>
         /// <param name="timeoutMs">Maximum time to wait for the request to complete.</param>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <param name="scope">Production assets only (the default), or every asset.</param>
         /// <returns>The site-assets result ordered by distance.</returns>
         public async Task<SiteAssetsResult> RequestSiteAssetsByLocationAsync(
             double lat,
             double lng,
             double radiusMeters,
             AssetType assetType,
+            int timeoutMs = DefaultTimeoutMs,
+            CancellationToken cancellationToken = default,
+            AssetScope scope = AssetScope.Production)
+        {
+            ThrowIfDisposed();
+
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestSiteAssetsByLocation(
+                handle, lat, lng, radiusMeters, assetType, scope, out var requestId);
+            if (status != NsdkStatus.Ok)
+            {
+                Log.Error($"Failed to request site assets by location. Status: {status}");
+                return SiteAssetsResult.Failure(SitesError.UnexpectedError);
+            }
+
+            return await PollForResultAsync(
+                requestId, GetSiteAssetsResult, SiteAssetsResult.Failure, timeoutMs, cancellationToken);
+        }
+
+        /// <summary>
+        /// Requests every scan of a site, of all types and statuses.
+        /// </summary>
+        /// <param name="siteId">The site ID to list scans for.</param>
+        /// <param name="timeoutMs">Maximum time to wait for the request to complete.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>
+        /// The scan result. A token scoped to <c>site-assets:read</c> cannot list scans and gets
+        /// <see cref="SitesError.HttpForbidden"/>.
+        /// </returns>
+        public async Task<ScanResult> RequestScansForSiteAsync(
+            string siteId,
             int timeoutMs = DefaultTimeoutMs,
             CancellationToken cancellationToken = default)
         {
@@ -347,16 +383,53 @@ namespace NianticSpatial.NSDK.AR.Sites
                 throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
             }
 
-            var status = NativeSitesApi.RequestSiteAssetsByLocation(
-                handle, lat, lng, radiusMeters, assetType, out var requestId);
+            var status = NativeSitesApi.RequestScansForSite(handle, siteId, out var requestId);
             if (status != NsdkStatus.Ok)
             {
-                Log.Error($"Failed to request site assets by location. Status: {status}");
-                return SiteAssetsResult.Failure(SitesError.UnexpectedError);
+                Log.Error($"Failed to request scans for site. Status: {status}");
+                return ScanResult.Failure(siteId, SitesError.UnexpectedError);
             }
 
             return await PollForResultAsync(
-                requestId, GetSiteAssetsResult, SiteAssetsResult.Failure, timeoutMs, cancellationToken);
+                requestId,
+                id => GetScanResult(id, siteId),
+                error => ScanResult.Failure(siteId, error),
+                timeoutMs,
+                cancellationToken);
+        }
+
+        /// <summary>
+        /// Requests one scan's information.
+        /// </summary>
+        /// <param name="scanId">The scan ID to query.</param>
+        /// <param name="timeoutMs">Maximum time to wait for the request to complete.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>The scan result, holding the single scan on success.</returns>
+        public async Task<ScanResult> RequestScanInfoAsync(
+            string scanId,
+            int timeoutMs = DefaultTimeoutMs,
+            CancellationToken cancellationToken = default)
+        {
+            ThrowIfDisposed();
+
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                throw new InvalidOperationException("NSDK context is not initialized. Cannot make Sites request");
+            }
+
+            var status = NativeSitesApi.RequestScanInfo(handle, scanId, out var requestId);
+            if (status != NsdkStatus.Ok)
+            {
+                Log.Error($"Failed to request scan info. Status: {status}");
+                return ScanResult.Failure(null, SitesError.UnexpectedError);
+            }
+
+            return await PollForResultAsync(
+                requestId,
+                id => GetScanResult(id, null),
+                error => ScanResult.Failure(null, error),
+                timeoutMs,
+                cancellationToken);
         }
 
         // ============================================================================
@@ -673,6 +746,47 @@ namespace NianticSpatial.NSDK.AR.Sites
             }
 
             return PollState<SiteAssetsResult>.InProgress();
+        }
+
+        private PollState<ScanResult> GetScanResult(ulong requestId, string siteId)
+        {
+            if (!TryGetNSDKHandle(out var handle))
+            {
+                return PollState<ScanResult>.Failed(SitesError.UnexpectedError);
+            }
+
+            var status = NativeSitesApi.ARDK_SitesManager_GetScanResult(
+                handle, requestId, out var nativeResult);
+
+            if (status != NsdkStatus.Ok)
+            {
+                return PollState<ScanResult>.Failed(SitesError.UnexpectedError);
+            }
+
+            var requestStatus = (SitesRequestStatus)nativeResult.status;
+
+            if (requestStatus == SitesRequestStatus.Success)
+            {
+                var scans = NativeSitesApi.ConvertScans(nativeResult.scans, nativeResult.scans_size);
+
+                if (nativeResult.handle != IntPtr.Zero)
+                {
+                    NsdkExternUtils.ReleaseResource(nativeResult.handle);
+                }
+
+                return PollState<ScanResult>.Success(ScanResult.Success(siteId, scans));
+            }
+
+            if (requestStatus == SitesRequestStatus.Failed)
+            {
+                if (nativeResult.handle != IntPtr.Zero)
+                {
+                    NsdkExternUtils.ReleaseResource(nativeResult.handle);
+                }
+                return PollState<ScanResult>.Failed((SitesError)nativeResult.error);
+            }
+
+            return PollState<ScanResult>.InProgress();
         }
 
         private void ThrowIfDisposed()

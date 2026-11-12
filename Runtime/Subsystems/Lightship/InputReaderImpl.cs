@@ -234,10 +234,11 @@ namespace NianticSpatial.NSDK.AR
         private static bool IsDeviceInternal(InputDevice device)
         {
             string manufacturer = device.description.manufacturer?.ToLowerInvariant() ?? "";
-            return manufacturer == "niantic";
+            return manufacturer.StartsWith("niantic");
         }
 
         private static bool UsesNewInterface(InputDevice device) =>
+            device.description.interfaceName == "Nsdk-Input-Device" ||
             device.description.interfaceName == "Lightship-Input-Device";
 
         private static bool IsDeviceEligible(InputDevice device)

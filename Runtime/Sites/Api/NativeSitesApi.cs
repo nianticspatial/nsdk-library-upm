@@ -39,7 +39,27 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             public IntPtr parent_site_id;
         }
 
-        // --- Typed Asset Data Structs ---
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NativeAssetArea
+        {
+            // Field order must match ARDK_SitesManager_AssetArea exactly.
+            public IntPtr area_id;
+            public int job_status;  // ARDK_SitesManager_AssetPipelineJobStatus
+            public IntPtr space_id;
+            public IntPtr root_node_id;
+            public IntPtr node_ids;  // const char**
+            public int node_ids_size;
+            public IntPtr anchor_payload;
+            public double mesh_coverage;
+            public double min_lat;
+            public double min_lng;
+            public double max_lat;
+            public double max_lng;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool has_bounds;
+        }
+
+        // --- Typed Asset Data Structs: deprecated, replaced by NativeAssetInfo.areas ---
 
         [StructLayout(LayoutKind.Sequential)]
         internal struct NativeAssetMeshData
@@ -65,29 +85,36 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
         [StructLayout(LayoutKind.Sequential)]
         internal struct NativeAssetInfo
         {
-            // From AssetKey
-            public IntPtr id;
+            // Field order must match ARDK_SitesManager_AssetInfo exactly.
 
-            // From AssetRecord
+            // From assetKey
+            public IntPtr id;
+            public long asset_timestamp;
+
+            // From the response root
             public IntPtr site_id;
 
-            // From AssetData
+            // From assetData
             public IntPtr name;
             public IntPtr description;
             public int asset_type;        // ARDK_SitesManager_AssetType
             public int asset_status;      // ARDK_SitesManager_AssetStatusType
             public int deployment;        // ARDK_SitesManager_AssetDeploymentType
 
-            // Typed asset data pointers (oneof based on asset_type)
+            // Deprecated typed asset data pointers, projecting assetData.areas[0]
             public IntPtr mesh_data;      // ARDK_SitesManager_AssetMeshData*
             public IntPtr splat_data;     // ARDK_SitesManager_AssetSplatData*
             public IntPtr vps_data;       // ARDK_SitesManager_AssetVpsData*
 
-            // From AssetComputedValues
+            // All three are deprecated: nothing fills them. pipeline_job_status parses
+            // assetData.jobStatus, which the portal leaves unset — areas carry the status.
             public IntPtr pipeline_job_id;
             public int pipeline_job_status;  // ARDK_SitesManager_AssetPipelineJobStatus
             public IntPtr source_scan_ids;   // const char**
             public int source_scan_ids_size;
+
+            public IntPtr areas;          // ARDK_SitesManager_AssetArea*
+            public int areas_size;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -156,6 +183,39 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             public int error;
             public IntPtr site_assets;  // ARDK_SitesManager_SiteAssetsInfo*
             public int site_assets_size;
+            public IntPtr handle;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NativeScanInfo
+        {
+            // Field order must match ARDK_SitesManager_ScanInfo exactly.
+            public IntPtr id;
+            public IntPtr name;
+            public int scan_type;    // ARDK_SitesManager_ScanType
+            public int scan_status;  // ARDK_SitesManager_ScanStatus
+            public double duration_seconds;
+            public long capture_timestamp;
+            public long created_timestamp;
+            public double latitude;
+            public double longitude;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool has_location;
+            public long total_size;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool has_thumbnail;
+            [MarshalAs(UnmanagedType.U1)]
+            public bool has_preview;
+            public IntPtr user_id;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NativeScanResult
+        {
+            public int status;
+            public int error;
+            public IntPtr scans;  // ARDK_SitesManager_ScanInfo*
+            public int scans_size;
             public IntPtr handle;
         }
 
@@ -232,6 +292,19 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             double lng,
             double radius_meters,
             int asset_type,  // ARDK_SitesManager_AssetType
+            int scope,  // ARDK_SitesManager_AssetScope
+            out ulong request_id_out);
+
+        [DllImport(NsdkPlugin.Name)]
+        private static extern NsdkStatus ARDK_SitesManager_RequestScansForSite(
+            IntPtr nsdk_handle,
+            NsdkString site_id,
+            out ulong request_id_out);
+
+        [DllImport(NsdkPlugin.Name)]
+        private static extern NsdkStatus ARDK_SitesManager_RequestScanInfo(
+            IntPtr nsdk_handle,
+            NsdkString scan_id,
             out ulong request_id_out);
 
         // ============================================================================
@@ -306,10 +379,26 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
 
         internal static NsdkStatus RequestSiteAssetsByLocation(
             IntPtr nsdkHandle, double lat, double lng, double radiusMeters, AssetType assetType,
-            out ulong requestId)
+            AssetScope scope, out ulong requestId)
         {
             return ARDK_SitesManager_RequestSiteAssetsByLocation(
-                nsdkHandle, lat, lng, radiusMeters, (int)assetType, out requestId);
+                nsdkHandle, lat, lng, radiusMeters, (int)assetType, (int)scope, out requestId);
+        }
+
+        internal static NsdkStatus RequestScansForSite(IntPtr nsdkHandle, string siteId, out ulong requestId)
+        {
+            using (var str = new ManagedNsdkString(siteId))
+            {
+                return ARDK_SitesManager_RequestScansForSite(nsdkHandle, str.ToNsdkString(), out requestId);
+            }
+        }
+
+        internal static NsdkStatus RequestScanInfo(IntPtr nsdkHandle, string scanId, out ulong requestId)
+        {
+            using (var str = new ManagedNsdkString(scanId))
+            {
+                return ARDK_SitesManager_RequestScanInfo(nsdkHandle, str.ToNsdkString(), out requestId);
+            }
         }
 
         // ============================================================================
@@ -345,6 +434,12 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             IntPtr nsdk_handle,
             ulong request_id,
             out NativeSiteAssetsResult result_out);
+
+        [DllImport(NsdkPlugin.Name)]
+        internal static extern NsdkStatus ARDK_SitesManager_GetScanResult(
+            IntPtr nsdk_handle,
+            ulong request_id,
+            out NativeScanResult result_out);
 
         // ============================================================================
         // Conversion helpers
@@ -432,8 +527,11 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
                     break;
             }
 
+            var areas = ConvertAreas(native.areas, native.areas_size);
+
             return new AssetInfo(
                 id: PtrToString(native.id) ?? "",
+                assetTimestamp: native.asset_timestamp,
                 siteId: PtrToString(native.site_id) ?? "",
                 name: PtrToString(native.name) ?? "",
                 description: PtrToString(native.description),
@@ -445,8 +543,40 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
                 vpsData: vpsData,
                 pipelineJobId: PtrToString(native.pipeline_job_id),
                 pipelineJobStatus: pipelineJobStatus,
-                sourceScanIds: sourceScanIds
+                sourceScanIds: sourceScanIds,
+                areas: areas
             );
+        }
+
+        internal static AssetArea[] ConvertAreas(IntPtr ptr, int count)
+        {
+            if (ptr == IntPtr.Zero || count <= 0)
+            {
+                return Array.Empty<AssetArea>();
+            }
+
+            var areas = new AssetArea[count];
+            int structSize = Marshal.SizeOf<NativeAssetArea>();
+            for (int i = 0; i < count; i++)
+            {
+                var native = Marshal.PtrToStructure<NativeAssetArea>(IntPtr.Add(ptr, i * structSize));
+                areas[i] = new AssetArea(
+                    areaId: PtrToString(native.area_id) ?? "",
+                    jobStatus: (AssetPipelineJobStatus)native.job_status,
+                    spaceId: PtrToString(native.space_id) ?? "",
+                    rootNodeId: PtrToString(native.root_node_id) ?? "",
+                    nodeIds: ConvertStringArray(native.node_ids, native.node_ids_size),
+                    anchorPayload: PtrToString(native.anchor_payload) ?? "",
+                    meshCoverage: native.mesh_coverage,
+                    minLat: native.min_lat,
+                    minLng: native.min_lng,
+                    maxLat: native.max_lat,
+                    maxLng: native.max_lng,
+                    hasBounds: native.has_bounds
+                );
+            }
+
+            return areas;
         }
 
         internal static string[] ConvertStringArray(IntPtr ptr, int count)
@@ -533,6 +663,44 @@ namespace NianticSpatial.NSDK.AR.Sites.Api
             {
                 var native = Marshal.PtrToStructure<NativeSiteAssetsInfo>(IntPtr.Add(ptr, i * structSize));
                 result[i] = ConvertSiteAssetsInfo(native);
+            }
+            return result;
+        }
+
+        internal static ScanInfo ConvertScan(NativeScanInfo native)
+        {
+            return new ScanInfo(
+                id: PtrToString(native.id) ?? "",
+                name: PtrToString(native.name) ?? "",
+                scanType: Enum.IsDefined(typeof(ScanType), native.scan_type)
+                    ? (ScanType)native.scan_type
+                    : ScanType.Unspecified,
+                scanStatus: Enum.IsDefined(typeof(ScanStatus), native.scan_status)
+                    ? (ScanStatus)native.scan_status
+                    : ScanStatus.Unspecified,
+                durationSeconds: native.duration_seconds,
+                captureTimestamp: native.capture_timestamp,
+                createdTimestamp: native.created_timestamp,
+                latitude: native.latitude,
+                longitude: native.longitude,
+                hasLocation: native.has_location,
+                totalSize: native.total_size,
+                hasThumbnail: native.has_thumbnail,
+                hasPreview: native.has_preview,
+                userId: PtrToString(native.user_id) ?? ""
+            );
+        }
+
+        internal static ScanInfo[] ConvertScans(IntPtr ptr, int count)
+        {
+            if (ptr == IntPtr.Zero || count <= 0) return Array.Empty<ScanInfo>();
+
+            var result = new ScanInfo[count];
+            int structSize = Marshal.SizeOf<NativeScanInfo>();
+            for (int i = 0; i < count; i++)
+            {
+                var native = Marshal.PtrToStructure<NativeScanInfo>(IntPtr.Add(ptr, i * structSize));
+                result[i] = ConvertScan(native);
             }
             return result;
         }

@@ -1,6 +1,6 @@
 {
         "name": "Niantic Lightship",
-        "version": "4.1.0-26051913",
+        "version": "4.5.0-26110800",
         "libraryName": "LightshipARDK",
         "inputs": [
                 {

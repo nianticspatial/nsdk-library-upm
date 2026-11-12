@@ -331,13 +331,11 @@ namespace NianticSpatial.NSDK.AR.PAM
                 return false;
             }
 
-            // The compass.timestamp value on Android will monotonic time since the device was last turned on
-            // instead of posix time. We've observed it being in nanoseconds on a wide array of devices
-            // even though Unity documentation says seconds. But we've been sending it multiplied by x1000
-            // since NSDK 2.x, so we will continue to do that, even on Android, for continuity's sake.
-            // On iOS we lose millisecond precision converting naively Input.compass.timestamp to a ulong,
-            // so we want the x1000 anyway.
+            // Unity reports the compass timestamp in seconds; x1000 -> ms. The base comes from the
+            // compass provider, so during playback it reflects the recorded dataset (its explicit base
+            // or platform) rather than the runtime device.
             compass.TimestampMs = (ulong)(Input.compass.timestamp * 1000);
+            compass.TimestampBase = Input.compass.timestampBase;
 
             compass.HeadingAccuracy = Input.compass.headingAccuracy;
             compass.MagneticHeading = Input.compass.magneticHeading;

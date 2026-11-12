@@ -75,14 +75,14 @@ namespace NianticSpatial.NSDK.AR.Scanning
         /// <summary>
         /// Flag tells if a scan quality compute is running or not.
         /// </summary>
-        /// <returns> Whether or not a run of quality computer is ongoing. <returns>
+        /// <returns> Whether or not a run of quality computer is ongoing. </returns>
         bool Running { get; }
 
         /// <summary>
         /// Progress of current quality compute, range is in percent between [0, 100.0].
         /// </summary>
         /// <returns> Percentage of existing run. 0 will be returned if not running a quality compute.
-        /// <returns>
+        /// </returns>
         float Progress { get; }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace NianticSpatial.NSDK.AR.Scanning
         /// </summary>
         /// <returns> A ScanQualityResult with overall score and RejectionReasons.
         ///           RejectionReasons will be empty if all scores pass the quality bar.
-        /// <returns>
+        /// </returns>
         ScanQualityResult GetResult(string scanPath);
     }
 }

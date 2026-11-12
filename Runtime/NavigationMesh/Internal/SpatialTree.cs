@@ -22,10 +22,12 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh
     // Store for root quads. Each root is identified with a location sensitive hash.
     private readonly Dictionary<long, Quad> _quads = new Dictionary<long, Quad>();
 
+    /// <summary>
     /// Creates a new spatial tree instance.
     /// A spatial tree consists of a grid of quads, which themselves can subdivide.
-    /// @param approximateQuadSize Defines the size of a quad. The actual size will
-    ///   be less than or equal to this number.
+    /// </summary>
+    /// <param name="approximateQuadSize">Defines the size of a quad. The actual size will
+    ///   be less than or equal to this number.</param>
     public SpatialTree(int approximateQuadSize)
     {
       _initialRank = (int)(Math.Log(approximateQuadSize) / Math.Log(2));
@@ -33,9 +35,11 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh
       _halfSize = _rootSize / 2;
     }
 
+    /// <summary>
     /// Inserts the provided elements to the tree.
-    /// @param gridNodes Grid nodes to insert.
-    /// @returns Whether all nodes were inserted successfully.
+    /// </summary>
+    /// <param name="gridNodes">Grid nodes to insert.</param>
+    /// <returns>Whether all nodes were inserted successfully.</returns>
     public bool Insert(IEnumerable<GridNode> gridNodes)
     {
       bool success = true;
@@ -63,8 +67,10 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh
       return success;
     }
 
+    /// <summary>
     /// Removes the provided elements from the tree.
-    /// @param gridNodes Grid nodes to remove.
+    /// </summary>
+    /// <param name="gridNodes">Grid nodes to remove.</param>
     public HashSet<Vector2Int> Remove(IEnumerable<GridNode> gridNodes)
     {
       HashSet<Vector2Int> removedNodes = new HashSet<Vector2Int>();
@@ -84,10 +90,12 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh
       return removedNodes;
     }
 
+    /// <summary>
     /// Returns the grid node at the specified location if exists.
-    /// @param atPosition The location of the grid node.
-    /// @param result The element stored at the specified location.
-    /// @returns True, if the grid node could be located.
+    /// </summary>
+    /// <param name="atPosition">The location of the grid node.</param>
+    /// <param name="result">The element stored at the specified location.</param>
+    /// <returns>True, if the grid node could be located.</returns>
     public bool GetElement(Vector2Int atPosition, out GridNode result)
     {
       var key = GetKey(atPosition);
@@ -195,8 +203,10 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh
       return nearest;
     }
 
+    /// <summary>
     /// Visualizes the quad-tree in the editor's scene view.
-    /// @param setting The NsdkNavMesh's configuration.
+    /// </summary>
+    /// <param name="settings">The NsdkNavMesh's configuration.</param>
     public void DrawGizmos(ModelSettings settings)
     {
       var queue = new Queue<Quad>();

@@ -19,10 +19,28 @@ namespace NianticSpatial.NSDK.AR.Common
         public const int Vps2Manager = Session + 1;
 
         /// <summary>
-        /// The <see cref="ARVps2Anchor"/>'s update order.
-        /// Should come after Vps2Manager.
+        /// The <see cref="ARVps2AnchorManager"/>'s update order.
+        /// Should come after the <see cref="ARSession"/>.
         /// </summary>
-        public const int Vps2Anchor = Vps2Manager + 1;
+        public const int Vps2AnchorManager = Session + 1;
+
+        /// <summary>
+        /// The <see cref="ARVps2Anchor"/>'s update order.
+        /// Should come after Vps2AnchorManager.
+        /// </summary>
+        public const int Vps2Anchor = Vps2AnchorManager + 1;
+
+        /// <summary>
+        /// The <see cref="ARVps2AssetManager"/>'s update order.
+        /// Should come after the <see cref="ARSession"/>.
+        /// </summary>
+        public const int Vps2AssetManager = Session + 1;
+
+        /// <summary>
+        /// The <see cref="ARVps2Asset"/>'s update order.
+        /// Should come after Vps2AssetManager.
+        /// </summary>
+        public const int Vps2Asset = Vps2AssetManager + 1;
 
         /// <summary>
         /// The <see cref="ARDeviceMappingManager"/>'s update order.

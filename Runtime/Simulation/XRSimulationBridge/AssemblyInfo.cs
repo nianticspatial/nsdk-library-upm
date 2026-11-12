@@ -6,3 +6,4 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR")]
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.Tests.PlayMode.Simulation")]
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.Tests.PlayMode")]
+[assembly: InternalsVisibleTo("NianticSpatial.NSDK.Samples.Internal.Tests.PlayMode")]

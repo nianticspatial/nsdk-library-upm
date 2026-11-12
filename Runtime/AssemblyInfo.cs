@@ -11,6 +11,8 @@ using UnityEngine.Scripting;
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.Tests.EditMode")]
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.Tests.PlayMode")]
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.Tests.PlayMode.Simulation")]
+[assembly: InternalsVisibleTo("NianticSpatial.NSDK.Samples.Internal.Tests.EditMode")]
+[assembly: InternalsVisibleTo("NianticSpatial.NSDK.Samples.Internal.Tests.PlayMode")]
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.IQP")]
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.SQP")]
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.InternalSamples")]

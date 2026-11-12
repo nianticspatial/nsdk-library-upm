@@ -24,7 +24,11 @@ namespace NianticSpatial.NSDK.AR.Editor
         public static bool TryGetFullPathToGradleLauncher(out string path, out string diagnosticMessage)
         {
 #if UNITY_ANDROID
+#if UNITY_6000_3_OR_NEWER
+            path = AndroidExternalToolsSettings.Gradle.path;
+#else
             path = AndroidExternalToolsSettings.gradlePath;
+#endif
             if (string.IsNullOrEmpty(path))
             {
                 diagnosticMessage = "No Gradle path set.";
