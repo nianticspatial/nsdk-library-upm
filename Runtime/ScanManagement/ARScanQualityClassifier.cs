@@ -93,7 +93,7 @@ namespace NianticSpatial.NSDK.AR.Scanning
         /// <summary>
         /// Flag tells if a scan quality compute is running or not.
         /// </summary>
-        /// <returns> Whether or not a run of quality computer is ongoing. <returns>
+        /// <returns> Whether or not a run of quality computer is ongoing. </returns>
         public bool Running
         {
             get
@@ -109,7 +109,7 @@ namespace NianticSpatial.NSDK.AR.Scanning
         /// Progress of current quality compute, range is in percent between [0, 100.0].
         /// </summary>
         /// <returns> Percentage of existing run. 0 will be returned if not running a quality compute.
-        /// <returns>
+        /// </returns>
         public float Progress
         {
             get
@@ -127,7 +127,7 @@ namespace NianticSpatial.NSDK.AR.Scanning
         /// Categories are within ScanQualityCategory.
         /// </summary>
         /// <returns> A ScanQualityResult with list of Scores and CategoriesFailRequirement.
-        /// <returns>
+        /// </returns>
         public ScanQualityResult GetResult(string scanPath)
         {
             if (!_nativeHandle.IsValidHandle())

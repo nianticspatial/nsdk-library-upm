@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using NianticSpatial.NSDK.AR.API;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.Loader;
 using UnityEngine;
@@ -12,6 +13,7 @@ using NianticSpatial.NSDK.AR.Utilities.Profiling;
 using NianticSpatial.NSDK.AR.Settings;
 using NianticSpatial.NSDK.AR.Telemetry;
 using NianticSpatial.NSDK.Utilities.UnityAssets;
+using PlaybackNativeApi = NianticSpatial.NSDK.AR.Subsystems.Playback.NativeApi;
 
 namespace NianticSpatial.NSDK.AR.Core
 {
@@ -32,6 +34,7 @@ namespace NianticSpatial.NSDK.AR.Core
         private static UserConfig s_userConfig;
         internal static bool s_isDeviceLidarSupported = false;
         internal const string featureFlagFileName = "featureFlag.json";
+        private static readonly PlaybackNativeApi s_playbackApi = new PlaybackNativeApi();
 
         // Event triggered right before the context is destroyed. Used by internal code its lifecycle is not managed
         // by native UnityContext
@@ -78,10 +81,6 @@ namespace NianticSpatial.NSDK.AR.Core
 
             s_userConfig = new UserConfig
             {
-                // TODO: ARDK-7769 Remove ApiKey when it is removed from underlying C API
-                ApiKey = string.Empty,
-                // Refresh token is not set — token refresh is handled entirely in C#.
-                // The RefreshToken field in UserConfig is kept for C ABI compatibility only.
                 AccessToken = settings.AccessToken,
                 FeatureFlagFilePath = string.IsNullOrEmpty(featureFlagFilePath) ? GetFeatureFlagPath() : featureFlagFilePath,
             };
@@ -115,6 +114,8 @@ namespace NianticSpatial.NSDK.AR.Core
                 settings.StdOutNsdkLogLevel
             );
 
+            CreatePlaybackCache();
+
 #if NIANTICSPATIAL_NSDK_TELEMETRY_DISABLE
             const bool telemetryDisabledByScriptingDefine = true;
 #else
@@ -127,7 +128,7 @@ namespace NianticSpatial.NSDK.AR.Core
                 // Native process-wide sink drain (ardk::TelemetryPublisher); independent of C# TelemetryService.
                 try
                 {
-                    if (!TelemetryPublishingNative.TryStart(settings.AuthEnvironment.ToString()))
+                    if (!TelemetryPublishingNative.TryStart())
                     {
                         Log.Debug("Native telemetry publishing was already started.");
                     }
@@ -196,6 +197,24 @@ namespace NianticSpatial.NSDK.AR.Core
             }
         }
 
+        private static void CreatePlaybackCache()
+        {
+            var status = s_playbackApi.CreateCache(GetNSDKHandle(UnityContextHandle));
+            if (status != NsdkStatus.Ok)
+            {
+                Log.Error($"Failed to create the playback cache. Status: {status}");
+            }
+        }
+
+        private static void DestroyPlaybackCache()
+        {
+            var status = s_playbackApi.DestroyCache(GetNSDKHandle(UnityContextHandle));
+            if (status != NsdkStatus.Ok)
+            {
+                Log.Warning($"Failed to destroy the playback cache. Status: {status}");
+            }
+        }
+
         private static void DisposePam()
         {
             Log.Info("Disposing PAM");
@@ -212,6 +231,7 @@ namespace NianticSpatial.NSDK.AR.Core
             {
                 Log.Info($"Shutting down {nameof(NsdkUnityContext)}");
 
+                DestroyPlaybackCache();
                 DisposePam();
 
                 try
@@ -376,9 +396,7 @@ namespace NianticSpatial.NSDK.AR.Core
         [StructLayout(LayoutKind.Sequential)]
         private struct UserConfig
         {
-            public string ApiKey;
             public string AccessToken;
-            public string RefreshToken;
             public string FeatureFlagFilePath;
         }
 

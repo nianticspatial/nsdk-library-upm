@@ -10,6 +10,11 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
 {
     /// <summary>
     /// Describes session-relative data for an anchor.
+    ///
+    /// Note: <c>trackingState</c> can stay tracked while a device is disturbed, such as a
+    /// covered camera or a dark room, and stays tracked indefinitely while the device stays
+    /// still. It changes once confidence drops low enough. Use <c>trackingConfidence</c> and
+    /// <c>trackingStateReason</c> to react more sensitively to device disturbances.
     /// </summary>
     /// <seealso cref="XRVps2Anchor"/>
     [PublicAPI]

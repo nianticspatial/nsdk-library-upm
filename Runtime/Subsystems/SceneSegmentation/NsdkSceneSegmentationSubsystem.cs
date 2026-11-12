@@ -521,6 +521,8 @@ namespace NianticSpatial.NSDK.AR.Subsystems.SceneSegmentation
             /// </summary>
             public override void Stop()
             {
+                _channels = new List<SceneSegmentationChannel>();
+
                 if (!_nativeProviderHandle.IsValidHandle())
                 {
                     return;

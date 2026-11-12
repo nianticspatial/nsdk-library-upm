@@ -214,9 +214,11 @@ namespace NianticSpatial.NSDK.AR.NavigationMesh
       );
     }
 
+    /// <summary>
     /// Converts a world position to grid coordinates.
-    /// @param position Position to convert.
-    /// @param tileSize Metric size of each tile in the grid.
+    /// </summary>
+    /// <param name="position">Position to convert.</param>
+    /// <param name="tileSize">Metric size of each tile in the grid.</param>
     public static Vector2Int PositionToTile(Vector3 position, float tileSize)
     {
       return new Vector2Int

@@ -79,6 +79,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         /// <summary>
         /// Default anchor payload used by VPS Service (base64 encoded).
         /// </summary>
+        /// <remarks>
+        /// @note A legacy map identifier. An anchor payload is no longer the preferred method
+        /// to identify the map to localize against: pass a site ID to
+        /// <c>ARVps2Manager.TryLocalize(string)</c> or a coordinate to its lat/long
+        /// overload.
+        /// </remarks>
         public string AnchorPayload { get; }
 
         public AssetVpsData(string anchorPayload)

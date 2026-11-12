@@ -119,7 +119,24 @@ namespace NianticSpatial.NSDK.AR.Simulation
             xrCamera.clearFlags = CameraClearFlags.Color;
             xrCamera.backgroundColor = Color.black;
 
+            // The projection matrix is Y-flipped (below) which inverts winding order.
+            //we need to compensate for this in the Camera render callbacks
+            Camera.onPreRender += OnSimulatedCameraPreRender;
+            Camera.onPostRender += OnSimulatedCameraPostRender;
+
             Initialized = true;
+        }
+
+        private void OnSimulatedCameraPreRender(Camera cam)
+        {
+            if (cam == _simulatedCamera)
+                GL.invertCulling = true;
+        }
+
+        private void OnSimulatedCameraPostRender(Camera cam)
+        {
+            if (cam == _simulatedCamera)
+                GL.invertCulling = false;
         }
 
         private void Update()
@@ -129,11 +146,9 @@ namespace NianticSpatial.NSDK.AR.Simulation
                 return;
             }
 
-            // Render the camera into texture
-            // We invert culling because the projection matrix is flipped
-            GL.invertCulling = true;
+            // Render the camera into texture.
+            // GL.invertCulling is applied via onPreRender/onPostRender callbacks above.
             _simulatedCamera.Render();
-            GL.invertCulling = false;
 
             // Invoke the post render callback
             OnPostRenderCamera(_simulatedCamera, _targetTexture);
@@ -147,6 +162,9 @@ namespace NianticSpatial.NSDK.AR.Simulation
 
         protected virtual void OnDestroy()
         {
+            Camera.onPreRender -= OnSimulatedCameraPreRender;
+            Camera.onPostRender -= OnSimulatedCameraPostRender;
+
             if (_simulatedCamera != null)
             {
                 _simulatedCamera.targetTexture = null;

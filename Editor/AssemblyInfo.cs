@@ -7,4 +7,5 @@ using UnityEngine.Scripting;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")] // For NSubstitute
 [assembly: InternalsVisibleTo("Niantic.Lightship.AR.Tests.EditMode")]
+[assembly: InternalsVisibleTo("NianticSpatial.NSDK.Samples.Internal.Tests.EditMode")]
 

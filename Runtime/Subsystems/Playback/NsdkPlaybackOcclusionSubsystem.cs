@@ -497,8 +497,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
                             DepthImageLinearColor);
                     }
 
-                    var path = Path.Combine(_datasetReader.GetDatasetPath(), frame.DepthPath);
-                    byte[] buffer = FileUtilities.GetAllBytes(path);
+                    byte[] buffer = _datasetReader.GetCurrentDepthData();
                     tex.LoadRawTextureData(buffer);
                     tex.Apply();
 
@@ -520,8 +519,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
                             DepthConfidenceImageLinearColor);
                     }
 
-                    var path = Path.Combine(_datasetReader.GetDatasetPath(), frame.DepthConfidencePath);
-                    byte[] buffer = FileUtilities.GetAllBytes(path);
+                    byte[] buffer = _datasetReader.GetCurrentDepthConfidenceData();
                     tex.LoadRawTextureData(buffer);
                     tex.Apply();
 

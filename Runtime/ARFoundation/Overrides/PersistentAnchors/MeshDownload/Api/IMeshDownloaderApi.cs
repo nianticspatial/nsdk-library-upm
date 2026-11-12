@@ -11,6 +11,10 @@ namespace NianticSpatial.NSDK.AR.Subsystems
 
         public NsdkStatus NSDK_MeshDownloader_Destroy(IntPtr nsdkHandle);
 
+        public NsdkStatus NSDK_MeshDownloader_Configure(
+            IntPtr nsdkHandle,
+            ref MeshDownloadClient.NsdkMeshDownloaderConfiguration configuration);
+
         public NsdkStatus NSDK_MeshDownloader_RequestLocationMesh(
             IntPtr nsdkHandle,
             NsdkString payload,
@@ -22,6 +26,22 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             IntPtr nsdkHandle,
             ulong requestId,
             out MeshDownloadClient.NsdkMeshDownloaderResults resultsOut);
+
+        public NsdkStatus NSDK_MeshDownloader_RequestLocationMeshByAsset(
+            IntPtr nsdkHandle,
+            NsdkString vpsMapAssetId,
+            double latitude,
+            double longitude,
+            bool getTexture,
+            uint maxChunks,
+            uint maxSizeKb,
+            uint maxDecodedSizeKb,
+            out ulong requestIdOut);
+
+        public NsdkStatus NSDK_MeshDownloader_GetNextMeshChunk(
+            IntPtr nsdkHandle,
+            ulong requestId,
+            out MeshDownloadClient.NsdkMeshDownloaderChunk chunkOut);
 
         public void NSDK_Release_Resource(IntPtr resource);
     }

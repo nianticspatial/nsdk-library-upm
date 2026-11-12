@@ -22,9 +22,9 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
     private SerializedProperty _autoTrackProperty;
 
     // ARVps2Manager serialized fields
-    private SerializedProperty _defaultAnchorGameObject;
     private SerializedProperty _universalLocalizationEnabled;
     private SerializedProperty _universalLocalizationRequestsPerSecond;
+    private SerializedProperty _aerialLocalizationEnabled;
     private SerializedProperty _vpsMapLocalizationEnabled;
     private SerializedProperty _initialVpsRequestsPerSecond;
     private SerializedProperty _continuousVpsRequestsPerSecond;
@@ -32,6 +32,13 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
     private SerializedProperty _deviceMapLocalizationEnabled;
     private SerializedProperty _deviceMapLocalizationFramerate;
     private SerializedProperty _vpsDebuggerEnabled;
+    private SerializedProperty _maxRequestsInTransitPerTarget;
+    private SerializedProperty _anchorDistanceGateMeters;
+    private SerializedProperty _blurDetectionEnabled;
+    private SerializedProperty _minSharpnessScore;
+    private SerializedProperty _areaTargetingEnterMarginMeters;
+    private SerializedProperty _areaTargetingExitMarginMeters;
+    private SerializedProperty _temporalFusionEnabled;
 
     static _ARLocationManagerEditor()
     {
@@ -71,7 +78,6 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
-        EditorGUILayout.PropertyField(_defaultAnchorGameObject);
 
         using (new EditorGUI.DisabledScope(Application.isPlaying))
         {
@@ -79,6 +85,7 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
             EditorGUILayout.LabelField("Configuration", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(_universalLocalizationEnabled);
             EditorGUILayout.PropertyField(_universalLocalizationRequestsPerSecond);
+            EditorGUILayout.PropertyField(_aerialLocalizationEnabled);
             EditorGUILayout.PropertyField(_vpsMapLocalizationEnabled);
             EditorGUILayout.PropertyField(_initialVpsRequestsPerSecond);
             EditorGUILayout.PropertyField(_continuousVpsRequestsPerSecond);
@@ -86,6 +93,13 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
             EditorGUILayout.PropertyField(_deviceMapLocalizationEnabled);
             EditorGUILayout.PropertyField(_deviceMapLocalizationFramerate);
             EditorGUILayout.PropertyField(_vpsDebuggerEnabled);
+            EditorGUILayout.PropertyField(_maxRequestsInTransitPerTarget);
+            EditorGUILayout.PropertyField(_anchorDistanceGateMeters);
+            EditorGUILayout.PropertyField(_blurDetectionEnabled);
+            EditorGUILayout.PropertyField(_minSharpnessScore);
+            EditorGUILayout.PropertyField(_areaTargetingEnterMarginMeters);
+            EditorGUILayout.PropertyField(_areaTargetingExitMarginMeters);
+            EditorGUILayout.PropertyField(_temporalFusionEnabled);
         }
 
         EditorGUILayout.Space();
@@ -306,9 +320,9 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
         _autoTrackProperty = serializedObject.FindProperty("_autoTrack");
 
         // ARVps2Manager fields
-        _defaultAnchorGameObject = serializedObject.FindProperty("_defaultAnchorGameObject");
         _universalLocalizationEnabled = serializedObject.FindProperty("_universalLocalizationEnabled");
         _universalLocalizationRequestsPerSecond = serializedObject.FindProperty("_universalLocalizationRequestsPerSecond");
+        _aerialLocalizationEnabled = serializedObject.FindProperty("_aerialLocalizationEnabled");
         _vpsMapLocalizationEnabled = serializedObject.FindProperty("_vpsMapLocalizationEnabled");
         _initialVpsRequestsPerSecond = serializedObject.FindProperty("_initialVpsRequestsPerSecond");
         _continuousVpsRequestsPerSecond = serializedObject.FindProperty("_continuousVpsRequestsPerSecond");
@@ -316,6 +330,15 @@ internal class _ARLocationManagerEditor : UnityEditor.Editor
         _deviceMapLocalizationEnabled = serializedObject.FindProperty("_deviceMapLocalizationEnabled");
         _deviceMapLocalizationFramerate = serializedObject.FindProperty("_deviceMapLocalizationFramerate");
         _vpsDebuggerEnabled = serializedObject.FindProperty("_vpsDebuggerEnabled");
+        _maxRequestsInTransitPerTarget = serializedObject.FindProperty("_maxRequestsInTransitPerTarget");
+        _anchorDistanceGateMeters = serializedObject.FindProperty("_anchorDistanceGateMeters");
+        _blurDetectionEnabled = serializedObject.FindProperty("_blurDetectionEnabled");
+        _minSharpnessScore = serializedObject.FindProperty("_minSharpnessScore");
+        _areaTargetingEnterMarginMeters =
+            serializedObject.FindProperty("_areaTargetingEnterMarginMeters");
+        _areaTargetingExitMarginMeters =
+            serializedObject.FindProperty("_areaTargetingExitMarginMeters");
+        _temporalFusionEnabled = serializedObject.FindProperty("_temporalFusionEnabled");
     }
 }
 #endif

@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.IO.Compression;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -74,45 +73,6 @@ namespace NianticSpatial.NSDK.Utilities.UnityAssets
             {
                 var content = SendWebRequestAndWait(request);
                 return content;
-            }
-        }
-
-        public static void ExtractToDirectory(string filePath, string destination, bool overwrite)
-        {
-            if (filePath.Contains("://"))
-            {
-                ExtractFromRemoteSource(filePath, destination, overwrite);
-            }
-            else
-            {
-                ZipFile.ExtractToDirectory(filePath, destination, overwrite);
-            }
-        }
-
-        private static void ExtractFromRemoteSource(string filePath, string destination, bool overwrite)
-        {
-            if (!filePath.Contains(".zip", StringComparison.OrdinalIgnoreCase))
-            {
-                throw new ArgumentException($"Remote source filePath must be a .zip file. Provided: {filePath}", nameof(filePath));
-            }
-            var bytes = GetAllBytes(filePath);
-            Directory.CreateDirectory(destination);
-            using MemoryStream zipStream = new MemoryStream(bytes);
-            using ZipArchive archive = new ZipArchive(zipStream, ZipArchiveMode.Read);
-            foreach (ZipArchiveEntry entry in archive.Entries)
-            {
-                string entryPath = Path.Combine(destination, entry.FullName);
-                //entry.Name is the file name, if it is empty the entry is a directory
-                if (string.IsNullOrEmpty(entry.Name))
-                {
-                    Directory.CreateDirectory(entryPath);
-                }
-                else
-                {
-                    using FileStream fileStream = new FileStream(entryPath, FileMode.Create);
-                    using Stream entryStream = entry.Open();
-                    entryStream.CopyTo(fileStream);
-                }
             }
         }
 

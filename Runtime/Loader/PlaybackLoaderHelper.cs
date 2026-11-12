@@ -33,9 +33,23 @@ namespace NianticSpatial.NSDK.AR
 
             var settings = NsdkSettingsHelper.ActiveSettings;
 
-            Log.Debug($"Using settings: {settings} with playback dataset path: {settings.PlaybackDatasetPath}");
+            var runtimeDataset = settings.PlaybackDataset;
+            if (runtimeDataset != null)
+            {
+                Log.Debug($"Using settings: {settings} with a runtime playback dataset");
+                if (runtimeDataset.IsClosed)
+                {
+                    Log.Error("Failed to initialize Playback subsystems because the runtime playback dataset is closed.");
+                    return false;
+                }
+            }
+            else
+            {
+                Log.Debug($"Using settings: {settings} with playback dataset path: {settings.PlaybackDatasetPath}");
+            }
 
-            var dataset = PlaybackDatasetLoader.Load(settings.PlaybackDatasetPath);
+            // The app owns a runtime dataset; the loader owns a dataset it opens from the path.
+            var dataset = runtimeDataset ?? PlaybackDataset.Open(settings.PlaybackDatasetPath);
 
             if (dataset == null)
             {
@@ -43,8 +57,9 @@ namespace NianticSpatial.NSDK.AR
                 return false;
             }
 
-            DatasetReader = new PlaybackDatasetReader(
+            DatasetReader = CreateDatasetReader(
                 dataset,
+                runtimeDataset != null,
                 settings.LoopPlaybackInfinitely,
                 settings.PlaybackSettings.StartFrame,
                 settings.PlaybackSettings.EndFrame);
@@ -93,6 +108,18 @@ namespace NianticSpatial.NSDK.AR
             ConfigureLocationAndCompass(true, DatasetReader);
 
             return true;
+        }
+
+        /// <summary>
+        /// Creates the reader over a dataset. A runtime dataset plays whole and stays open on unload; the trim
+        /// frames apply only to a dataset opened from the path.
+        /// </summary>
+        internal static PlaybackDatasetReader CreateDatasetReader(
+            PlaybackDataset dataset, bool isRuntimeDataset, bool loopInfinitely, int startFrame, int endFrame)
+        {
+            return isRuntimeDataset
+                ? new PlaybackDatasetReader(dataset, loopInfinitely, ownsDataset: false)
+                : new PlaybackDatasetReader(dataset, loopInfinitely, startFrame, endFrame);
         }
 
         /// <summary>

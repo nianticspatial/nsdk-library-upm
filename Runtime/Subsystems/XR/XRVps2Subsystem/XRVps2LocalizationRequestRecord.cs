@@ -5,15 +5,44 @@ using NianticSpatial.NSDK.AR.Utilities;
 
 namespace NianticSpatial.NSDK.AR.XRSubsystems
 {
+    /// <summary>
+    /// Type of request reported by a <see cref="XRVps2LocalizationRequestRecord"/>.
+    /// </summary>
+    /// <remarks>
+    /// Values are assigned explicitly because this enum is marshalled from native as a raw byte.
+    /// </remarks>
     [PublicAPI]
     public enum Vps2LocalizationRequestType: byte
     {
-        Unknown,
-        VpsMapLocalize,
-        GetGraph,
-        GetReplacedNodes,
-        RegisteredNodes,
-        UniversalLocalize
+        /// <summary>
+        /// The request type could not be recognized.
+        /// </summary>
+        Unknown = 0,
+
+        /// <summary>
+        /// An attempt to locate the device by matching the camera view against a VPS map.
+        /// </summary>
+        VpsMapLocalize = 1,
+
+        [Obsolete("VPS2 never reports this request type. Records only ever use VpsMapLocalize, UniversalLocalize, or AssetInfo.")]
+        GetGraph = 2,
+
+        [Obsolete("VPS2 never reports this request type. Records only ever use VpsMapLocalize, UniversalLocalize, or AssetInfo.")]
+        GetReplacedNodes = 3,
+
+        [Obsolete("VPS2 never reports this request type. Records only ever use VpsMapLocalize, UniversalLocalize, or AssetInfo.")]
+        RegisteredNodes = 4,
+
+        /// <summary>
+        /// Cloud geopositioning for coarse localization. Improves the device's global position;
+        /// it does not localize to a VPS map.
+        /// </summary>
+        UniversalLocalize = 5,
+
+        /// <summary>
+        /// Portal asset fetch issued when localizing to a Site.
+        /// </summary>
+        AssetInfo = 6
     }
 
     [PublicAPI]
@@ -27,9 +56,14 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// <remarks>The localization itself may still have failed — check the localization error for details.</remarks>
         Completed,
         /// <summary>The request failed (e.g. network error, HTTP error, or unparseable response).</summary>
+        /// <remarks>A site request cancelled by <c>TryStopLocalize</c> also ends Failed, with
+        /// <see cref="Vps2LocalizationError.Unknown"/>.</remarks>
         Failed,
         /// <summary>The request was not sent because the frame was rejected (e.g. camera pointed downward).</summary>
         FrameRejected,
+        /// <summary>The frame was flagged for a non-fatal quality issue (e.g. too blurry) but
+        /// still sent; use this to warn the user.</summary>
+        FrameFlagged,
     }
 
     /// <summary>
@@ -80,6 +114,28 @@ namespace NianticSpatial.NSDK.AR.XRSubsystems
         /// <summary>The frame was rejected because the camera is pointing at the ground or sky
         /// (no horizon crossing).</summary>
         BadCameraAngle,
+
+        /// <summary>The frame was rejected before dispatch because no valid geolocation prior was
+        /// available — the GPS reading was NaN or a placeholder and no other valid prior (e.g. a
+        /// WPS estimate) could be substituted.</summary>
+        NoValidPrior,
+
+        /// <summary>The frame was rejected because the device was held upside down
+        /// (inverted relative to gravity).</summary>
+        DeviceUpsideDown,
+
+        /// <summary>The frame was flagged because the image was too blurry or featureless to
+        /// localize well. Advisory: the frame is still sent; use this to coach the user, not
+        /// to explain a drop.</summary>
+        ImageTooBlurry,
+
+        /// <summary>The requested site does not exist or is not accessible to this caller.</summary>
+        SiteNotFound,
+
+        /// <summary>The request found nothing to localize against. When localizing to a site, the
+        /// site was found but none of its production-deployed VPS assets were localizable. When
+        /// localizing to nearby sites, no site within the radius had a localizable asset.</summary>
+        VpsAssetsNotFound,
     }
 
     /// <summary>

@@ -7,27 +7,31 @@ using NianticSpatial.NSDK.AR.Utilities;
 namespace NianticSpatial.NSDK.AR.Sites
 {
     /// <summary>
-    /// Information about an asset.
-    /// Maps to proto messages AssetRecord, AssetData, and AssetComputedValues.
+    /// Information about an asset, and the areas it is split into.
     /// </summary>
     [PublicAPI]
     public readonly struct AssetInfo
     {
-        // --- From AssetKey ---
+        // --- From assetKey ---
 
         /// <summary>
         /// The unique identifier for the asset.
         /// </summary>
         public string Id { get; }
 
-        // --- From AssetRecord ---
+        /// <summary>
+        /// The Unix timestamp (in seconds) from the asset key, or 0 if unset.
+        /// </summary>
+        public long AssetTimestamp { get; }
+
+        // --- From the response root ---
 
         /// <summary>
         /// The site ID this asset belongs to.
         /// </summary>
         public string SiteId { get; }
 
-        // --- From AssetData ---
+        // --- From assetData ---
 
         /// <summary>
         /// The asset's display name.
@@ -40,12 +44,12 @@ namespace NianticSpatial.NSDK.AR.Sites
         public string Description { get; }
 
         /// <summary>
-        /// The asset type - determines which typed asset data is present.
+        /// The asset type - determines which fields of <see cref="Areas"/> are meaningful.
         /// </summary>
         public AssetType AssetType { get; }
 
         /// <summary>
-        /// The asset status.
+        /// DEPRECATED - always <see cref="AssetStatusType.Unspecified"/>.
         /// </summary>
         public AssetStatusType AssetStatus { get; }
 
@@ -55,39 +59,63 @@ namespace NianticSpatial.NSDK.AR.Sites
         public AssetDeploymentType Deployment { get; }
 
         /// <summary>
-        /// Mesh-specific data. Only valid when <see cref="AssetType"/> is <see cref="AssetType.Mesh"/>.
+        /// DEPRECATED - read <see cref="AssetArea.JobStatus"/> on each entry of
+        /// <see cref="Areas"/>. The portal leaves the asset-level status unset, since a job
+        /// belongs to an area, so expect <see cref="AssetPipelineJobStatus.Unspecified"/>.
+        /// </summary>
+        public AssetPipelineJobStatus PipelineJobStatus { get; }
+
+        // --- DEPRECATED: wholly replaced by Areas ---
+        // Every field on these three also exists on AssetArea, read from Areas[0].
+        //
+        // All three are null unless the first area carries the field this type is read
+        // through: the anchor for VpsInfo, the root node for Mesh and Splat.
+
+        /// <summary>
+        /// DEPRECATED - read <see cref="Areas"/>[0] instead. Only non-null when
+        /// <see cref="AssetType"/> is <see cref="AssetType.Mesh"/> and <see cref="Areas"/> is
+        /// non-empty, and it describes that first area only.
         /// </summary>
         public AssetMeshData? MeshData { get; }
 
         /// <summary>
-        /// Splat-specific data. Only valid when <see cref="AssetType"/> is <see cref="AssetType.Splat"/>.
+        /// DEPRECATED - read <see cref="Areas"/>[0] instead. Only non-null when
+        /// <see cref="AssetType"/> is <see cref="AssetType.Splat"/> and <see cref="Areas"/> is
+        /// non-empty.
         /// </summary>
         public AssetSplatData? SplatData { get; }
 
         /// <summary>
-        /// VPS-specific data. Only valid when <see cref="AssetType"/> is <see cref="AssetType.VpsInfo"/>.
+        /// DEPRECATED - read <see cref="Areas"/>[0] instead. Only non-null when
+        /// <see cref="AssetType"/> is <see cref="AssetType.VpsInfo"/> and <see cref="Areas"/> is
+        /// non-empty.
         /// </summary>
         public AssetVpsData? VpsData { get; }
 
-        // --- From AssetComputedValues ---
-
         /// <summary>
-        /// The pipeline job ID associated with this asset, or null if not applicable.
+        /// DEPRECATED - always null. The portal has no source for it; retained so existing
+        /// callers keep compiling.
         /// </summary>
         public string PipelineJobId { get; }
 
         /// <summary>
-        /// The pipeline job status.
-        /// </summary>
-        public AssetPipelineJobStatus PipelineJobStatus { get; }
-
-        /// <summary>
-        /// The source scan IDs used to create this asset.
+        /// DEPRECATED - always empty. The portal has no source for it; retained so existing
+        /// callers keep compiling.
         /// </summary>
         public IReadOnlyList<string> SourceScanIds { get; }
 
+        /// <summary>
+        /// Every area of this asset.
+        /// </summary>
+        /// <remarks>
+        /// An asset mapped in a single pass has exactly one. Empty while the asset's job has
+        /// produced no output yet.
+        /// </remarks>
+        public IReadOnlyList<AssetArea> Areas { get; }
+
         public AssetInfo(
             string id,
+            long assetTimestamp,
             string siteId,
             string name,
             string description,
@@ -100,8 +128,31 @@ namespace NianticSpatial.NSDK.AR.Sites
             string pipelineJobId,
             AssetPipelineJobStatus pipelineJobStatus,
             IReadOnlyList<string> sourceScanIds)
+            : this(id, assetTimestamp, siteId, name, description, assetType, assetStatus,
+                   deployment, meshData, splatData, vpsData, pipelineJobId, pipelineJobStatus,
+                   sourceScanIds, Array.Empty<AssetArea>())
+        {
+        }
+
+        public AssetInfo(
+            string id,
+            long assetTimestamp,
+            string siteId,
+            string name,
+            string description,
+            AssetType assetType,
+            AssetStatusType assetStatus,
+            AssetDeploymentType deployment,
+            AssetMeshData? meshData,
+            AssetSplatData? splatData,
+            AssetVpsData? vpsData,
+            string pipelineJobId,
+            AssetPipelineJobStatus pipelineJobStatus,
+            IReadOnlyList<string> sourceScanIds,
+            IReadOnlyList<AssetArea> areas)
         {
             Id = id ?? string.Empty;
+            AssetTimestamp = assetTimestamp;
             SiteId = siteId ?? string.Empty;
             Name = name ?? string.Empty;
             Description = description;
@@ -114,6 +165,7 @@ namespace NianticSpatial.NSDK.AR.Sites
             PipelineJobId = pipelineJobId;
             PipelineJobStatus = pipelineJobStatus;
             SourceScanIds = sourceScanIds ?? Array.Empty<string>();
+            Areas = areas ?? Array.Empty<AssetArea>();
         }
 
         /// <inheritdoc />
@@ -144,6 +196,11 @@ namespace NianticSpatial.NSDK.AR.Sites
             if (SourceScanIds.Count > 0)
             {
                 result += $", SourceScanIds=[{string.Join(", ", SourceScanIds)}]";
+            }
+
+            if (Areas.Count > 0)
+            {
+                result += $", Areas={Areas.Count}";
             }
 
             if (MeshData.HasValue)

@@ -1,11 +1,10 @@
 // Copyright 2022-2026 Niantic Spatial.
 
 using System;
-using System.IO;
+using NianticSpatial.NSDK.AR.API;
 using NianticSpatial.NSDK.AR.PAM;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.Utilities.Profiling;
-using NianticSpatial.NSDK.Utilities.UnityAssets;
 using UnityEngine;
 using UnityEngine.XR.ARSubsystems;
 
@@ -14,6 +13,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
     internal class PlaybackDatasetReader
     {
         private readonly PlaybackDataset _dataset;
+        private readonly bool _ownsDataset;
         private int _currentFrameIndex;
         private readonly int _startFrame;
         private readonly int _endFrame;
@@ -30,9 +30,16 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
 
         internal Action FrameChanged;
 
-        public PlaybackDatasetReader(PlaybackDataset dataset, bool loopInfinitely = false, int? startFrame = null, int? endFrame = null)
+        /// <param name="ownsDataset">Whether <see cref="UnloadDataset"/> closes <paramref name="dataset"/>.</param>
+        public PlaybackDatasetReader(
+            PlaybackDataset dataset,
+            bool loopInfinitely = false,
+            int? startFrame = null,
+            int? endFrame = null,
+            bool ownsDataset = true)
         {
             _dataset = dataset ?? throw new ArgumentNullException(nameof(dataset));
+            _ownsDataset = ownsDataset;
             _loopInfinitely = loopInfinitely;
 
             if (startFrame < 0 || startFrame >= _dataset.FrameCount)
@@ -145,10 +152,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
         private bool _finished;
         public bool Finished => _finished;
 
-        public string GetDatasetPath() => _dataset.DatasetPath;
-
-        public bool GetAutofocusEnabled() => _dataset.AutofocusEnabled;
-
         public Vector2Int GetImageResolution() => _dataset.Resolution;
 
         public Vector2Int GetDepthResolution() => _dataset.DepthResolution;
@@ -161,24 +164,23 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
 
         public bool GetCompassEnabled() => _dataset.CompassEnabled;
 
+        public NsdkClockBase GetCompassTimestampBase() => _dataset.CompassTimestampBase;
+
         public bool GetIsLidarAvailable() => _dataset?.LidarEnabled ?? false;
 
         public Matrix4x4 GetCurrentPose() => CurrFrame?.Pose ?? MatrixUtils.InvalidMatrix;
 
-        public Matrix4x4 GetCurrentProjectionMatrix() => CurrFrame?.ProjectionMatrix ?? MatrixUtils.InvalidMatrix;
-
         public XRCameraIntrinsics GetCurrentIntrinsics() => CurrFrame?.Intrinsics ?? default;
 
-        public CameraIntrinsicsCStruct GetCurrentIntrinsicsCstruct() => CurrFrame?.IntrinsicsCStruct ?? default;
+        public byte[] GetCurrentImageData() => CurrFrame != null ? ReadImageData(_currentFrameIndex) : null;
 
-        public byte[] GetCurrentImageData() =>
-            CurrFrame != null ? ReadImageData(_currentFrameIndex, CurrFrame.ImagePath) : null;
+        /// <summary>The current frame's depth buffer (Float32 meters), or null when it has none.</summary>
+        public byte[] GetCurrentDepthData() =>
+            CurrFrame?.HasDepth == true ? NativeBuffers(_currentFrameIndex).Depth : null;
 
-        public string GetCurrentImagePath() => CurrFrame?.ImagePath;
-
-        public string GetCurrentDepthPath() => CurrFrame?.DepthPath;
-
-        public string GetCurrentDepthConfidencePath() => CurrFrame?.DepthConfidencePath;
+        /// <summary>The current frame's depth confidence buffer, or null when it has none.</summary>
+        public byte[] GetCurrentDepthConfidenceData() =>
+            CurrFrame?.HasDepth == true ? NativeBuffers(_currentFrameIndex).Confidence : null;
 
         public TrackingState GetCurrentTrackingState() => CurrFrame?.TrackingState ?? TrackingState.None;
 
@@ -241,7 +243,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
             }
         }
 
-        private byte[] ReadImageData(int frameNumber, string fileName)
+        private byte[] ReadImageData(int frameNumber)
         {
             if (_lastLoadedImageFrameNumber == frameNumber)
             {
@@ -249,17 +251,34 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
             }
 
             ProfilerUtility.EventBegin(TraceCategory, "ReadImageData");
-            var filePath = Path.Combine(_dataset.DatasetPath, fileName);
-            _imageBytes = FileUtilities.GetAllBytes(filePath);
+            _imageBytes = NativeBuffers(frameNumber).Image;
             _lastLoadedImageFrameNumber = frameNumber;
             ProfilerUtility.EventEnd(TraceCategory, "ReadImageData");
 
             return _imageBytes;
         }
 
+        // Native's image, depth and confidence bytes, holding the most recently read frame.
+        private PlaybackFrameBuffers NativeBuffers(int frameIndex)
+        {
+            if (_nativeBufferedIndex != frameIndex)
+            {
+                _nativeBuffers = _dataset.ReadBuffers(frameIndex);
+                _nativeBufferedIndex = frameIndex;
+            }
+
+            return _nativeBuffers;
+        }
+
+        private int _nativeBufferedIndex = -1;
+        private PlaybackFrameBuffers _nativeBuffers;
+
         public void UnloadDataset()
         {
-            _dataset.Unload();
+            if (_ownsDataset)
+            {
+                _dataset.Unload();
+            }
         }
     }
 }

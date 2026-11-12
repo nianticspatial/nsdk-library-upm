@@ -25,174 +25,378 @@ namespace Niantic.Lightship.AR.Protobuf {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CjVhcmdlby9hcmRrLW5leHQvY29tbW9uL3Byb3Rvcy9hcmRrX3Zwc19kZWJ1",
-            "Z2dlci5wcm90bxIIYXJkay52cHMijAUKCVZwc0NvbmZpZxJGCh9jb250aW51",
-            "b3VzX2xvY2FsaXphdGlvbl9lbmFibGVkGAEgASgIUh1jb250aW51b3VzTG9j",
-            "YWxpemF0aW9uRW5hYmxlZBI2Chd0ZW1wb3JhbF9mdXNpb25fZW5hYmxlZBgC",
-            "IAEoCFIVdGVtcG9yYWxGdXNpb25FbmFibGVkEksKInRyYW5zZm9ybV91cGRh",
-            "dGVfc21vb3RoaW5nX2VuYWJsZWQYAyABKAhSH3RyYW5zZm9ybVVwZGF0ZVNt",
-            "b290aGluZ0VuYWJsZWQSPAoaY2xvdWRfbG9jYWxpemF0aW9uX2VuYWJsZWQY",
-            "BCABKAhSGGNsb3VkTG9jYWxpemF0aW9uRW5hYmxlZBI8ChpzbGlja19sb2Nh",
-            "bGl6YXRpb25fZW5hYmxlZBgFIAEoCFIYc2xpY2tMb2NhbGl6YXRpb25FbmFi",
-            "bGVkEkoKImNsb3VkX2xvY2FsaXplcl9pbml0aWFsX2ZyYW1lX3JhdGUYBiAB",
-            "KAJSHmNsb3VkTG9jYWxpemVySW5pdGlhbEZyYW1lUmF0ZRJQCiVjbG91ZF9s",
-            "b2NhbGl6ZXJfY29udGludW91c19mcmFtZV9yYXRlGAcgASgCUiFjbG91ZExv",
-            "Y2FsaXplckNvbnRpbnVvdXNGcmFtZVJhdGUSOwoac2xpY2tfbG9jYWxpemVy",
-            "X2ZyYW1lX3JhdGUYCCABKA1SF3NsaWNrTG9jYWxpemVyRnJhbWVSYXRlEjgK",
-            "GGpwZWdfY29tcHJlc3Npb25fcXVhbGl0eRgJIAEoBVIWanBlZ0NvbXByZXNz",
-            "aW9uUXVhbGl0eRIhCgx2cHNfZW5kcG9pbnQYCiABKAlSC3Zwc0VuZHBvaW50",
-            "Iu8BCgVTdGFydBItChJzZXNzaW9uX2lkZW50aWZpZXIYASABKAxSEXNlc3Np",
-            "b25JZGVudGlmaWVyEhsKCWZpbGVfcGF0aBgCIAEoCVIIZmlsZVBhdGgSGwoJ",
-            "ZGF0ZV90aW1lGAMgASgJUghkYXRlVGltZRIhCgx0aW1lc3RhbXBfbXMYBCAB",
-            "KARSC3RpbWVzdGFtcE1zEiYKD2RldmljZV9lbnZfaW5mbxgFIAEoCVINZGV2",
-            "aWNlRW52SW5mbxIyCgp2cHNfY29uZmlnGAYgASgLMhMuYXJkay52cHMuVnBz",
-            "Q29uZmlnUgl2cHNDb25maWciuwMKBkFuY2hvchJFChFhbmNob3JfZXZlbnRf",
-            "dHlwZRgBIAEoDjIZLmFyZGsudnBzLkFuY2hvckV2ZW50VHlwZVIPYW5jaG9y",
-            "RXZlbnRUeXBlEisKEWFuY2hvcl9pZGVudGlmaWVyGAIgASgMUhBhbmNob3JJ",
-            "ZGVudGlmaWVyEkoKImFuY2hvcl90b19sb2NhbF90cmFja2luZ190cmFuc2Zv",
-            "cm0YAyADKAJSHmFuY2hvclRvTG9jYWxUcmFja2luZ1RyYW5zZm9ybRJECg50",
-            "cmFja2luZ19zdGF0ZRgEIAEoDjIdLmFyZGsudnBzLkFuY2hvclRyYWNraW5n",
-            "U3RhdGVSDXRyYWNraW5nU3RhdGUSVwoVdHJhY2tpbmdfc3RhdGVfcmVhc29u",
-            "GAUgASgOMiMuYXJkay52cHMuQW5jaG9yVHJhY2tpbmdTdGF0ZVJlYXNvblIT",
-            "dHJhY2tpbmdTdGF0ZVJlYXNvbhIvChN0cmFja2luZ19jb25maWRlbmNlGAYg",
-            "ASgCUhJ0cmFja2luZ0NvbmZpZGVuY2USIQoMdGltZXN0YW1wX21zGAcgASgE",
-            "Ugt0aW1lc3RhbXBNcyLNAgoTTmV0d29ya1JlcXVlc3RTdGF0ZRItChJyZXF1",
-            "ZXN0X2lkZW50aWZpZXIYASABKAxSEXJlcXVlc3RJZGVudGlmaWVyEjYKBnN0",
-            "YXR1cxgCIAEoDjIeLmFyZGsudnBzLk5ldHdvcmtSZXF1ZXN0U3RhdHVzUgZz",
-            "dGF0dXMSMAoEdHlwZRgDIAEoDjIcLmFyZGsudnBzLk5ldHdvcmtSZXF1ZXN0",
-            "VHlwZVIEdHlwZRIsCgVlcnJvchgEIAEoDjIWLmFyZGsudnBzLk5ldHdvcmtF",
-            "cnJvclIFZXJyb3ISIgoNc3RhcnRfdGltZV9tcxgFIAEoBFILc3RhcnRUaW1l",
-            "TXMSHgoLZW5kX3RpbWVfbXMYBiABKARSCWVuZFRpbWVNcxIeCghmcmFtZV9p",
-            "ZBgHIAEoBEgAUgdmcmFtZUlkiAEBQgsKCV9mcmFtZV9pZCLTAgoSTG9jYWxp",
-            "emF0aW9uVXBkYXRlEk0KE2xvY2FsaXphdGlvbl9tZXRob2QYASABKA4yHC5h",
-            "cmRrLnZwcy5Mb2NhbGl6YXRpb25NZXRob2RSEmxvY2FsaXphdGlvbk1ldGhv",
-            "ZBInCg9ub2RlX2lkZW50aWZpZXIYAiABKAxSDm5vZGVJZGVudGlmaWVyEjQK",
-            "BnN0YXR1cxgDIAEoDjIcLmFyZGsudnBzLkxvY2FsaXphdGlvblN0YXR1c1IG",
-            "c3RhdHVzEh4KCmNvbmZpZGVuY2UYBCABKAJSCmNvbmZpZGVuY2USGQoIZnJh",
-            "bWVfaWQYBSABKARSB2ZyYW1lSWQSIQoMdGltZXN0YW1wX21zGAYgASgEUgt0",
-            "aW1lc3RhbXBNcxIxChV0cmFja2luZ190b19ub2RlX3Bvc2UYByADKAJSEnRy",
-            "YWNraW5nVG9Ob2RlUG9zZSLDAwoVQmV2TG9jYWxpemF0aW9uVXBkYXRlEjcK",
-            "Bm1ldGhvZBgBIAEoDjIfLmFyZGsudnBzLkJldkxvY2FsaXphdGlvbk1ldGhv",
-            "ZFIGbWV0aG9kEhoKCGxhdGl0dWRlGAIgASgBUghsYXRpdHVkZRIcCglsb25n",
-            "aXR1ZGUYAyABKAFSCWxvbmdpdHVkZRIaCghhbHRpdHVkZRgEIAEoAVIIYWx0",
-            "aXR1ZGUSGAoHaGVhZGluZxgFIAEoAVIHaGVhZGluZxIeCgpjb25maWRlbmNl",
-            "GAYgASgBUgpjb25maWRlbmNlEh4KCmxpa2VsaWhvb2QYByABKAFSCmxpa2Vs",
-            "aWhvb2QSHgoIZnJhbWVfaWQYCCABKARIAFIHZnJhbWVJZIgBARItChJyZXF1",
-            "ZXN0X2lkZW50aWZpZXIYCSABKAxSEXJlcXVlc3RJZGVudGlmaWVyEkQKHHBy",
-            "b2Nlc3NpbmdfcG9zZV90aW1lc3RhbXBfbXMYCiABKARIAVIZcHJvY2Vzc2lu",
-            "Z1Bvc2VUaW1lc3RhbXBNc4gBAUILCglfZnJhbWVfaWRCHwodX3Byb2Nlc3Np",
-            "bmdfcG9zZV90aW1lc3RhbXBfbXMi+AQKBUZyYW1lEiEKDHRpbWVzdGFtcF9t",
-            "cxgBIAEoBFILdGltZXN0YW1wTXMSEgoEcG9zZRgCIAMoAlIEcG9zZRIZCghm",
-            "cmFtZV9pZBgDIAEoBFIHZnJhbWVJZBI+Cg50cmFja2luZ19zdGF0ZRgEIAEo",
-            "DjIXLmFyZGsudnBzLlRyYWNraW5nU3RhdGVSDXRyYWNraW5nU3RhdGUSIQoM",
-            "Z3BzX2xhdGl0dWRlGAUgASgCUgtncHNMYXRpdHVkZRIjCg1ncHNfbG9uZ2l0",
-            "dWRlGAYgASgCUgxncHNMb25naXR1ZGUSIQoMZ3BzX2FsdGl0dWRlGAcgASgC",
-            "UgtncHNBbHRpdHVkZRIyChVncHNfdmVydGljYWxfYWNjdXJhY3kYCCABKAJS",
-            "E2dwc1ZlcnRpY2FsQWNjdXJhY3kSNgoXZ3BzX2hvcml6b250YWxfYWNjdXJh",
-            "Y3kYCSABKAJSFWdwc0hvcml6b250YWxBY2N1cmFjeRIeCgppbnRyaW5zaWNz",
-            "GAogAygCUgppbnRyaW5zaWNzEhQKBXdpZHRoGAsgASgCUgV3aWR0aBIWCgZo",
-            "ZWlnaHQYDCABKAJSBmhlaWdodBIsChJmcmFtZV90aW1lc3RhbXBfbXMYDSAB",
-            "KARSEGZyYW1lVGltZXN0YW1wTXMSHwoLZ3BzX2hlYWRpbmcYDiABKAJSCmdw",
-            "c0hlYWRpbmcSNwoLb3JpZW50YXRpb24YDyABKA4yFS5hcmRrLnZwcy5Pcmll",
-            "bnRhdGlvblILb3JpZW50YXRpb24SMAoUZ3BzX2hlYWRpbmdfYWNjdXJhY3kY",
-            "ECABKAJSEmdwc0hlYWRpbmdBY2N1cmFjeSInCgpNYXBQb2ludDJEEhkKCHBv",
-            "aW50XzJkGAEgAygCUgdwb2ludDJkIoAHChFMb2NhbGl6YXRpb25TdGF0cxIh",
-            "Cgx0aW1lc3RhbXBfbXMYASABKARSC3RpbWVzdGFtcE1zEi0KE3RpbWVfdG9f",
-            "bG9jYWxpemVfbXMYAiABKARSEHRpbWVUb0xvY2FsaXplTXMSFgoGcmVjYWxs",
-            "GAMgASgCUgZyZWNhbGwSIwoNc3VjY2Vzc19jb3VudBgEIAEoDVIMc3VjY2Vz",
-            "c0NvdW50EiMKDWF0dGVtcHRfY291bnQYBSABKA1SDGF0dGVtcHRDb3VudBIr",
-            "ChFtZWRpYW5fY29uZmlkZW5jZRgGIAEoAlIQbWVkaWFuQ29uZmlkZW5jZRIn",
-            "Cg9tZWFuX2NvbmZpZGVuY2UYByABKAJSDm1lYW5Db25maWRlbmNlEjUKF21l",
-            "ZGlhbl9yZXNwb25zZV90aW1lX21zGAggASgEUhRtZWRpYW5SZXNwb25zZVRp",
-            "bWVNcxIxChVtZWFuX3Jlc3BvbnNlX3RpbWVfbXMYCSABKARSEm1lYW5SZXNw",
-            "b25zZVRpbWVNcxI2ChdtZWRpYW5fcHJvamVjdGlvbl9lcnJvchgKIAEoAlIV",
-            "bWVkaWFuUHJvamVjdGlvbkVycm9yEjIKFW1lYW5fcHJvamVjdGlvbl9lcnJv",
-            "chgLIAEoAlITbWVhblByb2plY3Rpb25FcnJvchI4ChhtZWRpYW5fdHJhbnNs",
-            "YXRpb25fZXJyb3IYDCABKAJSFm1lZGlhblRyYW5zbGF0aW9uRXJyb3ISNAoW",
-            "bWVhbl90cmFuc2xhdGlvbl9lcnJvchgNIAEoAlIUbWVhblRyYW5zbGF0aW9u",
-            "RXJyb3ISMgoVbWVkaWFuX3JvdGF0aW9uX2Vycm9yGA4gASgCUhNtZWRpYW5S",
-            "b3RhdGlvbkVycm9yEi4KE21lYW5fcm90YXRpb25fZXJyb3IYDyABKAJSEW1l",
-            "YW5Sb3RhdGlvbkVycm9yEk0KE2xvY2FsaXphdGlvbl9tZXRob2QYECABKA4y",
-            "HC5hcmRrLnZwcy5Mb2NhbGl6YXRpb25NZXRob2RSEmxvY2FsaXphdGlvbk1l",
-            "dGhvZBIxChVtZWFuX2JlbmNobWFya190dGxfbXMYESABKARSEm1lYW5CZW5j",
-            "aG1hcmtUdGxNcxI1ChdtZWRpYW5fYmVuY2htYXJrX3R0bF9tcxgSIAEoBFIU",
-            "bWVkaWFuQmVuY2htYXJrVHRsTXMiwgMKE0dlb0xvY2F0aW9uVHJhY2tpbmcS",
-            "IQoMdGltZXN0YW1wX21zGAEgASgEUgt0aW1lc3RhbXBNcxIjCg10cmFja2lu",
-            "Z190eXBlGAIgASgJUgx0cmFja2luZ1R5cGUSGgoIbGF0aXR1ZGUYAyABKAFS",
-            "CGxhdGl0dWRlEhwKCWxvbmdpdHVkZRgEIAEoAVIJbG9uZ2l0dWRlEhoKCGFs",
-            "dGl0dWRlGAUgASgBUghhbHRpdHVkZRIYCgdoZWFkaW5nGAYgASgBUgdoZWFk",
-            "aW5nEiEKDGV1bl9yb3RhdGlvbhgHIAMoAlILZXVuUm90YXRpb24SLwoTaG9y",
-            "aXpvbnRhbF9hY2N1cmFjeRgIIAEoAVISaG9yaXpvbnRhbEFjY3VyYWN5EisK",
-            "EXZlcnRpY2FsX2FjY3VyYWN5GAkgASgBUhB2ZXJ0aWNhbEFjY3VyYWN5EisK",
-            "EXJvdGF0aW9uX2FjY3VyYWN5GAogASgBUhByb3RhdGlvbkFjY3VyYWN5EiUK",
-            "DnRyYWNraW5nX3N0YXRlGAsgASgJUg10cmFja2luZ1N0YXRlEh4KCmxpa2Vs",
-            "aWhvb2QYDCABKAFSCmxpa2VsaWhvb2QiIAoISW50QXJyYXkSFAoFdmFsdWUY",
-            "ASADKAVSBXZhbHVlIiIKCkZsb2F0QXJyYXkSFAoFdmFsdWUYASADKAJSBXZh",
-            "bHVlIiMKC0RvdWJsZUFycmF5EhQKBXZhbHVlGAEgAygBUgV2YWx1ZSL2AQoK",
-            "Q3VzdG9tRGF0YRIUCgVsYWJlbBgBIAEoCVIFbGFiZWwSIQoLc3RyaW5nX2Rh",
-            "dGEYAiABKAlIAFIKc3RyaW5nRGF0YRIxCglpbnRfYXJyYXkYAyABKAsyEi5h",
-            "cmRrLnZwcy5JbnRBcnJheUgAUghpbnRBcnJheRI3CgtmbG9hdF9hcnJheRgE",
-            "IAEoCzIULmFyZGsudnBzLkZsb2F0QXJyYXlIAFIKZmxvYXRBcnJheRI6Cgxk",
-            "b3VibGVfYXJyYXkYBSABKAsyFS5hcmRrLnZwcy5Eb3VibGVBcnJheUgAUgtk",
-            "b3VibGVBcnJheUIHCgVWYWx1ZSLZAQoNQXNzZXRSZWNlaXZlZBIbCglhbmNo",
-            "b3JfaWQYASABKAxSCGFuY2hvcklkEhcKB3NpdGVfaWQYAiABKAxSBnNpdGVJ",
-            "ZBIhCgx0aW1lc3RhbXBfbXMYAyABKARSC3RpbWVzdGFtcE1zEhkKCG5vZGVf",
-            "aWRzGAQgAygMUgdub2RlSWRzEhoKCGxhdGl0dWRlGAUgASgBUghsYXRpdHVk",
-            "ZRIcCglsb25naXR1ZGUYBiABKAFSCWxvbmdpdHVkZRIaCghhbHRpdHVkZRgH",
-            "IAEoAVIIYWx0aXR1ZGUi4wYKFFZwc0RlYnVnZ2VyRGF0YUV2ZW50EicKBXN0",
-            "YXJ0GAEgASgLMg8uYXJkay52cHMuU3RhcnRIAFIFc3RhcnQSKgoGYW5jaG9y",
-            "GAIgASgLMhAuYXJkay52cHMuQW5jaG9ySABSBmFuY2hvchJTChVuZXR3b3Jr",
-            "X3JlcXVlc3Rfc3RhdGUYAyABKAsyHS5hcmRrLnZwcy5OZXR3b3JrUmVxdWVz",
-            "dFN0YXRlSABSE25ldHdvcmtSZXF1ZXN0U3RhdGUSTwoTbG9jYWxpemF0aW9u",
-            "X3VwZGF0ZRgEIAEoCzIcLmFyZGsudnBzLkxvY2FsaXphdGlvblVwZGF0ZUgA",
-            "UhJsb2NhbGl6YXRpb25VcGRhdGUSJwoFZnJhbWUYBSABKAsyDy5hcmRrLnZw",
-            "cy5GcmFtZUgAUgVmcmFtZRI4CgxtYXBfcG9pbnRfMmQYBiABKAsyFC5hcmRr",
-            "LnZwcy5NYXBQb2ludDJESABSCm1hcFBvaW50MmQSUwoWdnBzX2xvY2FsaXph",
-            "dGlvbl9zdGF0cxgHIAEoCzIbLmFyZGsudnBzLkxvY2FsaXphdGlvblN0YXRz",
-            "SABSFHZwc0xvY2FsaXphdGlvblN0YXRzElcKGHNsaWNrX2xvY2FsaXphdGlv",
-            "bl9zdGF0cxgIIAEoCzIbLmFyZGsudnBzLkxvY2FsaXphdGlvblN0YXRzSABS",
-            "FnNsaWNrTG9jYWxpemF0aW9uU3RhdHMSUwoVZ2VvX2xvY2F0aW9uX3RyYWNr",
-            "aW5nGAkgASgLMh0uYXJkay52cHMuR2VvTG9jYXRpb25UcmFja2luZ0gAUhNn",
-            "ZW9Mb2NhdGlvblRyYWNraW5nEjcKC2N1c3RvbV9kYXRhGAogASgLMhQuYXJk",
-            "ay52cHMuQ3VzdG9tRGF0YUgAUgpjdXN0b21EYXRhElkKF2Jldl9sb2NhbGl6",
-            "YXRpb25fdXBkYXRlGAsgASgLMh8uYXJkay52cHMuQmV2TG9jYWxpemF0aW9u",
-            "VXBkYXRlSABSFWJldkxvY2FsaXphdGlvblVwZGF0ZRJACg5hc3NldF9yZWNl",
-            "aXZlZBgMIAEoCzIXLmFyZGsudnBzLkFzc2V0UmVjZWl2ZWRIAFINYXNzZXRS",
-            "ZWNlaXZlZEIUChJ2cHNfZGVidWdnZXJfZXZlbnQqPwoTQW5jaG9yVHJhY2tp",
-            "bmdTdGF0ZRIOCgpOb3RUcmFja2VkEAASCwoHTGltaXRlZBABEgsKB1RyYWNr",
-            "ZWQQAiqEAQoZQW5jaG9yVHJhY2tpbmdTdGF0ZVJlYXNvbhIICgROb25lEAAS",
-            "EAoMSW5pdGlhbGl6aW5nEAESCwoHUmVtb3ZlZBACEhEKDUludGVybmFsRXJy",
-            "b3IQAxIUChBQZXJtaXNzaW9uRGVuaWVkEAQSFQoRRmF0YWxOZXR3b3JrRXJy",
-            "b3IQBSpkCg9BbmNob3JFdmVudFR5cGUSGgoWVW5rbm93bkFuY2hvckV2ZW50",
-            "VHlwZRAAEg8KC0FuY2hvckFkZGVkEAESEQoNQW5jaG9yVXBkYXRlZBACEhEK",
-            "DUFuY2hvclJlbW92ZWQQAypgChROZXR3b3JrUmVxdWVzdFN0YXR1cxIfChtV",
-            "bmtub3duTmV0d29ya1JlcXVlc3RTdGF0dXMQABILCgdQZW5kaW5nEAESDgoK",
-            "U3VjY2Vzc2Z1bBACEgoKBkZhaWxlZBADKmEKEk5ldHdvcmtSZXF1ZXN0VHlw",
-            "ZRIMCghMb2NhbGl6ZRAAEgwKCEdldEdyYXBoEAESFAoQR2V0UmVwbGFjZWRO",
-            "b2RlcxACEhAKDFJlZ2lzdGVyTm9kZRADEgcKA0JldhAEKrQBCgxOZXR3b3Jr",
-            "RXJyb3ISEAoMVW5rbm93bkVycm9yEAASCwoHTm9FcnJvchABEhgKFEJhZE5l",
-            "dHdvcmtDb25uZWN0aW9uEAISDQoJQmFkQXBpS2V5EAMSGQoVUGVybWlzc2lv",
-            "bkRlbmllZEVycm9yEAQSGQoVUmVxdWVzdHNMaW1pdEV4Y2VlZGVkEAUSEgoO",
-            "SW50ZXJuYWxTZXJ2ZXIQBhISCg5JbnRlcm5hbENsaWVudBAHKmYKEkxvY2Fs",
-            "aXphdGlvblN0YXR1cxIdChlVbmtub3duTG9jYWxpemF0aW9uU3RhdHVzEAAS",
-            "CwoHRmFpbHVyZRABEhcKE0xpbWl0ZWRMb2NhbGl6YXRpb24QAhILCgdTdWNj",
-            "ZXNzEAMqRwoSTG9jYWxpemF0aW9uTWV0aG9kEh0KGVVua25vd25Mb2NhbGl6",
-            "YXRpb25NZXRob2QQABIHCgNWcHMQARIJCgVTbGljaxACKkEKFUJldkxvY2Fs",
-            "aXphdGlvbk1ldGhvZBIUChBVbmtub3duQmV2TWV0aG9kEAASBwoDT3NtEAES",
-            "CQoFRHJvbmUQAipeCg1UcmFja2luZ1N0YXRlEhMKD1RyYWNraW5nVW5rbm93",
-            "bhAAEhIKDlRyYWNraW5nRmFpbGVkEAESEAoMVHJhY2tpbmdQb29yEAISEgoO",
-            "VHJhY2tpbmdOb3JtYWwQAyqeAQoLT3JpZW50YXRpb24SFgoST3JpZW50YXRp",
-            "b25Vbmtub3duEAASFwoTT3JpZW50YXRpb25Qb3J0cmFpdBABEiEKHU9yaWVu",
-            "dGF0aW9uUG9ydHJhaXRVcHNpZGVEb3duEAISHQoZT3JpZW50YXRpb25MYW5k",
-            "c2NhcGVSaWdodBADEhwKGE9yaWVudGF0aW9uTGFuZHNjYXBlTGVmdBAEQiCq",
-            "Ah1OaWFudGljLkxpZ2h0c2hpcC5BUi5Qcm90b2J1ZmIGcHJvdG8z"));
+            "Z2dlci5wcm90bxIIYXJkay52cHMi3hEKCVZwc0NvbmZpZxJKCh9jb250aW51",
+            "b3VzX2xvY2FsaXphdGlvbl9lbmFibGVkGAEgASgIQgIYAVIdY29udGludW91",
+            "c0xvY2FsaXphdGlvbkVuYWJsZWQSOgoXdGVtcG9yYWxfZnVzaW9uX2VuYWJs",
+            "ZWQYAiABKAhCAhgBUhV0ZW1wb3JhbEZ1c2lvbkVuYWJsZWQSTwoidHJhbnNm",
+            "b3JtX3VwZGF0ZV9zbW9vdGhpbmdfZW5hYmxlZBgDIAEoCEICGAFSH3RyYW5z",
+            "Zm9ybVVwZGF0ZVNtb290aGluZ0VuYWJsZWQSPAoaY2xvdWRfbG9jYWxpemF0",
+            "aW9uX2VuYWJsZWQYBCABKAhSGGNsb3VkTG9jYWxpemF0aW9uRW5hYmxlZBI8",
+            "ChpzbGlja19sb2NhbGl6YXRpb25fZW5hYmxlZBgFIAEoCFIYc2xpY2tMb2Nh",
+            "bGl6YXRpb25FbmFibGVkEkoKImNsb3VkX2xvY2FsaXplcl9pbml0aWFsX2Zy",
+            "YW1lX3JhdGUYBiABKAJSHmNsb3VkTG9jYWxpemVySW5pdGlhbEZyYW1lUmF0",
+            "ZRJQCiVjbG91ZF9sb2NhbGl6ZXJfY29udGludW91c19mcmFtZV9yYXRlGAcg",
+            "ASgCUiFjbG91ZExvY2FsaXplckNvbnRpbnVvdXNGcmFtZVJhdGUSOwoac2xp",
+            "Y2tfbG9jYWxpemVyX2ZyYW1lX3JhdGUYCCABKA1SF3NsaWNrTG9jYWxpemVy",
+            "RnJhbWVSYXRlEjgKGGpwZWdfY29tcHJlc3Npb25fcXVhbGl0eRgJIAEoBVIW",
+            "anBlZ0NvbXByZXNzaW9uUXVhbGl0eRIhCgx2cHNfZW5kcG9pbnQYCiABKAlS",
+            "C3Zwc0VuZHBvaW50EkIKHWdlb2xvY2F0aW9uX3Ntb290aGluZ19lbmFibGVk",
+            "GAsgASgIUhtnZW9sb2NhdGlvblNtb290aGluZ0VuYWJsZWQSRAoedW5pdmVy",
+            "c2FsX2xvY2FsaXphdGlvbl9lbmFibGVkGAwgASgIUhx1bml2ZXJzYWxMb2Nh",
+            "bGl6YXRpb25FbmFibGVkEloKKnVuaXZlcnNhbF9sb2NhbGl6YXRpb25fcmVx",
+            "dWVzdHNfcGVyX3NlY29uZBgNIAEoAlImdW5pdmVyc2FsTG9jYWxpemF0aW9u",
+            "UmVxdWVzdHNQZXJTZWNvbmQSWwoqdW5pdmVyc2FsX2xvY2FsaXphdGlvbl9t",
+            "dWx0aWNhbWVyYV9lbmFibGVkGA4gASgIUid1bml2ZXJzYWxMb2NhbGl6YXRp",
+            "b25NdWx0aWNhbWVyYUVuYWJsZWQSIQoMYmV2X2VuZHBvaW50GA8gASgJUgti",
+            "ZXZFbmRwb2ludBI9Cht2cHNfdGVtcG9yYWxfZnVzaW9uX2VuYWJsZWQYECAB",
+            "KAhSGHZwc1RlbXBvcmFsRnVzaW9uRW5hYmxlZBJQCiVjbG91ZF9sb2NhbGl6",
+            "ZXJfdW50YXJnZXRlZF9mcmFtZV9yYXRlGBEgASgCUiFjbG91ZExvY2FsaXpl",
+            "clVudGFyZ2V0ZWRGcmFtZVJhdGUSNQoXbG9uZ19yZXF1ZXN0X3RpbWVvdXRf",
+            "bXMYEiABKARSFGxvbmdSZXF1ZXN0VGltZW91dE1zEjcKGHNob3J0X3JlcXVl",
+            "c3RfdGltZW91dF9tcxgTIAEoBFIVc2hvcnRSZXF1ZXN0VGltZW91dE1zEmMK",
+            "MG51bV9vZl9yZXF1ZXN0c19iZXR3ZWVuX3JlcXVlc3Rfd2l0aF9tYXhfdGlt",
+            "ZW91dBgUIAEoDVIpbnVtT2ZSZXF1ZXN0c0JldHdlZW5SZXF1ZXN0V2l0aE1h",
+            "eFRpbWVvdXQSMAoUdnBzX2RlYnVnZ2VyX2VuYWJsZWQYFSABKAhSEnZwc0Rl",
+            "YnVnZ2VyRW5hYmxlZBIpCg5yZXRyaWV2ZV9zaXRlcxgWIAEoCEICGAFSDXJl",
+            "dHJpZXZlU2l0ZXMSQQobYXNzZXRfcmVxdWVzdF9yYWRpdXNfbWV0ZXJzGBcg",
+            "ASgCQgIYAVIYYXNzZXRSZXF1ZXN0UmFkaXVzTWV0ZXJzEi8KEmZldGNoX3Np",
+            "dGVzX2J5X2dwcxgYIAEoCEICGAFSD2ZldGNoU2l0ZXNCeUdwcxJMCiFleHBv",
+            "c2VfcmV0cmlldmVkX3NpdGVzX2FzX2FuY2hvcnMYGSABKAhCAhgBUh1leHBv",
+            "c2VSZXRyaWV2ZWRTaXRlc0FzQW5jaG9ycxIkCg53cHNfcHJpb3JfbW9kZRga",
+            "IAEoBVIMd3BzUHJpb3JNb2RlEj8KHHdwc19wcmlvcl9kaXN0YW5jZV90aHJl",
+            "c2hvbGQYGyABKAJSGXdwc1ByaW9yRGlzdGFuY2VUaHJlc2hvbGQSLAoSd3Bz",
+            "X2duc3NfZnJhbWVyYXRlGBwgASgCUhB3cHNHbnNzRnJhbWVyYXRlEiwKEndw",
+            "c19wb3NlX2ZyYW1lcmF0ZRgdIAEoAlIQd3BzUG9zZUZyYW1lcmF0ZRI4Chhi",
+            "ZXZfY29uZmlkZW5jZV90aHJlc2hvbGQYHiABKAJSFmJldkNvbmZpZGVuY2VU",
+            "aHJlc2hvbGQSPgobYWVyaWFsX2xvY2FsaXphdGlvbl9lbmFibGVkGB8gASgI",
+            "UhlhZXJpYWxMb2NhbGl6YXRpb25FbmFibGVkEjgKGGFlcmlhbF9tdWx0aXZp",
+            "ZXdfZW5hYmxlZBggIAEoCFIWYWVyaWFsTXVsdGl2aWV3RW5hYmxlZBJYCil1",
+            "bml2ZXJzYWxfbG9jYWxpemF0aW9uX3JlcXVlc3RfdGltZW91dF9tcxghIAEo",
+            "BVIldW5pdmVyc2FsTG9jYWxpemF0aW9uUmVxdWVzdFRpbWVvdXRNcxJJCiJt",
+            "YXhfcmVxdWVzdHNfaW5fdHJhbnNpdF9wZXJfdGFyZ2V0GCIgASgNUh1tYXhS",
+            "ZXF1ZXN0c0luVHJhbnNpdFBlclRhcmdldBI9ChthbmNob3JfZGlzdGFuY2Vf",
+            "Z2F0ZV9tZXRlcnMYIyABKAJSGGFuY2hvckRpc3RhbmNlR2F0ZU1ldGVycyKm",
+            "AgoFU3RhcnQSLQoSc2Vzc2lvbl9pZGVudGlmaWVyGAEgASgMUhFzZXNzaW9u",
+            "SWRlbnRpZmllchIbCglmaWxlX3BhdGgYAiABKAlSCGZpbGVQYXRoEhsKCWRh",
+            "dGVfdGltZRgDIAEoCVIIZGF0ZVRpbWUSIQoMdGltZXN0YW1wX21zGAQgASgE",
+            "Ugt0aW1lc3RhbXBNcxImCg9kZXZpY2VfZW52X2luZm8YBSABKAlSDWRldmlj",
+            "ZUVudkluZm8SMgoKdnBzX2NvbmZpZxgGIAEoCzITLmFyZGsudnBzLlZwc0Nv",
+            "bmZpZ1IJdnBzQ29uZmlnEjUKF3Zwc19kZWJ1Z2dlcl9ldmVudF9tYXNrGAcg",
+            "ASgEUhR2cHNEZWJ1Z2dlckV2ZW50TWFzayK7AwoGQW5jaG9yEkUKEWFuY2hv",
+            "cl9ldmVudF90eXBlGAEgASgOMhkuYXJkay52cHMuQW5jaG9yRXZlbnRUeXBl",
+            "Ug9hbmNob3JFdmVudFR5cGUSKwoRYW5jaG9yX2lkZW50aWZpZXIYAiABKAxS",
+            "EGFuY2hvcklkZW50aWZpZXISSgoiYW5jaG9yX3RvX2xvY2FsX3RyYWNraW5n",
+            "X3RyYW5zZm9ybRgDIAMoAlIeYW5jaG9yVG9Mb2NhbFRyYWNraW5nVHJhbnNm",
+            "b3JtEkQKDnRyYWNraW5nX3N0YXRlGAQgASgOMh0uYXJkay52cHMuQW5jaG9y",
+            "VHJhY2tpbmdTdGF0ZVINdHJhY2tpbmdTdGF0ZRJXChV0cmFja2luZ19zdGF0",
+            "ZV9yZWFzb24YBSABKA4yIy5hcmRrLnZwcy5BbmNob3JUcmFja2luZ1N0YXRl",
+            "UmVhc29uUhN0cmFja2luZ1N0YXRlUmVhc29uEi8KE3RyYWNraW5nX2NvbmZp",
+            "ZGVuY2UYBiABKAJSEnRyYWNraW5nQ29uZmlkZW5jZRIhCgx0aW1lc3RhbXBf",
+            "bXMYByABKARSC3RpbWVzdGFtcE1zIpcEChNOZXR3b3JrUmVxdWVzdFN0YXRl",
+            "Ei0KEnJlcXVlc3RfaWRlbnRpZmllchgBIAEoDFIRcmVxdWVzdElkZW50aWZp",
+            "ZXISNgoGc3RhdHVzGAIgASgOMh4uYXJkay52cHMuTmV0d29ya1JlcXVlc3RT",
+            "dGF0dXNSBnN0YXR1cxIwCgR0eXBlGAMgASgOMhwuYXJkay52cHMuTmV0d29y",
+            "a1JlcXVlc3RUeXBlUgR0eXBlEiwKBWVycm9yGAQgASgOMhYuYXJkay52cHMu",
+            "TmV0d29ya0Vycm9yUgVlcnJvchIiCg1zdGFydF90aW1lX21zGAUgASgEUgtz",
+            "dGFydFRpbWVNcxIeCgtlbmRfdGltZV9tcxgGIAEoBFIJZW5kVGltZU1zEh4K",
+            "CGZyYW1lX2lkGAcgASgESABSB2ZyYW1lSWSIAQESIgoKaW1hZ2VfanBlZxgI",
+            "IAEoDEgBUglpbWFnZUpwZWeIAQESJAoLaW1hZ2Vfd2lkdGgYCSABKA1IAlIK",
+            "aW1hZ2VXaWR0aIgBARImCgxpbWFnZV9oZWlnaHQYCiABKA1IA1ILaW1hZ2VI",
+            "ZWlnaHSIAQESJgoPdGFyZ2V0X25vZGVfaWRzGAsgAygMUg10YXJnZXROb2Rl",
+            "SWRzQgsKCV9mcmFtZV9pZEINCgtfaW1hZ2VfanBlZ0IOCgxfaW1hZ2Vfd2lk",
+            "dGhCDwoNX2ltYWdlX2hlaWdodCL+CgoSTG9jYWxpemF0aW9uVXBkYXRlEk0K",
+            "E2xvY2FsaXphdGlvbl9tZXRob2QYASABKA4yHC5hcmRrLnZwcy5Mb2NhbGl6",
+            "YXRpb25NZXRob2RSEmxvY2FsaXphdGlvbk1ldGhvZBInCg9ub2RlX2lkZW50",
+            "aWZpZXIYAiABKAxSDm5vZGVJZGVudGlmaWVyEjQKBnN0YXR1cxgDIAEoDjIc",
+            "LmFyZGsudnBzLkxvY2FsaXphdGlvblN0YXR1c1IGc3RhdHVzEh4KCmNvbmZp",
+            "ZGVuY2UYBCABKAJSCmNvbmZpZGVuY2USGQoIZnJhbWVfaWQYBSABKARSB2Zy",
+            "YW1lSWQSIQoMdGltZXN0YW1wX21zGAYgASgEUgt0aW1lc3RhbXBNcxIxChV0",
+            "cmFja2luZ190b19ub2RlX3Bvc2UYByADKAJSEnRyYWNraW5nVG9Ob2RlUG9z",
+            "ZRI6Chlsb2NhbGl6ZWRfbm9kZV9pZGVudGlmaWVyGAggASgMUhdsb2NhbGl6",
+            "ZWROb2RlSWRlbnRpZmllchJECh90cmFja2luZ190b19sb2NhbGl6ZWRfbm9k",
+            "ZV9wb3NlGAkgAygCUht0cmFja2luZ1RvTG9jYWxpemVkTm9kZVBvc2USLAoS",
+            "ZnJhbWVfdGltZXN0YW1wX21zGAogASgEUhBmcmFtZVRpbWVzdGFtcE1zEi0K",
+            "EnJlcXVlc3RfaWRlbnRpZmllchgLIAEoDFIRcmVxdWVzdElkZW50aWZpZXIS",
+            "RAoMZ3JhcGhfcmVzdWx0GAwgASgOMiEuYXJkay52cHMuTG9jYWxpemF0aW9u",
+            "R3JhcGhSZXN1bHRSC2dyYXBoUmVzdWx0EjIKFWdyYXBoX2VkZ2VfaWRlbnRp",
+            "ZmllchgNIAEoDFITZ3JhcGhFZGdlSWRlbnRpZmllchI1ChRyZXF1ZXN0X2dw",
+            "c19sYXRpdHVkZRgOIAEoAUgAUhJyZXF1ZXN0R3BzTGF0aXR1ZGWIAQESNwoV",
+            "cmVxdWVzdF9ncHNfbG9uZ2l0dWRlGA8gASgBSAFSE3JlcXVlc3RHcHNMb25n",
+            "aXR1ZGWIAQESNQoUcmVxdWVzdF9ncHNfYWx0aXR1ZGUYECABKAFIAlIScmVx",
+            "dWVzdEdwc0FsdGl0dWRliAEBEkoKH3JlcXVlc3RfZ3BzX2hvcml6b250YWxf",
+            "YWNjdXJhY3kYESABKAJIA1IccmVxdWVzdEdwc0hvcml6b250YWxBY2N1cmFj",
+            "eYgBARI8ChhyZXF1ZXN0X2dwc190aW1lc3RhbXBfbXMYEiABKARIBFIVcmVx",
+            "dWVzdEdwc1RpbWVzdGFtcE1ziAEBEi4KEGltcGxpZWRfbGF0aXR1ZGUYEyAB",
+            "KAFIBVIPaW1wbGllZExhdGl0dWRliAEBEjAKEWltcGxpZWRfbG9uZ2l0dWRl",
+            "GBQgASgBSAZSEGltcGxpZWRMb25naXR1ZGWIAQESLgoQaW1wbGllZF9hbHRp",
+            "dHVkZRgVIAEoAUgHUg9pbXBsaWVkQWx0aXR1ZGWIAQESLAoPaW1wbGllZF9o",
+            "ZWFkaW5nGBYgASgBSAhSDmltcGxpZWRIZWFkaW5niAEBQhcKFV9yZXF1ZXN0",
+            "X2dwc19sYXRpdHVkZUIYChZfcmVxdWVzdF9ncHNfbG9uZ2l0dWRlQhcKFV9y",
+            "ZXF1ZXN0X2dwc19hbHRpdHVkZUIiCiBfcmVxdWVzdF9ncHNfaG9yaXpvbnRh",
+            "bF9hY2N1cmFjeUIbChlfcmVxdWVzdF9ncHNfdGltZXN0YW1wX21zQhMKEV9p",
+            "bXBsaWVkX2xhdGl0dWRlQhQKEl9pbXBsaWVkX2xvbmdpdHVkZUITChFfaW1w",
+            "bGllZF9hbHRpdHVkZUISChBfaW1wbGllZF9oZWFkaW5nIsMDChVCZXZMb2Nh",
+            "bGl6YXRpb25VcGRhdGUSNwoGbWV0aG9kGAEgASgOMh8uYXJkay52cHMuQmV2",
+            "TG9jYWxpemF0aW9uTWV0aG9kUgZtZXRob2QSGgoIbGF0aXR1ZGUYAiABKAFS",
+            "CGxhdGl0dWRlEhwKCWxvbmdpdHVkZRgDIAEoAVIJbG9uZ2l0dWRlEhoKCGFs",
+            "dGl0dWRlGAQgASgBUghhbHRpdHVkZRIYCgdoZWFkaW5nGAUgASgBUgdoZWFk",
+            "aW5nEh4KCmNvbmZpZGVuY2UYBiABKAFSCmNvbmZpZGVuY2USHgoKbGlrZWxp",
+            "aG9vZBgHIAEoAVIKbGlrZWxpaG9vZBIeCghmcmFtZV9pZBgIIAEoBEgAUgdm",
+            "cmFtZUlkiAEBEi0KEnJlcXVlc3RfaWRlbnRpZmllchgJIAEoDFIRcmVxdWVz",
+            "dElkZW50aWZpZXISRAoccHJvY2Vzc2luZ19wb3NlX3RpbWVzdGFtcF9tcxgK",
+            "IAEoBEgBUhlwcm9jZXNzaW5nUG9zZVRpbWVzdGFtcE1ziAEBQgsKCV9mcmFt",
+            "ZV9pZEIfCh1fcHJvY2Vzc2luZ19wb3NlX3RpbWVzdGFtcF9tcyL4BAoFRnJh",
+            "bWUSIQoMdGltZXN0YW1wX21zGAEgASgEUgt0aW1lc3RhbXBNcxISCgRwb3Nl",
+            "GAIgAygCUgRwb3NlEhkKCGZyYW1lX2lkGAMgASgEUgdmcmFtZUlkEj4KDnRy",
+            "YWNraW5nX3N0YXRlGAQgASgOMhcuYXJkay52cHMuVHJhY2tpbmdTdGF0ZVIN",
+            "dHJhY2tpbmdTdGF0ZRIhCgxncHNfbGF0aXR1ZGUYBSABKAJSC2dwc0xhdGl0",
+            "dWRlEiMKDWdwc19sb25naXR1ZGUYBiABKAJSDGdwc0xvbmdpdHVkZRIhCgxn",
+            "cHNfYWx0aXR1ZGUYByABKAJSC2dwc0FsdGl0dWRlEjIKFWdwc192ZXJ0aWNh",
+            "bF9hY2N1cmFjeRgIIAEoAlITZ3BzVmVydGljYWxBY2N1cmFjeRI2ChdncHNf",
+            "aG9yaXpvbnRhbF9hY2N1cmFjeRgJIAEoAlIVZ3BzSG9yaXpvbnRhbEFjY3Vy",
+            "YWN5Eh4KCmludHJpbnNpY3MYCiADKAJSCmludHJpbnNpY3MSFAoFd2lkdGgY",
+            "CyABKAJSBXdpZHRoEhYKBmhlaWdodBgMIAEoAlIGaGVpZ2h0EiwKEmZyYW1l",
+            "X3RpbWVzdGFtcF9tcxgNIAEoBFIQZnJhbWVUaW1lc3RhbXBNcxIfCgtncHNf",
+            "aGVhZGluZxgOIAEoAlIKZ3BzSGVhZGluZxI3CgtvcmllbnRhdGlvbhgPIAEo",
+            "DjIVLmFyZGsudnBzLk9yaWVudGF0aW9uUgtvcmllbnRhdGlvbhIwChRncHNf",
+            "aGVhZGluZ19hY2N1cmFjeRgQIAEoAlISZ3BzSGVhZGluZ0FjY3VyYWN5IicK",
+            "Ck1hcFBvaW50MkQSGQoIcG9pbnRfMmQYASADKAJSB3BvaW50MmQigAcKEUxv",
+            "Y2FsaXphdGlvblN0YXRzEiEKDHRpbWVzdGFtcF9tcxgBIAEoBFILdGltZXN0",
+            "YW1wTXMSLQoTdGltZV90b19sb2NhbGl6ZV9tcxgCIAEoBFIQdGltZVRvTG9j",
+            "YWxpemVNcxIWCgZyZWNhbGwYAyABKAJSBnJlY2FsbBIjCg1zdWNjZXNzX2Nv",
+            "dW50GAQgASgNUgxzdWNjZXNzQ291bnQSIwoNYXR0ZW1wdF9jb3VudBgFIAEo",
+            "DVIMYXR0ZW1wdENvdW50EisKEW1lZGlhbl9jb25maWRlbmNlGAYgASgCUhBt",
+            "ZWRpYW5Db25maWRlbmNlEicKD21lYW5fY29uZmlkZW5jZRgHIAEoAlIObWVh",
+            "bkNvbmZpZGVuY2USNQoXbWVkaWFuX3Jlc3BvbnNlX3RpbWVfbXMYCCABKARS",
+            "FG1lZGlhblJlc3BvbnNlVGltZU1zEjEKFW1lYW5fcmVzcG9uc2VfdGltZV9t",
+            "cxgJIAEoBFISbWVhblJlc3BvbnNlVGltZU1zEjYKF21lZGlhbl9wcm9qZWN0",
+            "aW9uX2Vycm9yGAogASgCUhVtZWRpYW5Qcm9qZWN0aW9uRXJyb3ISMgoVbWVh",
+            "bl9wcm9qZWN0aW9uX2Vycm9yGAsgASgCUhNtZWFuUHJvamVjdGlvbkVycm9y",
+            "EjgKGG1lZGlhbl90cmFuc2xhdGlvbl9lcnJvchgMIAEoAlIWbWVkaWFuVHJh",
+            "bnNsYXRpb25FcnJvchI0ChZtZWFuX3RyYW5zbGF0aW9uX2Vycm9yGA0gASgC",
+            "UhRtZWFuVHJhbnNsYXRpb25FcnJvchIyChVtZWRpYW5fcm90YXRpb25fZXJy",
+            "b3IYDiABKAJSE21lZGlhblJvdGF0aW9uRXJyb3ISLgoTbWVhbl9yb3RhdGlv",
+            "bl9lcnJvchgPIAEoAlIRbWVhblJvdGF0aW9uRXJyb3ISTQoTbG9jYWxpemF0",
+            "aW9uX21ldGhvZBgQIAEoDjIcLmFyZGsudnBzLkxvY2FsaXphdGlvbk1ldGhv",
+            "ZFISbG9jYWxpemF0aW9uTWV0aG9kEjEKFW1lYW5fYmVuY2htYXJrX3R0bF9t",
+            "cxgRIAEoBFISbWVhbkJlbmNobWFya1R0bE1zEjUKF21lZGlhbl9iZW5jaG1h",
+            "cmtfdHRsX21zGBIgASgEUhRtZWRpYW5CZW5jaG1hcmtUdGxNcyLCAwoTR2Vv",
+            "TG9jYXRpb25UcmFja2luZxIhCgx0aW1lc3RhbXBfbXMYASABKARSC3RpbWVz",
+            "dGFtcE1zEiMKDXRyYWNraW5nX3R5cGUYAiABKAlSDHRyYWNraW5nVHlwZRIa",
+            "CghsYXRpdHVkZRgDIAEoAVIIbGF0aXR1ZGUSHAoJbG9uZ2l0dWRlGAQgASgB",
+            "Uglsb25naXR1ZGUSGgoIYWx0aXR1ZGUYBSABKAFSCGFsdGl0dWRlEhgKB2hl",
+            "YWRpbmcYBiABKAFSB2hlYWRpbmcSIQoMZXVuX3JvdGF0aW9uGAcgAygCUgtl",
+            "dW5Sb3RhdGlvbhIvChNob3Jpem9udGFsX2FjY3VyYWN5GAggASgBUhJob3Jp",
+            "em9udGFsQWNjdXJhY3kSKwoRdmVydGljYWxfYWNjdXJhY3kYCSABKAFSEHZl",
+            "cnRpY2FsQWNjdXJhY3kSKwoRcm90YXRpb25fYWNjdXJhY3kYCiABKAFSEHJv",
+            "dGF0aW9uQWNjdXJhY3kSJQoOdHJhY2tpbmdfc3RhdGUYCyABKAlSDXRyYWNr",
+            "aW5nU3RhdGUSHgoKbGlrZWxpaG9vZBgMIAEoAVIKbGlrZWxpaG9vZCIgCghJ",
+            "bnRBcnJheRIUCgV2YWx1ZRgBIAMoBVIFdmFsdWUiIgoKRmxvYXRBcnJheRIU",
+            "CgV2YWx1ZRgBIAMoAlIFdmFsdWUiIwoLRG91YmxlQXJyYXkSFAoFdmFsdWUY",
+            "ASADKAFSBXZhbHVlIpkCCgpDdXN0b21EYXRhEhQKBWxhYmVsGAEgASgJUgVs",
+            "YWJlbBIhCgtzdHJpbmdfZGF0YRgCIAEoCUgAUgpzdHJpbmdEYXRhEjEKCWlu",
+            "dF9hcnJheRgDIAEoCzISLmFyZGsudnBzLkludEFycmF5SABSCGludEFycmF5",
+            "EjcKC2Zsb2F0X2FycmF5GAQgASgLMhQuYXJkay52cHMuRmxvYXRBcnJheUgA",
+            "UgpmbG9hdEFycmF5EjoKDGRvdWJsZV9hcnJheRgFIAEoCzIVLmFyZGsudnBz",
+            "LkRvdWJsZUFycmF5SABSC2RvdWJsZUFycmF5EiEKDHRpbWVzdGFtcF9tcxgG",
+            "IAEoBFILdGltZXN0YW1wTXNCBwoFVmFsdWUimwIKDUFzc2V0UmVjZWl2ZWQS",
+            "GwoJYW5jaG9yX2lkGAEgASgMUghhbmNob3JJZBIXCgdzaXRlX2lkGAIgASgM",
+            "UgZzaXRlSWQSIQoMdGltZXN0YW1wX21zGAMgASgEUgt0aW1lc3RhbXBNcxIZ",
+            "Cghub2RlX2lkcxgEIAMoDFIHbm9kZUlkcxIaCghsYXRpdHVkZRgFIAEoAVII",
+            "bGF0aXR1ZGUSHAoJbG9uZ2l0dWRlGAYgASgBUglsb25naXR1ZGUSGgoIYWx0",
+            "aXR1ZGUYByABKAFSCGFsdGl0dWRlEhkKCGFzc2V0X2lkGAggASgJUgdhc3Nl",
+            "dElkEiUKDmFuY2hvcl9wYXlsb2FkGAkgASgJUg1hbmNob3JQYXlsb2FkIo0D",
+            "ChBWcHNTZWdtZW50VGFyZ2V0EhcKB3NpdGVfaWQYASABKAxSBnNpdGVJZBIZ",
+            "Cghhc3NldF9pZBgCIAEoCVIHYXNzZXRJZBIZCghub2RlX2lkcxgDIAMoDFIH",
+            "bm9kZUlkcxIhCgx0aW1lc3RhbXBfbXMYBCABKARSC3RpbWVzdGFtcE1zEh8K",
+            "C2lzX3RhcmdldGVkGAUgASgIUgppc1RhcmdldGVkEiEKDGlzX2xvY2FsaXpl",
+            "ZBgGIAEoCFILaXNMb2NhbGl6ZWQSHAoHbWluX2xhdBgHIAEoAUgAUgZtaW5M",
+            "YXSIAQESHAoHbWluX2xuZxgIIAEoAUgBUgZtaW5MbmeIAQESHAoHbWF4X2xh",
+            "dBgJIAEoAUgCUgZtYXhMYXSIAQESHAoHbWF4X2xuZxgKIAEoAUgDUgZtYXhM",
+            "bmeIAQESGwoJYW5jaG9yX2lkGAsgASgMUghhbmNob3JJZEIKCghfbWluX2xh",
+            "dEIKCghfbWluX2xuZ0IKCghfbWF4X2xhdEIKCghfbWF4X2xuZyKsBwoNTWFw",
+            "Tm9kZVVwZGF0ZRI5CgpldmVudF90eXBlGAEgASgOMhouYXJkay52cHMuTWFw",
+            "Tm9kZUV2ZW50VHlwZVIJZXZlbnRUeXBlEicKD25vZGVfaWRlbnRpZmllchgC",
+            "IAEoDFIObm9kZUlkZW50aWZpZXISIQoMdGltZXN0YW1wX21zGAMgASgEUgt0",
+            "aW1lc3RhbXBNcxIyCglub2RlX3R5cGUYBCABKA4yFS5hcmRrLnZwcy5NYXBO",
+            "b2RlVHlwZVIIbm9kZVR5cGUSQgoNc291cmNlX2RldmljZRgFIAEoDjIdLmFy",
+            "ZGsudnBzLk1hcE5vZGVTb3VyY2VEZXZpY2VSDHNvdXJjZURldmljZRIpChBz",
+            "cGFjZV9pZGVudGlmaWVyGAYgASgMUg9zcGFjZUlkZW50aWZpZXISIAoMaXNf",
+            "bGl2ZV9ub2RlGAggASgIUgppc0xpdmVOb2RlEigKEGlzX2FuY2hvcl90YXJn",
+            "ZXQYCSABKAhSDmlzQW5jaG9yVGFyZ2V0EiYKD2V4aXN0c19pbl9jbG91ZBgK",
+            "IAEoCFINZXhpc3RzSW5DbG91ZBI2ChdjbG91ZF9wZXJtaXNzaW9uX2Rlbmll",
+            "ZBgMIAEoCFIVY2xvdWRQZXJtaXNzaW9uRGVuaWVkEj8KHGdlb19yZWZlcmVu",
+            "Y2VfZGF0YV9wcm9jZXNzZWQYDSABKAhSGWdlb1JlZmVyZW5jZURhdGFQcm9j",
+            "ZXNzZWQSHAoKaXNfdG9vX2ZhchgOIAEoCFIIaXNUb29GYXISTQoTbG9jYWxp",
+            "emF0aW9uX3N0YXR1cxgPIAEoDjIcLmFyZGsudnBzLkxvY2FsaXphdGlvblN0",
+            "YXR1c1ISbG9jYWxpemF0aW9uU3RhdHVzEh8KCGxhdGl0dWRlGBAgASgBSABS",
+            "CGxhdGl0dWRliAEBEiEKCWxvbmdpdHVkZRgRIAEoAUgBUglsb25naXR1ZGWI",
+            "AQESHwoIYWx0aXR1ZGUYEiABKAFIAlIIYWx0aXR1ZGWIAQESLQoTaGFzX2Rl",
+            "dmljZV9tYXBfZGF0YRgTIAEoCFIQaGFzRGV2aWNlTWFwRGF0YRIpChBhdmFp",
+            "bGFibGVfbGF5ZXJzGBQgAygJUg9hdmFpbGFibGVMYXllcnNCCwoJX2xhdGl0",
+            "dWRlQgwKCl9sb25naXR1ZGVCCwoJX2FsdGl0dWRlSgQIBxAISgQICxAMUhJz",
+            "ZXNzaW9uX2lkZW50aWZpZXJSEHVwbG9hZF9wZXJtaXR0ZWQijAUKD0dyYXBo",
+            "RWRnZVVwZGF0ZRI7CgpldmVudF90eXBlGAEgASgOMhwuYXJkay52cHMuR3Jh",
+            "cGhFZGdlRXZlbnRUeXBlUglldmVudFR5cGUSJwoPZWRnZV9pZGVudGlmaWVy",
+            "GAIgASgMUg5lZGdlSWRlbnRpZmllchI0ChZzb3VyY2Vfbm9kZV9pZGVudGlm",
+            "aWVyGAMgASgMUhRzb3VyY2VOb2RlSWRlbnRpZmllchI+ChtkZXN0aW5hdGlv",
+            "bl9ub2RlX2lkZW50aWZpZXIYBCABKAxSGWRlc3RpbmF0aW9uTm9kZUlkZW50",
+            "aWZpZXISKgoRc291cmNlX2xheWVyX25hbWUYBSABKAlSD3NvdXJjZUxheWVy",
+            "TmFtZRI0ChZkZXN0aW5hdGlvbl9sYXllcl9uYW1lGAYgASgJUhRkZXN0aW5h",
+            "dGlvbkxheWVyTmFtZRI0CgllZGdlX3R5cGUYByABKA4yFy5hcmRrLnZwcy5H",
+            "cmFwaEVkZ2VUeXBlUghlZGdlVHlwZRIeCgpjb25maWRlbmNlGAggASgCUgpj",
+            "b25maWRlbmNlEiYKD2V4aXN0c19pbl9jbG91ZBgJIAEoCFINZXhpc3RzSW5D",
+            "bG91ZBIpChB1cGxvYWRfcGVybWl0dGVkGAogASgIUg91cGxvYWRQZXJtaXR0",
+            "ZWQSIQoMdGltZXN0YW1wX21zGAsgASgEUgt0aW1lc3RhbXBNcxI7Chpzb3Vy",
+            "Y2VfdG9fZGVzdGluYXRpb25fcG9zZRgMIAMoAlIXc291cmNlVG9EZXN0aW5h",
+            "dGlvblBvc2USMgoVY3JlYXRpb25fdGltZXN0YW1wX21zGA0gASgEUhNjcmVh",
+            "dGlvblRpbWVzdGFtcE1zIpMCChBGdXNpb25IeXBvdGhlc2lzEjoKGXNvdXJj",
+            "ZV9jbHVzdGVyX2lkZW50aWZpZXIYASABKAxSF3NvdXJjZUNsdXN0ZXJJZGVu",
+            "dGlmaWVyEkQKHmRlc3RpbmF0aW9uX2NsdXN0ZXJfaWRlbnRpZmllchgCIAEo",
+            "DFIcZGVzdGluYXRpb25DbHVzdGVySWRlbnRpZmllchIpChBlZGdlX2lkZW50",
+            "aWZpZXJzGAMgAygMUg9lZGdlSWRlbnRpZmllcnMSHgoKY29uZmlkZW5jZRgE",
+            "IAEoAVIKY29uZmlkZW5jZRIWCgZ3ZWlnaHQYBSABKAFSBndlaWdodBIaCghz",
+            "ZWxlY3RlZBgGIAEoCFIIc2VsZWN0ZWQicQoQRnVzaW9uSHlwb3RoZXNlcxIh",
+            "Cgx0aW1lc3RhbXBfbXMYASABKARSC3RpbWVzdGFtcE1zEjoKCmh5cG90aGVz",
+            "ZXMYAiADKAsyGi5hcmRrLnZwcy5GdXNpb25IeXBvdGhlc2lzUgpoeXBvdGhl",
+            "c2VzIq0DChhGdXNpb25IeXBvdGhlc2lzU2VsZWN0ZWQSIQoMdGltZXN0YW1w",
+            "X21zGAEgASgEUgt0aW1lc3RhbXBNcxJECh5kZXN0aW5hdGlvbl9jbHVzdGVy",
+            "X2lkZW50aWZpZXIYAiABKAxSHGRlc3RpbmF0aW9uQ2x1c3RlcklkZW50aWZp",
+            "ZXISOgoZc291cmNlX2NsdXN0ZXJfaWRlbnRpZmllchgIIAEoDFIXc291cmNl",
+            "Q2x1c3RlcklkZW50aWZpZXISOgoZcHJldmlvdXNfZWRnZV9pZGVudGlmaWVy",
+            "cxgDIAMoDFIXcHJldmlvdXNFZGdlSWRlbnRpZmllcnMSKQoQZWRnZV9pZGVu",
+            "dGlmaWVycxgEIAMoDFIPZWRnZUlkZW50aWZpZXJzEi8KE3ByZXZpb3VzX2Nv",
+            "bmZpZGVuY2UYBSABKAFSEnByZXZpb3VzQ29uZmlkZW5jZRIeCgpjb25maWRl",
+            "bmNlGAYgASgBUgpjb25maWRlbmNlEjQKFnByZXZpb3VzX3N0aWxsX3ByZXNl",
+            "bnQYByABKAhSFHByZXZpb3VzU3RpbGxQcmVzZW50IowFChVHZW9sb2NhdGlv",
+            "blRyYW5zaXRpb24SIQoMdGltZXN0YW1wX21zGAEgASgEUgt0aW1lc3RhbXBN",
+            "cxJECg9wcmV2aW91c19zb3VyY2UYAiABKA4yGy5hcmRrLnZwcy5HZW9sb2Nh",
+            "dGlvblNvdXJjZVIOcHJldmlvdXNTb3VyY2USMwoGc291cmNlGAMgASgOMhsu",
+            "YXJkay52cHMuR2VvbG9jYXRpb25Tb3VyY2VSBnNvdXJjZRJCCgZyZWFzb24Y",
+            "BCABKA4yKi5hcmRrLnZwcy5WcHNHZW9yZWZlcmVuY2VVbmF2YWlsYWJsZVJl",
+            "YXNvblIGcmVhc29uEjcKGGJlc3RfbWFwX25vZGVfaWRlbnRpZmllchgFIAEo",
+            "DFIVYmVzdE1hcE5vZGVJZGVudGlmaWVyEicKD2Jlc3RfY29uZmlkZW5jZRgG",
+            "IAEoAlIOYmVzdENvbmZpZGVuY2USJQoObWluX2NvbmZpZGVuY2UYByABKAJS",
+            "DW1pbkNvbmZpZGVuY2USNgoXZ2VvcmVmZXJlbmNlZF9tYXBfbm9kZXMYCCAB",
+            "KA1SFWdlb3JlZmVyZW5jZWRNYXBOb2RlcxIuChNjb25uZWN0ZWRfbWFwX25v",
+            "ZGVzGAkgASgNUhFjb25uZWN0ZWRNYXBOb2RlcxI4Chh0cmFja2luZ19ub2Rl",
+            "X2lkZW50aWZpZXIYCiABKAxSFnRyYWNraW5nTm9kZUlkZW50aWZpZXISMgoV",
+            "dHJhY2tpbmdfbm9kZV9jaGFuZ2VkGAsgASgIUhN0cmFja2luZ05vZGVDaGFu",
+            "Z2VkEjIKFXZwc19nZW9yZWZlcmVuY2VfaGVsZBgMIAEoCFITdnBzR2VvcmVm",
+            "ZXJlbmNlSGVsZCLwAgoPVGFyZ2V0UmVxdWVzdGVkEiEKDHRpbWVzdGFtcF9t",
+            "cxgBIAEoBFILdGltZXN0YW1wTXMSLwoEdHlwZRgCIAEoDjIbLmFyZGsudnBz",
+            "LlRhcmdldFJlcXVlc3RUeXBlUgR0eXBlEisKEWFuY2hvcl9pZGVudGlmaWVy",
+            "GAMgASgMUhBhbmNob3JJZGVudGlmaWVyEiUKDmFuY2hvcl9wYXlsb2FkGAQg",
+            "ASgJUg1hbmNob3JQYXlsb2FkEhcKB3NpdGVfaWQYBSABKAlSBnNpdGVJZBIm",
+            "Cg9hc3NldF9pZF9maWx0ZXIYBiADKAlSDWFzc2V0SWRGaWx0ZXISGgoIbGF0",
+            "aXR1ZGUYByABKAFSCGxhdGl0dWRlEhwKCWxvbmdpdHVkZRgIIAEoAVIJbG9u",
+            "Z2l0dWRlEigKDXJhZGl1c19tZXRlcnMYCSABKAFIAFIMcmFkaXVzTWV0ZXJz",
+            "iAEBQhAKDl9yYWRpdXNfbWV0ZXJzIowLChRWcHNEZWJ1Z2dlckRhdGFFdmVu",
+            "dBInCgVzdGFydBgBIAEoCzIPLmFyZGsudnBzLlN0YXJ0SABSBXN0YXJ0EioK",
+            "BmFuY2hvchgCIAEoCzIQLmFyZGsudnBzLkFuY2hvckgAUgZhbmNob3ISUwoV",
+            "bmV0d29ya19yZXF1ZXN0X3N0YXRlGAMgASgLMh0uYXJkay52cHMuTmV0d29y",
+            "a1JlcXVlc3RTdGF0ZUgAUhNuZXR3b3JrUmVxdWVzdFN0YXRlEk8KE2xvY2Fs",
+            "aXphdGlvbl91cGRhdGUYBCABKAsyHC5hcmRrLnZwcy5Mb2NhbGl6YXRpb25V",
+            "cGRhdGVIAFISbG9jYWxpemF0aW9uVXBkYXRlEicKBWZyYW1lGAUgASgLMg8u",
+            "YXJkay52cHMuRnJhbWVIAFIFZnJhbWUSOAoMbWFwX3BvaW50XzJkGAYgASgL",
+            "MhQuYXJkay52cHMuTWFwUG9pbnQyREgAUgptYXBQb2ludDJkElMKFnZwc19s",
+            "b2NhbGl6YXRpb25fc3RhdHMYByABKAsyGy5hcmRrLnZwcy5Mb2NhbGl6YXRp",
+            "b25TdGF0c0gAUhR2cHNMb2NhbGl6YXRpb25TdGF0cxJXChhzbGlja19sb2Nh",
+            "bGl6YXRpb25fc3RhdHMYCCABKAsyGy5hcmRrLnZwcy5Mb2NhbGl6YXRpb25T",
+            "dGF0c0gAUhZzbGlja0xvY2FsaXphdGlvblN0YXRzElMKFWdlb19sb2NhdGlv",
+            "bl90cmFja2luZxgJIAEoCzIdLmFyZGsudnBzLkdlb0xvY2F0aW9uVHJhY2tp",
+            "bmdIAFITZ2VvTG9jYXRpb25UcmFja2luZxI3CgtjdXN0b21fZGF0YRgKIAEo",
+            "CzIULmFyZGsudnBzLkN1c3RvbURhdGFIAFIKY3VzdG9tRGF0YRJZChdiZXZf",
+            "bG9jYWxpemF0aW9uX3VwZGF0ZRgLIAEoCzIfLmFyZGsudnBzLkJldkxvY2Fs",
+            "aXphdGlvblVwZGF0ZUgAUhViZXZMb2NhbGl6YXRpb25VcGRhdGUSQAoOYXNz",
+            "ZXRfcmVjZWl2ZWQYDCABKAsyFy5hcmRrLnZwcy5Bc3NldFJlY2VpdmVkSABS",
+            "DWFzc2V0UmVjZWl2ZWQSQQoPbWFwX25vZGVfdXBkYXRlGA0gASgLMhcuYXJk",
+            "ay52cHMuTWFwTm9kZVVwZGF0ZUgAUg1tYXBOb2RlVXBkYXRlEkcKEWdyYXBo",
+            "X2VkZ2VfdXBkYXRlGA4gASgLMhkuYXJkay52cHMuR3JhcGhFZGdlVXBkYXRl",
+            "SABSD2dyYXBoRWRnZVVwZGF0ZRJKChJ2cHNfc2VnbWVudF90YXJnZXQYDyAB",
+            "KAsyGi5hcmRrLnZwcy5WcHNTZWdtZW50VGFyZ2V0SABSEHZwc1NlZ21lbnRU",
+            "YXJnZXQSSQoRZnVzaW9uX2h5cG90aGVzZXMYECABKAsyGi5hcmRrLnZwcy5G",
+            "dXNpb25IeXBvdGhlc2VzSABSEGZ1c2lvbkh5cG90aGVzZXMSYgoaZnVzaW9u",
+            "X2h5cG90aGVzaXNfc2VsZWN0ZWQYESABKAsyIi5hcmRrLnZwcy5GdXNpb25I",
+            "eXBvdGhlc2lzU2VsZWN0ZWRIAFIYZnVzaW9uSHlwb3RoZXNpc1NlbGVjdGVk",
+            "ElgKFmdlb2xvY2F0aW9uX3RyYW5zaXRpb24YEiABKAsyHy5hcmRrLnZwcy5H",
+            "ZW9sb2NhdGlvblRyYW5zaXRpb25IAFIVZ2VvbG9jYXRpb25UcmFuc2l0aW9u",
+            "EkYKEHRhcmdldF9yZXF1ZXN0ZWQYEyABKAsyGS5hcmRrLnZwcy5UYXJnZXRS",
+            "ZXF1ZXN0ZWRIAFIPdGFyZ2V0UmVxdWVzdGVkQhQKEnZwc19kZWJ1Z2dlcl9l",
+            "dmVudCo/ChNBbmNob3JUcmFja2luZ1N0YXRlEg4KCk5vdFRyYWNrZWQQABIL",
+            "CgdMaW1pdGVkEAESCwoHVHJhY2tlZBACKp4BChlBbmNob3JUcmFja2luZ1N0",
+            "YXRlUmVhc29uEggKBE5vbmUQABIQCgxJbml0aWFsaXppbmcQARILCgdSZW1v",
+            "dmVkEAISEQoNSW50ZXJuYWxFcnJvchADEhQKEFBlcm1pc3Npb25EZW5pZWQQ",
+            "BBIVChFGYXRhbE5ldHdvcmtFcnJvchAFEhgKFE5vVmlzdWFsTG9jYWxpemF0",
+            "aW9uEAYqZAoPQW5jaG9yRXZlbnRUeXBlEhoKFlVua25vd25BbmNob3JFdmVu",
+            "dFR5cGUQABIPCgtBbmNob3JBZGRlZBABEhEKDUFuY2hvclVwZGF0ZWQQAhIR",
+            "Cg1BbmNob3JSZW1vdmVkEAMqcwoUTmV0d29ya1JlcXVlc3RTdGF0dXMSHwob",
+            "VW5rbm93bk5ldHdvcmtSZXF1ZXN0U3RhdHVzEAASCwoHUGVuZGluZxABEg4K",
+            "ClN1Y2Nlc3NmdWwQAhIKCgZGYWlsZWQQAxIRCg1GcmFtZVJlamVjdGVkEAQq",
+            "cAoSTmV0d29ya1JlcXVlc3RUeXBlEgwKCExvY2FsaXplEAASDAoIR2V0R3Jh",
+            "cGgQARIUChBHZXRSZXBsYWNlZE5vZGVzEAISEAoMUmVnaXN0ZXJOb2RlEAMS",
+            "BwoDQmV2EAQSDQoJQXNzZXRJbmZvEAUq+QIKDE5ldHdvcmtFcnJvchIQCgxV",
+            "bmtub3duRXJyb3IQABILCgdOb0Vycm9yEAESGAoUQmFkTmV0d29ya0Nvbm5l",
+            "Y3Rpb24QAhINCglCYWRBcGlLZXkQAxIZChVQZXJtaXNzaW9uRGVuaWVkRXJy",
+            "b3IQBBIZChVSZXF1ZXN0c0xpbWl0RXhjZWVkZWQQBRISCg5JbnRlcm5hbFNl",
+            "cnZlchAGEhIKDkludGVybmFsQ2xpZW50EAcSDgoKTm9NYXBGb3VuZBAIEhYK",
+            "EkxvY2FsaXphdGlvbkZhaWxlZBAJEhEKDVF1b3RhRXhjZWVkZWQQChIPCgtC",
+            "YWRUcmFja2luZxALEhIKDkJhZENhbWVyYUFuZ2xlEAwSEAoMTm9WYWxpZFBy",
+            "aW9yEA0SFAoQRGV2aWNlVXBzaWRlRG93bhAOEhIKDkltYWdlVG9vQmx1cnJ5",
+            "EA8SEAoMU2l0ZU5vdEZvdW5kEBASFQoRVnBzQXNzZXRzTm90Rm91bmQQESpm",
+            "ChJMb2NhbGl6YXRpb25TdGF0dXMSHQoZVW5rbm93bkxvY2FsaXphdGlvblN0",
+            "YXR1cxAAEgsKB0ZhaWx1cmUQARIXChNMaW1pdGVkTG9jYWxpemF0aW9uEAIS",
+            "CwoHU3VjY2VzcxADKkcKEkxvY2FsaXphdGlvbk1ldGhvZBIdChlVbmtub3du",
+            "TG9jYWxpemF0aW9uTWV0aG9kEAASBwoDVnBzEAESCQoFU2xpY2sQAipXChVC",
+            "ZXZMb2NhbGl6YXRpb25NZXRob2QSFAoQVW5rbm93bkJldk1ldGhvZBAAEgcK",
+            "A09zbRABEgoKBkFlcmlhbBACEhMKD0FlcmlhbE11bHRpdmlldxADKl4KDVRy",
+            "YWNraW5nU3RhdGUSEwoPVHJhY2tpbmdVbmtub3duEAASEgoOVHJhY2tpbmdG",
+            "YWlsZWQQARIQCgxUcmFja2luZ1Bvb3IQAhISCg5UcmFja2luZ05vcm1hbBAD",
+            "Kp4BCgtPcmllbnRhdGlvbhIWChJPcmllbnRhdGlvblVua25vd24QABIXChNP",
+            "cmllbnRhdGlvblBvcnRyYWl0EAESIQodT3JpZW50YXRpb25Qb3J0cmFpdFVw",
+            "c2lkZURvd24QAhIdChlPcmllbnRhdGlvbkxhbmRzY2FwZVJpZ2h0EAMSHAoY",
+            "T3JpZW50YXRpb25MYW5kc2NhcGVMZWZ0EAQqaQoQTWFwTm9kZUV2ZW50VHlw",
+            "ZRIbChdVbmtub3duTWFwTm9kZUV2ZW50VHlwZRAAEhAKDE1hcE5vZGVBZGRl",
+            "ZBABEhIKDk1hcE5vZGVVcGRhdGVkEAISEgoOTWFwTm9kZVJlbW92ZWQQAypi",
+            "CgtNYXBOb2RlVHlwZRIWChJVbmtub3duTWFwTm9kZVR5cGUQABIMCghUcmFj",
+            "a2luZxABEg0KCURldmljZU1hcBACEgwKCENsb3VkTWFwEAMSEAoMR3JhcGhS",
+            "ZXF1ZXN0EAQq0gEKE01hcE5vZGVTb3VyY2VEZXZpY2USHgoaVW5rbm93bk1h",
+            "cE5vZGVTb3VyY2VEZXZpY2UQABIcChhUaGlzRGV2aWNlQ3VycmVudFNlc3Np",
+            "b24QARIZChVUaGlzRGV2aWNlUGFzdFNlc3Npb24QAhIdChlPdGhlckRldmlj",
+            "ZUN1cnJlbnRTZXNzaW9uEAMSGgoWT3RoZXJEZXZpY2VQYXN0U2Vzc2lvbhAE",
+            "EhAKDE1hcHBpbmdDbG91ZBAFEhUKEU90aGVyU291cmNlRGV2aWNlEAYqcwoS",
+            "R3JhcGhFZGdlRXZlbnRUeXBlEh0KGVVua25vd25HcmFwaEVkZ2VFdmVudFR5",
+            "cGUQABISCg5HcmFwaEVkZ2VBZGRlZBABEhQKEEdyYXBoRWRnZVVwZGF0ZWQQ",
+            "AhIUChBHcmFwaEVkZ2VSZW1vdmVkEAMqwQEKDUdyYXBoRWRnZVR5cGUSGAoU",
+            "VW5rbm93bkdyYXBoRWRnZVR5cGUQABIUChBDbHVzdGVyQWxpZ25tZW50EAES",
+            "EAoMVHJhY2tpbmdFZGdlEAISCgoGTm9FZGdlEAMSEgoOU3BhY2VTcGxpdHRp",
+            "bmcQBBINCglVc2VyQmFzZWQQBRIYChRPbkRldmljZUxvY2FsaXphdGlvbhAG",
+            "EhAKDFRyYWNraW5nSnVtcBAHEhMKD0xpbWl0ZWRUcmFja2luZxAIKuUBChdM",
+            "b2NhbGl6YXRpb25HcmFwaFJlc3VsdBIiCh5Vbmtub3duTG9jYWxpemF0aW9u",
+            "R3JhcGhSZXN1bHQQABINCglFZGdlQWRkZWQQARIYChROb3RBZGRlZE5vdExv",
+            "Y2FsaXplZBACEh8KG05vdEFkZGVkVHJhY2tpbmdOb2RlTWlzc2luZxADEhcK",
+            "E05vdEFkZGVkTGltaXRlZE9ubHkQBBIhCh1Ob3RBZGRlZExpbWl0ZWRXaGls",
+            "ZUxvY2FsaXplZBAFEiAKHE5vdEFkZGVkT2xkZXJUaGFuQ3VycmVudEVkZ2UQ",
+            "BipiChFHZW9sb2NhdGlvblNvdXJjZRIZChVHZW9sb2NhdGlvblNvdXJjZU5v",
+            "bmUQABIYChRHZW9sb2NhdGlvblNvdXJjZVdwcxABEhgKFEdlb2xvY2F0aW9u",
+            "U291cmNlVnBzEAIqrwEKIFZwc0dlb3JlZmVyZW5jZVVuYXZhaWxhYmxlUmVh",
+            "c29uEhwKGFZwc0dlb3JlZmVyZW5jZUF2YWlsYWJsZRAAEhkKFU5vVHJhY2tp",
+            "bmdOb2RlT3JHcmFwaBABEhoKFk5vR2VvcmVmZXJlbmNlZE1hcE5vZGUQAhIY",
+            "ChRNYXBOb2Rlc05vdENvbm5lY3RlZBADEhwKGENvbmZpZGVuY2VCZWxvd1Ro",
+            "cmVzaG9sZBAEKoUBChFUYXJnZXRSZXF1ZXN0VHlwZRIcChhVbmtub3duVGFy",
+            "Z2V0UmVxdWVzdFR5cGUQABIXChNUYXJnZXRBbmNob3JQYXlsb2FkEAESGAoU",
+            "VGFyZ2V0TG9jYWxpemVUb1NpdGUQAhIfChtUYXJnZXRMb2NhbGl6ZVRvTmVh",
+            "cmJ5U2l0ZXMQA0JQCiBjb20ubmlhbnRpY3NwYXRpYWwubnNkay5wcm90b2J1",
+            "ZlABqgIdTmlhbnRpYy5MaWdodHNoaXAuQVIuUHJvdG9idWa6AglOc2RrX1Zw",
+            "c19iBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Niantic.Lightship.AR.Protobuf.AnchorTrackingState), typeof(global::Niantic.Lightship.AR.Protobuf.AnchorTrackingStateReason), typeof(global::Niantic.Lightship.AR.Protobuf.AnchorEventType), typeof(global::Niantic.Lightship.AR.Protobuf.NetworkRequestStatus), typeof(global::Niantic.Lightship.AR.Protobuf.NetworkRequestType), typeof(global::Niantic.Lightship.AR.Protobuf.NetworkError), typeof(global::Niantic.Lightship.AR.Protobuf.LocalizationStatus), typeof(global::Niantic.Lightship.AR.Protobuf.LocalizationMethod), typeof(global::Niantic.Lightship.AR.Protobuf.BevLocalizationMethod), typeof(global::Niantic.Lightship.AR.Protobuf.TrackingState), typeof(global::Niantic.Lightship.AR.Protobuf.Orientation), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.VpsConfig), global::Niantic.Lightship.AR.Protobuf.VpsConfig.Parser, new[]{ "ContinuousLocalizationEnabled", "TemporalFusionEnabled", "TransformUpdateSmoothingEnabled", "CloudLocalizationEnabled", "SlickLocalizationEnabled", "CloudLocalizerInitialFrameRate", "CloudLocalizerContinuousFrameRate", "SlickLocalizerFrameRate", "JpegCompressionQuality", "VpsEndpoint" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.Start), global::Niantic.Lightship.AR.Protobuf.Start.Parser, new[]{ "SessionIdentifier", "FilePath", "DateTime", "TimestampMs", "DeviceEnvInfo", "VpsConfig" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Niantic.Lightship.AR.Protobuf.AnchorTrackingState), typeof(global::Niantic.Lightship.AR.Protobuf.AnchorTrackingStateReason), typeof(global::Niantic.Lightship.AR.Protobuf.AnchorEventType), typeof(global::Niantic.Lightship.AR.Protobuf.NetworkRequestStatus), typeof(global::Niantic.Lightship.AR.Protobuf.NetworkRequestType), typeof(global::Niantic.Lightship.AR.Protobuf.NetworkError), typeof(global::Niantic.Lightship.AR.Protobuf.LocalizationStatus), typeof(global::Niantic.Lightship.AR.Protobuf.LocalizationMethod), typeof(global::Niantic.Lightship.AR.Protobuf.BevLocalizationMethod), typeof(global::Niantic.Lightship.AR.Protobuf.TrackingState), typeof(global::Niantic.Lightship.AR.Protobuf.Orientation), typeof(global::Niantic.Lightship.AR.Protobuf.MapNodeEventType), typeof(global::Niantic.Lightship.AR.Protobuf.MapNodeType), typeof(global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice), typeof(global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType), typeof(global::Niantic.Lightship.AR.Protobuf.GraphEdgeType), typeof(global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult), typeof(global::Niantic.Lightship.AR.Protobuf.GeolocationSource), typeof(global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason), typeof(global::Niantic.Lightship.AR.Protobuf.TargetRequestType), }, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.VpsConfig), global::Niantic.Lightship.AR.Protobuf.VpsConfig.Parser, new[]{ "ContinuousLocalizationEnabled", "TemporalFusionEnabled", "TransformUpdateSmoothingEnabled", "CloudLocalizationEnabled", "SlickLocalizationEnabled", "CloudLocalizerInitialFrameRate", "CloudLocalizerContinuousFrameRate", "SlickLocalizerFrameRate", "JpegCompressionQuality", "VpsEndpoint", "GeolocationSmoothingEnabled", "UniversalLocalizationEnabled", "UniversalLocalizationRequestsPerSecond", "UniversalLocalizationMulticameraEnabled", "BevEndpoint", "VpsTemporalFusionEnabled", "CloudLocalizerUntargetedFrameRate", "LongRequestTimeoutMs", "ShortRequestTimeoutMs", "NumOfRequestsBetweenRequestWithMaxTimeout", "VpsDebuggerEnabled", "RetrieveSites", "AssetRequestRadiusMeters", "FetchSitesByGps", "ExposeRetrievedSitesAsAnchors", "WpsPriorMode", "WpsPriorDistanceThreshold", "WpsGnssFramerate", "WpsPoseFramerate", "BevConfidenceThreshold", "AerialLocalizationEnabled", "AerialMultiviewEnabled", "UniversalLocalizationRequestTimeoutMs", "MaxRequestsInTransitPerTarget", "AnchorDistanceGateMeters" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.Start), global::Niantic.Lightship.AR.Protobuf.Start.Parser, new[]{ "SessionIdentifier", "FilePath", "DateTime", "TimestampMs", "DeviceEnvInfo", "VpsConfig", "VpsDebuggerEventMask" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.Anchor), global::Niantic.Lightship.AR.Protobuf.Anchor.Parser, new[]{ "AnchorEventType", "AnchorIdentifier", "AnchorToLocalTrackingTransform", "TrackingState", "TrackingStateReason", "TrackingConfidence", "TimestampMs" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.NetworkRequestState), global::Niantic.Lightship.AR.Protobuf.NetworkRequestState.Parser, new[]{ "RequestIdentifier", "Status", "Type", "Error", "StartTimeMs", "EndTimeMs", "FrameId" }, new[]{ "FrameId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.LocalizationUpdate), global::Niantic.Lightship.AR.Protobuf.LocalizationUpdate.Parser, new[]{ "LocalizationMethod", "NodeIdentifier", "Status", "Confidence", "FrameId", "TimestampMs", "TrackingToNodePose" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.NetworkRequestState), global::Niantic.Lightship.AR.Protobuf.NetworkRequestState.Parser, new[]{ "RequestIdentifier", "Status", "Type", "Error", "StartTimeMs", "EndTimeMs", "FrameId", "ImageJpeg", "ImageWidth", "ImageHeight", "TargetNodeIds" }, new[]{ "FrameId", "ImageJpeg", "ImageWidth", "ImageHeight" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.LocalizationUpdate), global::Niantic.Lightship.AR.Protobuf.LocalizationUpdate.Parser, new[]{ "LocalizationMethod", "NodeIdentifier", "Status", "Confidence", "FrameId", "TimestampMs", "TrackingToNodePose", "LocalizedNodeIdentifier", "TrackingToLocalizedNodePose", "FrameTimestampMs", "RequestIdentifier", "GraphResult", "GraphEdgeIdentifier", "RequestGpsLatitude", "RequestGpsLongitude", "RequestGpsAltitude", "RequestGpsHorizontalAccuracy", "RequestGpsTimestampMs", "ImpliedLatitude", "ImpliedLongitude", "ImpliedAltitude", "ImpliedHeading" }, new[]{ "RequestGpsLatitude", "RequestGpsLongitude", "RequestGpsAltitude", "RequestGpsHorizontalAccuracy", "RequestGpsTimestampMs", "ImpliedLatitude", "ImpliedLongitude", "ImpliedAltitude", "ImpliedHeading" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.BevLocalizationUpdate), global::Niantic.Lightship.AR.Protobuf.BevLocalizationUpdate.Parser, new[]{ "Method", "Latitude", "Longitude", "Altitude", "Heading", "Confidence", "Likelihood", "FrameId", "RequestIdentifier", "ProcessingPoseTimestampMs" }, new[]{ "FrameId", "ProcessingPoseTimestampMs" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.Frame), global::Niantic.Lightship.AR.Protobuf.Frame.Parser, new[]{ "TimestampMs", "Pose", "FrameId", "TrackingState", "GpsLatitude", "GpsLongitude", "GpsAltitude", "GpsVerticalAccuracy", "GpsHorizontalAccuracy", "Intrinsics", "Width", "Height", "FrameTimestampMs", "GpsHeading", "Orientation", "GpsHeadingAccuracy" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.MapPoint2D), global::Niantic.Lightship.AR.Protobuf.MapPoint2D.Parser, new[]{ "Point2D" }, null, null, null, null),
@@ -201,9 +405,17 @@ namespace Niantic.Lightship.AR.Protobuf {
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.IntArray), global::Niantic.Lightship.AR.Protobuf.IntArray.Parser, new[]{ "Value" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.FloatArray), global::Niantic.Lightship.AR.Protobuf.FloatArray.Parser, new[]{ "Value" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.DoubleArray), global::Niantic.Lightship.AR.Protobuf.DoubleArray.Parser, new[]{ "Value" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.CustomData), global::Niantic.Lightship.AR.Protobuf.CustomData.Parser, new[]{ "Label", "StringData", "IntArray", "FloatArray", "DoubleArray" }, new[]{ "Value" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.AssetReceived), global::Niantic.Lightship.AR.Protobuf.AssetReceived.Parser, new[]{ "AnchorId", "SiteId", "TimestampMs", "NodeIds", "Latitude", "Longitude", "Altitude" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.VpsDebuggerDataEvent), global::Niantic.Lightship.AR.Protobuf.VpsDebuggerDataEvent.Parser, new[]{ "Start", "Anchor", "NetworkRequestState", "LocalizationUpdate", "Frame", "MapPoint2D", "VpsLocalizationStats", "SlickLocalizationStats", "GeoLocationTracking", "CustomData", "BevLocalizationUpdate", "AssetReceived" }, new[]{ "VpsDebuggerEvent" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.CustomData), global::Niantic.Lightship.AR.Protobuf.CustomData.Parser, new[]{ "Label", "StringData", "IntArray", "FloatArray", "DoubleArray", "TimestampMs" }, new[]{ "Value" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.AssetReceived), global::Niantic.Lightship.AR.Protobuf.AssetReceived.Parser, new[]{ "AnchorId", "SiteId", "TimestampMs", "NodeIds", "Latitude", "Longitude", "Altitude", "AssetId", "AnchorPayload" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget), global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget.Parser, new[]{ "SiteId", "AssetId", "NodeIds", "TimestampMs", "IsTargeted", "IsLocalized", "MinLat", "MinLng", "MaxLat", "MaxLng", "AnchorId" }, new[]{ "MinLat", "MinLng", "MaxLat", "MaxLng" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate), global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate.Parser, new[]{ "EventType", "NodeIdentifier", "TimestampMs", "NodeType", "SourceDevice", "SpaceIdentifier", "IsLiveNode", "IsAnchorTarget", "ExistsInCloud", "CloudPermissionDenied", "GeoReferenceDataProcessed", "IsTooFar", "LocalizationStatus", "Latitude", "Longitude", "Altitude", "HasDeviceMapData", "AvailableLayers" }, new[]{ "Latitude", "Longitude", "Altitude" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate), global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate.Parser, new[]{ "EventType", "EdgeIdentifier", "SourceNodeIdentifier", "DestinationNodeIdentifier", "SourceLayerName", "DestinationLayerName", "EdgeType", "Confidence", "ExistsInCloud", "UploadPermitted", "TimestampMs", "SourceToDestinationPose", "CreationTimestampMs" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.FusionHypothesis), global::Niantic.Lightship.AR.Protobuf.FusionHypothesis.Parser, new[]{ "SourceClusterIdentifier", "DestinationClusterIdentifier", "EdgeIdentifiers", "Confidence", "Weight", "Selected" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.FusionHypotheses), global::Niantic.Lightship.AR.Protobuf.FusionHypotheses.Parser, new[]{ "TimestampMs", "Hypotheses" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected), global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected.Parser, new[]{ "TimestampMs", "DestinationClusterIdentifier", "SourceClusterIdentifier", "PreviousEdgeIdentifiers", "EdgeIdentifiers", "PreviousConfidence", "Confidence", "PreviousStillPresent" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.GeolocationTransition), global::Niantic.Lightship.AR.Protobuf.GeolocationTransition.Parser, new[]{ "TimestampMs", "PreviousSource", "Source", "Reason", "BestMapNodeIdentifier", "BestConfidence", "MinConfidence", "GeoreferencedMapNodes", "ConnectedMapNodes", "TrackingNodeIdentifier", "TrackingNodeChanged", "VpsGeoreferenceHeld" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.TargetRequested), global::Niantic.Lightship.AR.Protobuf.TargetRequested.Parser, new[]{ "TimestampMs", "Type", "AnchorIdentifier", "AnchorPayload", "SiteId", "AssetIdFilter", "Latitude", "Longitude", "RadiusMeters" }, new[]{ "RadiusMeters" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Niantic.Lightship.AR.Protobuf.VpsDebuggerDataEvent), global::Niantic.Lightship.AR.Protobuf.VpsDebuggerDataEvent.Parser, new[]{ "Start", "Anchor", "NetworkRequestState", "LocalizationUpdate", "Frame", "MapPoint2D", "VpsLocalizationStats", "SlickLocalizationStats", "GeoLocationTracking", "CustomData", "BevLocalizationUpdate", "AssetReceived", "MapNodeUpdate", "GraphEdgeUpdate", "VpsSegmentTarget", "FusionHypotheses", "FusionHypothesisSelected", "GeolocationTransition", "TargetRequested" }, new[]{ "VpsDebuggerEvent" }, null, null, null)
           }));
     }
     #endregion
@@ -223,6 +435,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     [pbr::OriginalName("InternalError")] InternalError = 3,
     [pbr::OriginalName("PermissionDenied")] PermissionDenied = 4,
     [pbr::OriginalName("FatalNetworkError")] FatalNetworkError = 5,
+    [pbr::OriginalName("NoVisualLocalization")] NoVisualLocalization = 6,
   }
 
   public enum AnchorEventType {
@@ -237,6 +450,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     [pbr::OriginalName("Pending")] Pending = 1,
     [pbr::OriginalName("Successful")] Successful = 2,
     [pbr::OriginalName("Failed")] Failed = 3,
+    [pbr::OriginalName("FrameRejected")] FrameRejected = 4,
   }
 
   public enum NetworkRequestType {
@@ -245,6 +459,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     [pbr::OriginalName("GetReplacedNodes")] GetReplacedNodes = 2,
     [pbr::OriginalName("RegisterNode")] RegisterNode = 3,
     [pbr::OriginalName("Bev")] Bev = 4,
+    [pbr::OriginalName("AssetInfo")] AssetInfo = 5,
   }
 
   public enum NetworkError {
@@ -256,6 +471,16 @@ namespace Niantic.Lightship.AR.Protobuf {
     [pbr::OriginalName("RequestsLimitExceeded")] RequestsLimitExceeded = 5,
     [pbr::OriginalName("InternalServer")] InternalServer = 6,
     [pbr::OriginalName("InternalClient")] InternalClient = 7,
+    [pbr::OriginalName("NoMapFound")] NoMapFound = 8,
+    [pbr::OriginalName("LocalizationFailed")] LocalizationFailed = 9,
+    [pbr::OriginalName("QuotaExceeded")] QuotaExceeded = 10,
+    [pbr::OriginalName("BadTracking")] BadTracking = 11,
+    [pbr::OriginalName("BadCameraAngle")] BadCameraAngle = 12,
+    [pbr::OriginalName("NoValidPrior")] NoValidPrior = 13,
+    [pbr::OriginalName("DeviceUpsideDown")] DeviceUpsideDown = 14,
+    [pbr::OriginalName("ImageTooBlurry")] ImageTooBlurry = 15,
+    [pbr::OriginalName("SiteNotFound")] SiteNotFound = 16,
+    [pbr::OriginalName("VpsAssetsNotFound")] VpsAssetsNotFound = 17,
   }
 
   public enum LocalizationStatus {
@@ -274,7 +499,8 @@ namespace Niantic.Lightship.AR.Protobuf {
   public enum BevLocalizationMethod {
     [pbr::OriginalName("UnknownBevMethod")] UnknownBevMethod = 0,
     [pbr::OriginalName("Osm")] Osm = 1,
-    [pbr::OriginalName("Drone")] Drone = 2,
+    [pbr::OriginalName("Aerial")] Aerial = 2,
+    [pbr::OriginalName("AerialMultiview")] AerialMultiview = 3,
   }
 
   public enum TrackingState {
@@ -290,6 +516,81 @@ namespace Niantic.Lightship.AR.Protobuf {
     [pbr::OriginalName("OrientationPortraitUpsideDown")] PortraitUpsideDown = 2,
     [pbr::OriginalName("OrientationLandscapeRight")] LandscapeRight = 3,
     [pbr::OriginalName("OrientationLandscapeLeft")] LandscapeLeft = 4,
+  }
+
+  public enum MapNodeEventType {
+    [pbr::OriginalName("UnknownMapNodeEventType")] UnknownMapNodeEventType = 0,
+    [pbr::OriginalName("MapNodeAdded")] MapNodeAdded = 1,
+    [pbr::OriginalName("MapNodeUpdated")] MapNodeUpdated = 2,
+    [pbr::OriginalName("MapNodeRemoved")] MapNodeRemoved = 3,
+  }
+
+  public enum MapNodeType {
+    [pbr::OriginalName("UnknownMapNodeType")] UnknownMapNodeType = 0,
+    [pbr::OriginalName("Tracking")] Tracking = 1,
+    [pbr::OriginalName("DeviceMap")] DeviceMap = 2,
+    [pbr::OriginalName("CloudMap")] CloudMap = 3,
+    [pbr::OriginalName("GraphRequest")] GraphRequest = 4,
+  }
+
+  public enum MapNodeSourceDevice {
+    [pbr::OriginalName("UnknownMapNodeSourceDevice")] UnknownMapNodeSourceDevice = 0,
+    [pbr::OriginalName("ThisDeviceCurrentSession")] ThisDeviceCurrentSession = 1,
+    [pbr::OriginalName("ThisDevicePastSession")] ThisDevicePastSession = 2,
+    [pbr::OriginalName("OtherDeviceCurrentSession")] OtherDeviceCurrentSession = 3,
+    [pbr::OriginalName("OtherDevicePastSession")] OtherDevicePastSession = 4,
+    [pbr::OriginalName("MappingCloud")] MappingCloud = 5,
+    [pbr::OriginalName("OtherSourceDevice")] OtherSourceDevice = 6,
+  }
+
+  public enum GraphEdgeEventType {
+    [pbr::OriginalName("UnknownGraphEdgeEventType")] UnknownGraphEdgeEventType = 0,
+    [pbr::OriginalName("GraphEdgeAdded")] GraphEdgeAdded = 1,
+    [pbr::OriginalName("GraphEdgeUpdated")] GraphEdgeUpdated = 2,
+    [pbr::OriginalName("GraphEdgeRemoved")] GraphEdgeRemoved = 3,
+  }
+
+  public enum GraphEdgeType {
+    [pbr::OriginalName("UnknownGraphEdgeType")] UnknownGraphEdgeType = 0,
+    [pbr::OriginalName("ClusterAlignment")] ClusterAlignment = 1,
+    [pbr::OriginalName("TrackingEdge")] TrackingEdge = 2,
+    [pbr::OriginalName("NoEdge")] NoEdge = 3,
+    [pbr::OriginalName("SpaceSplitting")] SpaceSplitting = 4,
+    [pbr::OriginalName("UserBased")] UserBased = 5,
+    [pbr::OriginalName("OnDeviceLocalization")] OnDeviceLocalization = 6,
+    [pbr::OriginalName("TrackingJump")] TrackingJump = 7,
+    [pbr::OriginalName("LimitedTracking")] LimitedTracking = 8,
+  }
+
+  public enum LocalizationGraphResult {
+    [pbr::OriginalName("UnknownLocalizationGraphResult")] UnknownLocalizationGraphResult = 0,
+    [pbr::OriginalName("EdgeAdded")] EdgeAdded = 1,
+    [pbr::OriginalName("NotAddedNotLocalized")] NotAddedNotLocalized = 2,
+    [pbr::OriginalName("NotAddedTrackingNodeMissing")] NotAddedTrackingNodeMissing = 3,
+    [pbr::OriginalName("NotAddedLimitedOnly")] NotAddedLimitedOnly = 4,
+    [pbr::OriginalName("NotAddedLimitedWhileLocalized")] NotAddedLimitedWhileLocalized = 5,
+    [pbr::OriginalName("NotAddedOlderThanCurrentEdge")] NotAddedOlderThanCurrentEdge = 6,
+  }
+
+  public enum GeolocationSource {
+    [pbr::OriginalName("GeolocationSourceNone")] None = 0,
+    [pbr::OriginalName("GeolocationSourceWps")] Wps = 1,
+    [pbr::OriginalName("GeolocationSourceVps")] Vps = 2,
+  }
+
+  public enum VpsGeoreferenceUnavailableReason {
+    [pbr::OriginalName("VpsGeoreferenceAvailable")] VpsGeoreferenceAvailable = 0,
+    [pbr::OriginalName("NoTrackingNodeOrGraph")] NoTrackingNodeOrGraph = 1,
+    [pbr::OriginalName("NoGeoreferencedMapNode")] NoGeoreferencedMapNode = 2,
+    [pbr::OriginalName("MapNodesNotConnected")] MapNodesNotConnected = 3,
+    [pbr::OriginalName("ConfidenceBelowThreshold")] ConfidenceBelowThreshold = 4,
+  }
+
+  public enum TargetRequestType {
+    [pbr::OriginalName("UnknownTargetRequestType")] UnknownTargetRequestType = 0,
+    [pbr::OriginalName("TargetAnchorPayload")] TargetAnchorPayload = 1,
+    [pbr::OriginalName("TargetLocalizeToSite")] TargetLocalizeToSite = 2,
+    [pbr::OriginalName("TargetLocalizeToNearbySites")] TargetLocalizeToNearbySites = 3,
   }
 
   #endregion
@@ -340,6 +641,31 @@ namespace Niantic.Lightship.AR.Protobuf {
       slickLocalizerFrameRate_ = other.slickLocalizerFrameRate_;
       jpegCompressionQuality_ = other.jpegCompressionQuality_;
       vpsEndpoint_ = other.vpsEndpoint_;
+      geolocationSmoothingEnabled_ = other.geolocationSmoothingEnabled_;
+      universalLocalizationEnabled_ = other.universalLocalizationEnabled_;
+      universalLocalizationRequestsPerSecond_ = other.universalLocalizationRequestsPerSecond_;
+      universalLocalizationMulticameraEnabled_ = other.universalLocalizationMulticameraEnabled_;
+      bevEndpoint_ = other.bevEndpoint_;
+      vpsTemporalFusionEnabled_ = other.vpsTemporalFusionEnabled_;
+      cloudLocalizerUntargetedFrameRate_ = other.cloudLocalizerUntargetedFrameRate_;
+      longRequestTimeoutMs_ = other.longRequestTimeoutMs_;
+      shortRequestTimeoutMs_ = other.shortRequestTimeoutMs_;
+      numOfRequestsBetweenRequestWithMaxTimeout_ = other.numOfRequestsBetweenRequestWithMaxTimeout_;
+      vpsDebuggerEnabled_ = other.vpsDebuggerEnabled_;
+      retrieveSites_ = other.retrieveSites_;
+      assetRequestRadiusMeters_ = other.assetRequestRadiusMeters_;
+      fetchSitesByGps_ = other.fetchSitesByGps_;
+      exposeRetrievedSitesAsAnchors_ = other.exposeRetrievedSitesAsAnchors_;
+      wpsPriorMode_ = other.wpsPriorMode_;
+      wpsPriorDistanceThreshold_ = other.wpsPriorDistanceThreshold_;
+      wpsGnssFramerate_ = other.wpsGnssFramerate_;
+      wpsPoseFramerate_ = other.wpsPoseFramerate_;
+      bevConfidenceThreshold_ = other.bevConfidenceThreshold_;
+      aerialLocalizationEnabled_ = other.aerialLocalizationEnabled_;
+      aerialMultiviewEnabled_ = other.aerialMultiviewEnabled_;
+      universalLocalizationRequestTimeoutMs_ = other.universalLocalizationRequestTimeoutMs_;
+      maxRequestsInTransitPerTarget_ = other.maxRequestsInTransitPerTarget_;
+      anchorDistanceGateMeters_ = other.anchorDistanceGateMeters_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -352,6 +678,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     /// <summary>Field number for the "continuous_localization_enabled" field.</summary>
     public const int ContinuousLocalizationEnabledFieldNumber = 1;
     private bool continuousLocalizationEnabled_;
+    [global::System.ObsoleteAttribute]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool ContinuousLocalizationEnabled {
@@ -364,6 +691,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     /// <summary>Field number for the "temporal_fusion_enabled" field.</summary>
     public const int TemporalFusionEnabledFieldNumber = 2;
     private bool temporalFusionEnabled_;
+    [global::System.ObsoleteAttribute]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool TemporalFusionEnabled {
@@ -376,6 +704,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     /// <summary>Field number for the "transform_update_smoothing_enabled" field.</summary>
     public const int TransformUpdateSmoothingEnabledFieldNumber = 3;
     private bool transformUpdateSmoothingEnabled_;
+    [global::System.ObsoleteAttribute]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public bool TransformUpdateSmoothingEnabled {
@@ -469,6 +798,310 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
     }
 
+    /// <summary>Field number for the "geolocation_smoothing_enabled" field.</summary>
+    public const int GeolocationSmoothingEnabledFieldNumber = 11;
+    private bool geolocationSmoothingEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool GeolocationSmoothingEnabled {
+      get { return geolocationSmoothingEnabled_; }
+      set {
+        geolocationSmoothingEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "universal_localization_enabled" field.</summary>
+    public const int UniversalLocalizationEnabledFieldNumber = 12;
+    private bool universalLocalizationEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool UniversalLocalizationEnabled {
+      get { return universalLocalizationEnabled_; }
+      set {
+        universalLocalizationEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "universal_localization_requests_per_second" field.</summary>
+    public const int UniversalLocalizationRequestsPerSecondFieldNumber = 13;
+    private float universalLocalizationRequestsPerSecond_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float UniversalLocalizationRequestsPerSecond {
+      get { return universalLocalizationRequestsPerSecond_; }
+      set {
+        universalLocalizationRequestsPerSecond_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "universal_localization_multicamera_enabled" field.</summary>
+    public const int UniversalLocalizationMulticameraEnabledFieldNumber = 14;
+    private bool universalLocalizationMulticameraEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool UniversalLocalizationMulticameraEnabled {
+      get { return universalLocalizationMulticameraEnabled_; }
+      set {
+        universalLocalizationMulticameraEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "bev_endpoint" field.</summary>
+    public const int BevEndpointFieldNumber = 15;
+    private string bevEndpoint_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string BevEndpoint {
+      get { return bevEndpoint_; }
+      set {
+        bevEndpoint_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "vps_temporal_fusion_enabled" field.</summary>
+    public const int VpsTemporalFusionEnabledFieldNumber = 16;
+    private bool vpsTemporalFusionEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool VpsTemporalFusionEnabled {
+      get { return vpsTemporalFusionEnabled_; }
+      set {
+        vpsTemporalFusionEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "cloud_localizer_untargeted_frame_rate" field.</summary>
+    public const int CloudLocalizerUntargetedFrameRateFieldNumber = 17;
+    private float cloudLocalizerUntargetedFrameRate_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float CloudLocalizerUntargetedFrameRate {
+      get { return cloudLocalizerUntargetedFrameRate_; }
+      set {
+        cloudLocalizerUntargetedFrameRate_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "long_request_timeout_ms" field.</summary>
+    public const int LongRequestTimeoutMsFieldNumber = 18;
+    private ulong longRequestTimeoutMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong LongRequestTimeoutMs {
+      get { return longRequestTimeoutMs_; }
+      set {
+        longRequestTimeoutMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "short_request_timeout_ms" field.</summary>
+    public const int ShortRequestTimeoutMsFieldNumber = 19;
+    private ulong shortRequestTimeoutMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong ShortRequestTimeoutMs {
+      get { return shortRequestTimeoutMs_; }
+      set {
+        shortRequestTimeoutMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "num_of_requests_between_request_with_max_timeout" field.</summary>
+    public const int NumOfRequestsBetweenRequestWithMaxTimeoutFieldNumber = 20;
+    private uint numOfRequestsBetweenRequestWithMaxTimeout_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint NumOfRequestsBetweenRequestWithMaxTimeout {
+      get { return numOfRequestsBetweenRequestWithMaxTimeout_; }
+      set {
+        numOfRequestsBetweenRequestWithMaxTimeout_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "vps_debugger_enabled" field.</summary>
+    public const int VpsDebuggerEnabledFieldNumber = 21;
+    private bool vpsDebuggerEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool VpsDebuggerEnabled {
+      get { return vpsDebuggerEnabled_; }
+      set {
+        vpsDebuggerEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "retrieve_sites" field.</summary>
+    public const int RetrieveSitesFieldNumber = 22;
+    private bool retrieveSites_;
+    [global::System.ObsoleteAttribute]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool RetrieveSites {
+      get { return retrieveSites_; }
+      set {
+        retrieveSites_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "asset_request_radius_meters" field.</summary>
+    public const int AssetRequestRadiusMetersFieldNumber = 23;
+    private float assetRequestRadiusMeters_;
+    [global::System.ObsoleteAttribute]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float AssetRequestRadiusMeters {
+      get { return assetRequestRadiusMeters_; }
+      set {
+        assetRequestRadiusMeters_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "fetch_sites_by_gps" field.</summary>
+    public const int FetchSitesByGpsFieldNumber = 24;
+    private bool fetchSitesByGps_;
+    [global::System.ObsoleteAttribute]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool FetchSitesByGps {
+      get { return fetchSitesByGps_; }
+      set {
+        fetchSitesByGps_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "expose_retrieved_sites_as_anchors" field.</summary>
+    public const int ExposeRetrievedSitesAsAnchorsFieldNumber = 25;
+    private bool exposeRetrievedSitesAsAnchors_;
+    [global::System.ObsoleteAttribute]
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool ExposeRetrievedSitesAsAnchors {
+      get { return exposeRetrievedSitesAsAnchors_; }
+      set {
+        exposeRetrievedSitesAsAnchors_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "wps_prior_mode" field.</summary>
+    public const int WpsPriorModeFieldNumber = 26;
+    private int wpsPriorMode_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int WpsPriorMode {
+      get { return wpsPriorMode_; }
+      set {
+        wpsPriorMode_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "wps_prior_distance_threshold" field.</summary>
+    public const int WpsPriorDistanceThresholdFieldNumber = 27;
+    private float wpsPriorDistanceThreshold_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float WpsPriorDistanceThreshold {
+      get { return wpsPriorDistanceThreshold_; }
+      set {
+        wpsPriorDistanceThreshold_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "wps_gnss_framerate" field.</summary>
+    public const int WpsGnssFramerateFieldNumber = 28;
+    private float wpsGnssFramerate_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float WpsGnssFramerate {
+      get { return wpsGnssFramerate_; }
+      set {
+        wpsGnssFramerate_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "wps_pose_framerate" field.</summary>
+    public const int WpsPoseFramerateFieldNumber = 29;
+    private float wpsPoseFramerate_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float WpsPoseFramerate {
+      get { return wpsPoseFramerate_; }
+      set {
+        wpsPoseFramerate_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "bev_confidence_threshold" field.</summary>
+    public const int BevConfidenceThresholdFieldNumber = 30;
+    private float bevConfidenceThreshold_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float BevConfidenceThreshold {
+      get { return bevConfidenceThreshold_; }
+      set {
+        bevConfidenceThreshold_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "aerial_localization_enabled" field.</summary>
+    public const int AerialLocalizationEnabledFieldNumber = 31;
+    private bool aerialLocalizationEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool AerialLocalizationEnabled {
+      get { return aerialLocalizationEnabled_; }
+      set {
+        aerialLocalizationEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "aerial_multiview_enabled" field.</summary>
+    public const int AerialMultiviewEnabledFieldNumber = 32;
+    private bool aerialMultiviewEnabled_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool AerialMultiviewEnabled {
+      get { return aerialMultiviewEnabled_; }
+      set {
+        aerialMultiviewEnabled_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "universal_localization_request_timeout_ms" field.</summary>
+    public const int UniversalLocalizationRequestTimeoutMsFieldNumber = 33;
+    private int universalLocalizationRequestTimeoutMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int UniversalLocalizationRequestTimeoutMs {
+      get { return universalLocalizationRequestTimeoutMs_; }
+      set {
+        universalLocalizationRequestTimeoutMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "max_requests_in_transit_per_target" field.</summary>
+    public const int MaxRequestsInTransitPerTargetFieldNumber = 34;
+    private uint maxRequestsInTransitPerTarget_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint MaxRequestsInTransitPerTarget {
+      get { return maxRequestsInTransitPerTarget_; }
+      set {
+        maxRequestsInTransitPerTarget_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "anchor_distance_gate_meters" field.</summary>
+    public const int AnchorDistanceGateMetersFieldNumber = 35;
+    private float anchorDistanceGateMeters_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float AnchorDistanceGateMeters {
+      get { return anchorDistanceGateMeters_; }
+      set {
+        anchorDistanceGateMeters_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -494,6 +1127,31 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (SlickLocalizerFrameRate != other.SlickLocalizerFrameRate) return false;
       if (JpegCompressionQuality != other.JpegCompressionQuality) return false;
       if (VpsEndpoint != other.VpsEndpoint) return false;
+      if (GeolocationSmoothingEnabled != other.GeolocationSmoothingEnabled) return false;
+      if (UniversalLocalizationEnabled != other.UniversalLocalizationEnabled) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(UniversalLocalizationRequestsPerSecond, other.UniversalLocalizationRequestsPerSecond)) return false;
+      if (UniversalLocalizationMulticameraEnabled != other.UniversalLocalizationMulticameraEnabled) return false;
+      if (BevEndpoint != other.BevEndpoint) return false;
+      if (VpsTemporalFusionEnabled != other.VpsTemporalFusionEnabled) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(CloudLocalizerUntargetedFrameRate, other.CloudLocalizerUntargetedFrameRate)) return false;
+      if (LongRequestTimeoutMs != other.LongRequestTimeoutMs) return false;
+      if (ShortRequestTimeoutMs != other.ShortRequestTimeoutMs) return false;
+      if (NumOfRequestsBetweenRequestWithMaxTimeout != other.NumOfRequestsBetweenRequestWithMaxTimeout) return false;
+      if (VpsDebuggerEnabled != other.VpsDebuggerEnabled) return false;
+      if (RetrieveSites != other.RetrieveSites) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(AssetRequestRadiusMeters, other.AssetRequestRadiusMeters)) return false;
+      if (FetchSitesByGps != other.FetchSitesByGps) return false;
+      if (ExposeRetrievedSitesAsAnchors != other.ExposeRetrievedSitesAsAnchors) return false;
+      if (WpsPriorMode != other.WpsPriorMode) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(WpsPriorDistanceThreshold, other.WpsPriorDistanceThreshold)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(WpsGnssFramerate, other.WpsGnssFramerate)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(WpsPoseFramerate, other.WpsPoseFramerate)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(BevConfidenceThreshold, other.BevConfidenceThreshold)) return false;
+      if (AerialLocalizationEnabled != other.AerialLocalizationEnabled) return false;
+      if (AerialMultiviewEnabled != other.AerialMultiviewEnabled) return false;
+      if (UniversalLocalizationRequestTimeoutMs != other.UniversalLocalizationRequestTimeoutMs) return false;
+      if (MaxRequestsInTransitPerTarget != other.MaxRequestsInTransitPerTarget) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(AnchorDistanceGateMeters, other.AnchorDistanceGateMeters)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -511,6 +1169,31 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (SlickLocalizerFrameRate != 0) hash ^= SlickLocalizerFrameRate.GetHashCode();
       if (JpegCompressionQuality != 0) hash ^= JpegCompressionQuality.GetHashCode();
       if (VpsEndpoint.Length != 0) hash ^= VpsEndpoint.GetHashCode();
+      if (GeolocationSmoothingEnabled != false) hash ^= GeolocationSmoothingEnabled.GetHashCode();
+      if (UniversalLocalizationEnabled != false) hash ^= UniversalLocalizationEnabled.GetHashCode();
+      if (UniversalLocalizationRequestsPerSecond != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(UniversalLocalizationRequestsPerSecond);
+      if (UniversalLocalizationMulticameraEnabled != false) hash ^= UniversalLocalizationMulticameraEnabled.GetHashCode();
+      if (BevEndpoint.Length != 0) hash ^= BevEndpoint.GetHashCode();
+      if (VpsTemporalFusionEnabled != false) hash ^= VpsTemporalFusionEnabled.GetHashCode();
+      if (CloudLocalizerUntargetedFrameRate != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(CloudLocalizerUntargetedFrameRate);
+      if (LongRequestTimeoutMs != 0UL) hash ^= LongRequestTimeoutMs.GetHashCode();
+      if (ShortRequestTimeoutMs != 0UL) hash ^= ShortRequestTimeoutMs.GetHashCode();
+      if (NumOfRequestsBetweenRequestWithMaxTimeout != 0) hash ^= NumOfRequestsBetweenRequestWithMaxTimeout.GetHashCode();
+      if (VpsDebuggerEnabled != false) hash ^= VpsDebuggerEnabled.GetHashCode();
+      if (RetrieveSites != false) hash ^= RetrieveSites.GetHashCode();
+      if (AssetRequestRadiusMeters != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(AssetRequestRadiusMeters);
+      if (FetchSitesByGps != false) hash ^= FetchSitesByGps.GetHashCode();
+      if (ExposeRetrievedSitesAsAnchors != false) hash ^= ExposeRetrievedSitesAsAnchors.GetHashCode();
+      if (WpsPriorMode != 0) hash ^= WpsPriorMode.GetHashCode();
+      if (WpsPriorDistanceThreshold != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(WpsPriorDistanceThreshold);
+      if (WpsGnssFramerate != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(WpsGnssFramerate);
+      if (WpsPoseFramerate != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(WpsPoseFramerate);
+      if (BevConfidenceThreshold != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(BevConfidenceThreshold);
+      if (AerialLocalizationEnabled != false) hash ^= AerialLocalizationEnabled.GetHashCode();
+      if (AerialMultiviewEnabled != false) hash ^= AerialMultiviewEnabled.GetHashCode();
+      if (UniversalLocalizationRequestTimeoutMs != 0) hash ^= UniversalLocalizationRequestTimeoutMs.GetHashCode();
+      if (MaxRequestsInTransitPerTarget != 0) hash ^= MaxRequestsInTransitPerTarget.GetHashCode();
+      if (AnchorDistanceGateMeters != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(AnchorDistanceGateMeters);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -569,6 +1252,106 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(82);
         output.WriteString(VpsEndpoint);
       }
+      if (GeolocationSmoothingEnabled != false) {
+        output.WriteRawTag(88);
+        output.WriteBool(GeolocationSmoothingEnabled);
+      }
+      if (UniversalLocalizationEnabled != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(UniversalLocalizationEnabled);
+      }
+      if (UniversalLocalizationRequestsPerSecond != 0F) {
+        output.WriteRawTag(109);
+        output.WriteFloat(UniversalLocalizationRequestsPerSecond);
+      }
+      if (UniversalLocalizationMulticameraEnabled != false) {
+        output.WriteRawTag(112);
+        output.WriteBool(UniversalLocalizationMulticameraEnabled);
+      }
+      if (BevEndpoint.Length != 0) {
+        output.WriteRawTag(122);
+        output.WriteString(BevEndpoint);
+      }
+      if (VpsTemporalFusionEnabled != false) {
+        output.WriteRawTag(128, 1);
+        output.WriteBool(VpsTemporalFusionEnabled);
+      }
+      if (CloudLocalizerUntargetedFrameRate != 0F) {
+        output.WriteRawTag(141, 1);
+        output.WriteFloat(CloudLocalizerUntargetedFrameRate);
+      }
+      if (LongRequestTimeoutMs != 0UL) {
+        output.WriteRawTag(144, 1);
+        output.WriteUInt64(LongRequestTimeoutMs);
+      }
+      if (ShortRequestTimeoutMs != 0UL) {
+        output.WriteRawTag(152, 1);
+        output.WriteUInt64(ShortRequestTimeoutMs);
+      }
+      if (NumOfRequestsBetweenRequestWithMaxTimeout != 0) {
+        output.WriteRawTag(160, 1);
+        output.WriteUInt32(NumOfRequestsBetweenRequestWithMaxTimeout);
+      }
+      if (VpsDebuggerEnabled != false) {
+        output.WriteRawTag(168, 1);
+        output.WriteBool(VpsDebuggerEnabled);
+      }
+      if (RetrieveSites != false) {
+        output.WriteRawTag(176, 1);
+        output.WriteBool(RetrieveSites);
+      }
+      if (AssetRequestRadiusMeters != 0F) {
+        output.WriteRawTag(189, 1);
+        output.WriteFloat(AssetRequestRadiusMeters);
+      }
+      if (FetchSitesByGps != false) {
+        output.WriteRawTag(192, 1);
+        output.WriteBool(FetchSitesByGps);
+      }
+      if (ExposeRetrievedSitesAsAnchors != false) {
+        output.WriteRawTag(200, 1);
+        output.WriteBool(ExposeRetrievedSitesAsAnchors);
+      }
+      if (WpsPriorMode != 0) {
+        output.WriteRawTag(208, 1);
+        output.WriteInt32(WpsPriorMode);
+      }
+      if (WpsPriorDistanceThreshold != 0F) {
+        output.WriteRawTag(221, 1);
+        output.WriteFloat(WpsPriorDistanceThreshold);
+      }
+      if (WpsGnssFramerate != 0F) {
+        output.WriteRawTag(229, 1);
+        output.WriteFloat(WpsGnssFramerate);
+      }
+      if (WpsPoseFramerate != 0F) {
+        output.WriteRawTag(237, 1);
+        output.WriteFloat(WpsPoseFramerate);
+      }
+      if (BevConfidenceThreshold != 0F) {
+        output.WriteRawTag(245, 1);
+        output.WriteFloat(BevConfidenceThreshold);
+      }
+      if (AerialLocalizationEnabled != false) {
+        output.WriteRawTag(248, 1);
+        output.WriteBool(AerialLocalizationEnabled);
+      }
+      if (AerialMultiviewEnabled != false) {
+        output.WriteRawTag(128, 2);
+        output.WriteBool(AerialMultiviewEnabled);
+      }
+      if (UniversalLocalizationRequestTimeoutMs != 0) {
+        output.WriteRawTag(136, 2);
+        output.WriteInt32(UniversalLocalizationRequestTimeoutMs);
+      }
+      if (MaxRequestsInTransitPerTarget != 0) {
+        output.WriteRawTag(144, 2);
+        output.WriteUInt32(MaxRequestsInTransitPerTarget);
+      }
+      if (AnchorDistanceGateMeters != 0F) {
+        output.WriteRawTag(157, 2);
+        output.WriteFloat(AnchorDistanceGateMeters);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -619,6 +1402,106 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(82);
         output.WriteString(VpsEndpoint);
       }
+      if (GeolocationSmoothingEnabled != false) {
+        output.WriteRawTag(88);
+        output.WriteBool(GeolocationSmoothingEnabled);
+      }
+      if (UniversalLocalizationEnabled != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(UniversalLocalizationEnabled);
+      }
+      if (UniversalLocalizationRequestsPerSecond != 0F) {
+        output.WriteRawTag(109);
+        output.WriteFloat(UniversalLocalizationRequestsPerSecond);
+      }
+      if (UniversalLocalizationMulticameraEnabled != false) {
+        output.WriteRawTag(112);
+        output.WriteBool(UniversalLocalizationMulticameraEnabled);
+      }
+      if (BevEndpoint.Length != 0) {
+        output.WriteRawTag(122);
+        output.WriteString(BevEndpoint);
+      }
+      if (VpsTemporalFusionEnabled != false) {
+        output.WriteRawTag(128, 1);
+        output.WriteBool(VpsTemporalFusionEnabled);
+      }
+      if (CloudLocalizerUntargetedFrameRate != 0F) {
+        output.WriteRawTag(141, 1);
+        output.WriteFloat(CloudLocalizerUntargetedFrameRate);
+      }
+      if (LongRequestTimeoutMs != 0UL) {
+        output.WriteRawTag(144, 1);
+        output.WriteUInt64(LongRequestTimeoutMs);
+      }
+      if (ShortRequestTimeoutMs != 0UL) {
+        output.WriteRawTag(152, 1);
+        output.WriteUInt64(ShortRequestTimeoutMs);
+      }
+      if (NumOfRequestsBetweenRequestWithMaxTimeout != 0) {
+        output.WriteRawTag(160, 1);
+        output.WriteUInt32(NumOfRequestsBetweenRequestWithMaxTimeout);
+      }
+      if (VpsDebuggerEnabled != false) {
+        output.WriteRawTag(168, 1);
+        output.WriteBool(VpsDebuggerEnabled);
+      }
+      if (RetrieveSites != false) {
+        output.WriteRawTag(176, 1);
+        output.WriteBool(RetrieveSites);
+      }
+      if (AssetRequestRadiusMeters != 0F) {
+        output.WriteRawTag(189, 1);
+        output.WriteFloat(AssetRequestRadiusMeters);
+      }
+      if (FetchSitesByGps != false) {
+        output.WriteRawTag(192, 1);
+        output.WriteBool(FetchSitesByGps);
+      }
+      if (ExposeRetrievedSitesAsAnchors != false) {
+        output.WriteRawTag(200, 1);
+        output.WriteBool(ExposeRetrievedSitesAsAnchors);
+      }
+      if (WpsPriorMode != 0) {
+        output.WriteRawTag(208, 1);
+        output.WriteInt32(WpsPriorMode);
+      }
+      if (WpsPriorDistanceThreshold != 0F) {
+        output.WriteRawTag(221, 1);
+        output.WriteFloat(WpsPriorDistanceThreshold);
+      }
+      if (WpsGnssFramerate != 0F) {
+        output.WriteRawTag(229, 1);
+        output.WriteFloat(WpsGnssFramerate);
+      }
+      if (WpsPoseFramerate != 0F) {
+        output.WriteRawTag(237, 1);
+        output.WriteFloat(WpsPoseFramerate);
+      }
+      if (BevConfidenceThreshold != 0F) {
+        output.WriteRawTag(245, 1);
+        output.WriteFloat(BevConfidenceThreshold);
+      }
+      if (AerialLocalizationEnabled != false) {
+        output.WriteRawTag(248, 1);
+        output.WriteBool(AerialLocalizationEnabled);
+      }
+      if (AerialMultiviewEnabled != false) {
+        output.WriteRawTag(128, 2);
+        output.WriteBool(AerialMultiviewEnabled);
+      }
+      if (UniversalLocalizationRequestTimeoutMs != 0) {
+        output.WriteRawTag(136, 2);
+        output.WriteInt32(UniversalLocalizationRequestTimeoutMs);
+      }
+      if (MaxRequestsInTransitPerTarget != 0) {
+        output.WriteRawTag(144, 2);
+        output.WriteUInt32(MaxRequestsInTransitPerTarget);
+      }
+      if (AnchorDistanceGateMeters != 0F) {
+        output.WriteRawTag(157, 2);
+        output.WriteFloat(AnchorDistanceGateMeters);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -658,6 +1541,81 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
       if (VpsEndpoint.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(VpsEndpoint);
+      }
+      if (GeolocationSmoothingEnabled != false) {
+        size += 1 + 1;
+      }
+      if (UniversalLocalizationEnabled != false) {
+        size += 1 + 1;
+      }
+      if (UniversalLocalizationRequestsPerSecond != 0F) {
+        size += 1 + 4;
+      }
+      if (UniversalLocalizationMulticameraEnabled != false) {
+        size += 1 + 1;
+      }
+      if (BevEndpoint.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BevEndpoint);
+      }
+      if (VpsTemporalFusionEnabled != false) {
+        size += 2 + 1;
+      }
+      if (CloudLocalizerUntargetedFrameRate != 0F) {
+        size += 2 + 4;
+      }
+      if (LongRequestTimeoutMs != 0UL) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt64Size(LongRequestTimeoutMs);
+      }
+      if (ShortRequestTimeoutMs != 0UL) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt64Size(ShortRequestTimeoutMs);
+      }
+      if (NumOfRequestsBetweenRequestWithMaxTimeout != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt32Size(NumOfRequestsBetweenRequestWithMaxTimeout);
+      }
+      if (VpsDebuggerEnabled != false) {
+        size += 2 + 1;
+      }
+      if (RetrieveSites != false) {
+        size += 2 + 1;
+      }
+      if (AssetRequestRadiusMeters != 0F) {
+        size += 2 + 4;
+      }
+      if (FetchSitesByGps != false) {
+        size += 2 + 1;
+      }
+      if (ExposeRetrievedSitesAsAnchors != false) {
+        size += 2 + 1;
+      }
+      if (WpsPriorMode != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeInt32Size(WpsPriorMode);
+      }
+      if (WpsPriorDistanceThreshold != 0F) {
+        size += 2 + 4;
+      }
+      if (WpsGnssFramerate != 0F) {
+        size += 2 + 4;
+      }
+      if (WpsPoseFramerate != 0F) {
+        size += 2 + 4;
+      }
+      if (BevConfidenceThreshold != 0F) {
+        size += 2 + 4;
+      }
+      if (AerialLocalizationEnabled != false) {
+        size += 2 + 1;
+      }
+      if (AerialMultiviewEnabled != false) {
+        size += 2 + 1;
+      }
+      if (UniversalLocalizationRequestTimeoutMs != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeInt32Size(UniversalLocalizationRequestTimeoutMs);
+      }
+      if (MaxRequestsInTransitPerTarget != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt32Size(MaxRequestsInTransitPerTarget);
+      }
+      if (AnchorDistanceGateMeters != 0F) {
+        size += 2 + 4;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -700,6 +1658,81 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
       if (other.VpsEndpoint.Length != 0) {
         VpsEndpoint = other.VpsEndpoint;
+      }
+      if (other.GeolocationSmoothingEnabled != false) {
+        GeolocationSmoothingEnabled = other.GeolocationSmoothingEnabled;
+      }
+      if (other.UniversalLocalizationEnabled != false) {
+        UniversalLocalizationEnabled = other.UniversalLocalizationEnabled;
+      }
+      if (other.UniversalLocalizationRequestsPerSecond != 0F) {
+        UniversalLocalizationRequestsPerSecond = other.UniversalLocalizationRequestsPerSecond;
+      }
+      if (other.UniversalLocalizationMulticameraEnabled != false) {
+        UniversalLocalizationMulticameraEnabled = other.UniversalLocalizationMulticameraEnabled;
+      }
+      if (other.BevEndpoint.Length != 0) {
+        BevEndpoint = other.BevEndpoint;
+      }
+      if (other.VpsTemporalFusionEnabled != false) {
+        VpsTemporalFusionEnabled = other.VpsTemporalFusionEnabled;
+      }
+      if (other.CloudLocalizerUntargetedFrameRate != 0F) {
+        CloudLocalizerUntargetedFrameRate = other.CloudLocalizerUntargetedFrameRate;
+      }
+      if (other.LongRequestTimeoutMs != 0UL) {
+        LongRequestTimeoutMs = other.LongRequestTimeoutMs;
+      }
+      if (other.ShortRequestTimeoutMs != 0UL) {
+        ShortRequestTimeoutMs = other.ShortRequestTimeoutMs;
+      }
+      if (other.NumOfRequestsBetweenRequestWithMaxTimeout != 0) {
+        NumOfRequestsBetweenRequestWithMaxTimeout = other.NumOfRequestsBetweenRequestWithMaxTimeout;
+      }
+      if (other.VpsDebuggerEnabled != false) {
+        VpsDebuggerEnabled = other.VpsDebuggerEnabled;
+      }
+      if (other.RetrieveSites != false) {
+        RetrieveSites = other.RetrieveSites;
+      }
+      if (other.AssetRequestRadiusMeters != 0F) {
+        AssetRequestRadiusMeters = other.AssetRequestRadiusMeters;
+      }
+      if (other.FetchSitesByGps != false) {
+        FetchSitesByGps = other.FetchSitesByGps;
+      }
+      if (other.ExposeRetrievedSitesAsAnchors != false) {
+        ExposeRetrievedSitesAsAnchors = other.ExposeRetrievedSitesAsAnchors;
+      }
+      if (other.WpsPriorMode != 0) {
+        WpsPriorMode = other.WpsPriorMode;
+      }
+      if (other.WpsPriorDistanceThreshold != 0F) {
+        WpsPriorDistanceThreshold = other.WpsPriorDistanceThreshold;
+      }
+      if (other.WpsGnssFramerate != 0F) {
+        WpsGnssFramerate = other.WpsGnssFramerate;
+      }
+      if (other.WpsPoseFramerate != 0F) {
+        WpsPoseFramerate = other.WpsPoseFramerate;
+      }
+      if (other.BevConfidenceThreshold != 0F) {
+        BevConfidenceThreshold = other.BevConfidenceThreshold;
+      }
+      if (other.AerialLocalizationEnabled != false) {
+        AerialLocalizationEnabled = other.AerialLocalizationEnabled;
+      }
+      if (other.AerialMultiviewEnabled != false) {
+        AerialMultiviewEnabled = other.AerialMultiviewEnabled;
+      }
+      if (other.UniversalLocalizationRequestTimeoutMs != 0) {
+        UniversalLocalizationRequestTimeoutMs = other.UniversalLocalizationRequestTimeoutMs;
+      }
+      if (other.MaxRequestsInTransitPerTarget != 0) {
+        MaxRequestsInTransitPerTarget = other.MaxRequestsInTransitPerTarget;
+      }
+      if (other.AnchorDistanceGateMeters != 0F) {
+        AnchorDistanceGateMeters = other.AnchorDistanceGateMeters;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -754,6 +1787,106 @@ namespace Niantic.Lightship.AR.Protobuf {
           }
           case 82: {
             VpsEndpoint = input.ReadString();
+            break;
+          }
+          case 88: {
+            GeolocationSmoothingEnabled = input.ReadBool();
+            break;
+          }
+          case 96: {
+            UniversalLocalizationEnabled = input.ReadBool();
+            break;
+          }
+          case 109: {
+            UniversalLocalizationRequestsPerSecond = input.ReadFloat();
+            break;
+          }
+          case 112: {
+            UniversalLocalizationMulticameraEnabled = input.ReadBool();
+            break;
+          }
+          case 122: {
+            BevEndpoint = input.ReadString();
+            break;
+          }
+          case 128: {
+            VpsTemporalFusionEnabled = input.ReadBool();
+            break;
+          }
+          case 141: {
+            CloudLocalizerUntargetedFrameRate = input.ReadFloat();
+            break;
+          }
+          case 144: {
+            LongRequestTimeoutMs = input.ReadUInt64();
+            break;
+          }
+          case 152: {
+            ShortRequestTimeoutMs = input.ReadUInt64();
+            break;
+          }
+          case 160: {
+            NumOfRequestsBetweenRequestWithMaxTimeout = input.ReadUInt32();
+            break;
+          }
+          case 168: {
+            VpsDebuggerEnabled = input.ReadBool();
+            break;
+          }
+          case 176: {
+            RetrieveSites = input.ReadBool();
+            break;
+          }
+          case 189: {
+            AssetRequestRadiusMeters = input.ReadFloat();
+            break;
+          }
+          case 192: {
+            FetchSitesByGps = input.ReadBool();
+            break;
+          }
+          case 200: {
+            ExposeRetrievedSitesAsAnchors = input.ReadBool();
+            break;
+          }
+          case 208: {
+            WpsPriorMode = input.ReadInt32();
+            break;
+          }
+          case 221: {
+            WpsPriorDistanceThreshold = input.ReadFloat();
+            break;
+          }
+          case 229: {
+            WpsGnssFramerate = input.ReadFloat();
+            break;
+          }
+          case 237: {
+            WpsPoseFramerate = input.ReadFloat();
+            break;
+          }
+          case 245: {
+            BevConfidenceThreshold = input.ReadFloat();
+            break;
+          }
+          case 248: {
+            AerialLocalizationEnabled = input.ReadBool();
+            break;
+          }
+          case 256: {
+            AerialMultiviewEnabled = input.ReadBool();
+            break;
+          }
+          case 264: {
+            UniversalLocalizationRequestTimeoutMs = input.ReadInt32();
+            break;
+          }
+          case 272: {
+            MaxRequestsInTransitPerTarget = input.ReadUInt32();
+            break;
+          }
+          case 285: {
+            AnchorDistanceGateMeters = input.ReadFloat();
             break;
           }
         }
@@ -811,6 +1944,106 @@ namespace Niantic.Lightship.AR.Protobuf {
             VpsEndpoint = input.ReadString();
             break;
           }
+          case 88: {
+            GeolocationSmoothingEnabled = input.ReadBool();
+            break;
+          }
+          case 96: {
+            UniversalLocalizationEnabled = input.ReadBool();
+            break;
+          }
+          case 109: {
+            UniversalLocalizationRequestsPerSecond = input.ReadFloat();
+            break;
+          }
+          case 112: {
+            UniversalLocalizationMulticameraEnabled = input.ReadBool();
+            break;
+          }
+          case 122: {
+            BevEndpoint = input.ReadString();
+            break;
+          }
+          case 128: {
+            VpsTemporalFusionEnabled = input.ReadBool();
+            break;
+          }
+          case 141: {
+            CloudLocalizerUntargetedFrameRate = input.ReadFloat();
+            break;
+          }
+          case 144: {
+            LongRequestTimeoutMs = input.ReadUInt64();
+            break;
+          }
+          case 152: {
+            ShortRequestTimeoutMs = input.ReadUInt64();
+            break;
+          }
+          case 160: {
+            NumOfRequestsBetweenRequestWithMaxTimeout = input.ReadUInt32();
+            break;
+          }
+          case 168: {
+            VpsDebuggerEnabled = input.ReadBool();
+            break;
+          }
+          case 176: {
+            RetrieveSites = input.ReadBool();
+            break;
+          }
+          case 189: {
+            AssetRequestRadiusMeters = input.ReadFloat();
+            break;
+          }
+          case 192: {
+            FetchSitesByGps = input.ReadBool();
+            break;
+          }
+          case 200: {
+            ExposeRetrievedSitesAsAnchors = input.ReadBool();
+            break;
+          }
+          case 208: {
+            WpsPriorMode = input.ReadInt32();
+            break;
+          }
+          case 221: {
+            WpsPriorDistanceThreshold = input.ReadFloat();
+            break;
+          }
+          case 229: {
+            WpsGnssFramerate = input.ReadFloat();
+            break;
+          }
+          case 237: {
+            WpsPoseFramerate = input.ReadFloat();
+            break;
+          }
+          case 245: {
+            BevConfidenceThreshold = input.ReadFloat();
+            break;
+          }
+          case 248: {
+            AerialLocalizationEnabled = input.ReadBool();
+            break;
+          }
+          case 256: {
+            AerialMultiviewEnabled = input.ReadBool();
+            break;
+          }
+          case 264: {
+            UniversalLocalizationRequestTimeoutMs = input.ReadInt32();
+            break;
+          }
+          case 272: {
+            MaxRequestsInTransitPerTarget = input.ReadUInt32();
+            break;
+          }
+          case 285: {
+            AnchorDistanceGateMeters = input.ReadFloat();
+            break;
+          }
         }
       }
     }
@@ -859,6 +2092,7 @@ namespace Niantic.Lightship.AR.Protobuf {
       timestampMs_ = other.timestampMs_;
       deviceEnvInfo_ = other.deviceEnvInfo_;
       vpsConfig_ = other.vpsConfig_ != null ? other.vpsConfig_.Clone() : null;
+      vpsDebuggerEventMask_ = other.vpsDebuggerEventMask_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -940,6 +2174,18 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
     }
 
+    /// <summary>Field number for the "vps_debugger_event_mask" field.</summary>
+    public const int VpsDebuggerEventMaskFieldNumber = 7;
+    private ulong vpsDebuggerEventMask_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong VpsDebuggerEventMask {
+      get { return vpsDebuggerEventMask_; }
+      set {
+        vpsDebuggerEventMask_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -961,6 +2207,7 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (TimestampMs != other.TimestampMs) return false;
       if (DeviceEnvInfo != other.DeviceEnvInfo) return false;
       if (!object.Equals(VpsConfig, other.VpsConfig)) return false;
+      if (VpsDebuggerEventMask != other.VpsDebuggerEventMask) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -974,6 +2221,7 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
       if (DeviceEnvInfo.Length != 0) hash ^= DeviceEnvInfo.GetHashCode();
       if (vpsConfig_ != null) hash ^= VpsConfig.GetHashCode();
+      if (VpsDebuggerEventMask != 0UL) hash ^= VpsDebuggerEventMask.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1016,6 +2264,10 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(50);
         output.WriteMessage(VpsConfig);
       }
+      if (VpsDebuggerEventMask != 0UL) {
+        output.WriteRawTag(56);
+        output.WriteUInt64(VpsDebuggerEventMask);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1050,6 +2302,10 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(50);
         output.WriteMessage(VpsConfig);
       }
+      if (VpsDebuggerEventMask != 0UL) {
+        output.WriteRawTag(56);
+        output.WriteUInt64(VpsDebuggerEventMask);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1077,6 +2333,9 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
       if (vpsConfig_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(VpsConfig);
+      }
+      if (VpsDebuggerEventMask != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(VpsDebuggerEventMask);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1110,6 +2369,9 @@ namespace Niantic.Lightship.AR.Protobuf {
           VpsConfig = new global::Niantic.Lightship.AR.Protobuf.VpsConfig();
         }
         VpsConfig.MergeFrom(other.VpsConfig);
+      }
+      if (other.VpsDebuggerEventMask != 0UL) {
+        VpsDebuggerEventMask = other.VpsDebuggerEventMask;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1153,6 +2415,10 @@ namespace Niantic.Lightship.AR.Protobuf {
             input.ReadMessage(VpsConfig);
             break;
           }
+          case 56: {
+            VpsDebuggerEventMask = input.ReadUInt64();
+            break;
+          }
         }
       }
     #endif
@@ -1193,6 +2459,10 @@ namespace Niantic.Lightship.AR.Protobuf {
               VpsConfig = new global::Niantic.Lightship.AR.Protobuf.VpsConfig();
             }
             input.ReadMessage(VpsConfig);
+            break;
+          }
+          case 56: {
+            VpsDebuggerEventMask = input.ReadUInt64();
             break;
           }
         }
@@ -1649,6 +2919,10 @@ namespace Niantic.Lightship.AR.Protobuf {
       startTimeMs_ = other.startTimeMs_;
       endTimeMs_ = other.endTimeMs_;
       frameId_ = other.frameId_;
+      imageJpeg_ = other.imageJpeg_;
+      imageWidth_ = other.imageWidth_;
+      imageHeight_ = other.imageHeight_;
+      targetNodeIds_ = other.targetNodeIds_.Clone();
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1757,6 +3031,97 @@ namespace Niantic.Lightship.AR.Protobuf {
       _hasBits0 &= ~1;
     }
 
+    /// <summary>Field number for the "image_jpeg" field.</summary>
+    public const int ImageJpegFieldNumber = 8;
+    private readonly static pb::ByteString ImageJpegDefaultValue = pb::ByteString.Empty;
+
+    private pb::ByteString imageJpeg_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString ImageJpeg {
+      get { return imageJpeg_ ?? ImageJpegDefaultValue; }
+      set {
+        imageJpeg_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "image_jpeg" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasImageJpeg {
+      get { return imageJpeg_ != null; }
+    }
+    /// <summary>Clears the value of the "image_jpeg" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearImageJpeg() {
+      imageJpeg_ = null;
+    }
+
+    /// <summary>Field number for the "image_width" field.</summary>
+    public const int ImageWidthFieldNumber = 9;
+    private readonly static uint ImageWidthDefaultValue = 0;
+
+    private uint imageWidth_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint ImageWidth {
+      get { if ((_hasBits0 & 2) != 0) { return imageWidth_; } else { return ImageWidthDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        imageWidth_ = value;
+      }
+    }
+    /// <summary>Gets whether the "image_width" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasImageWidth {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "image_width" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearImageWidth() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "image_height" field.</summary>
+    public const int ImageHeightFieldNumber = 10;
+    private readonly static uint ImageHeightDefaultValue = 0;
+
+    private uint imageHeight_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint ImageHeight {
+      get { if ((_hasBits0 & 4) != 0) { return imageHeight_; } else { return ImageHeightDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        imageHeight_ = value;
+      }
+    }
+    /// <summary>Gets whether the "image_height" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasImageHeight {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "image_height" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearImageHeight() {
+      _hasBits0 &= ~4;
+    }
+
+    /// <summary>Field number for the "target_node_ids" field.</summary>
+    public const int TargetNodeIdsFieldNumber = 11;
+    private static readonly pb::FieldCodec<pb::ByteString> _repeated_targetNodeIds_codec
+        = pb::FieldCodec.ForBytes(90);
+    private readonly pbc::RepeatedField<pb::ByteString> targetNodeIds_ = new pbc::RepeatedField<pb::ByteString>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<pb::ByteString> TargetNodeIds {
+      get { return targetNodeIds_; }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1779,6 +3144,10 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (StartTimeMs != other.StartTimeMs) return false;
       if (EndTimeMs != other.EndTimeMs) return false;
       if (FrameId != other.FrameId) return false;
+      if (ImageJpeg != other.ImageJpeg) return false;
+      if (ImageWidth != other.ImageWidth) return false;
+      if (ImageHeight != other.ImageHeight) return false;
+      if(!targetNodeIds_.Equals(other.targetNodeIds_)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1793,6 +3162,10 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (StartTimeMs != 0UL) hash ^= StartTimeMs.GetHashCode();
       if (EndTimeMs != 0UL) hash ^= EndTimeMs.GetHashCode();
       if (HasFrameId) hash ^= FrameId.GetHashCode();
+      if (HasImageJpeg) hash ^= ImageJpeg.GetHashCode();
+      if (HasImageWidth) hash ^= ImageWidth.GetHashCode();
+      if (HasImageHeight) hash ^= ImageHeight.GetHashCode();
+      hash ^= targetNodeIds_.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1839,6 +3212,19 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(56);
         output.WriteUInt64(FrameId);
       }
+      if (HasImageJpeg) {
+        output.WriteRawTag(66);
+        output.WriteBytes(ImageJpeg);
+      }
+      if (HasImageWidth) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(ImageWidth);
+      }
+      if (HasImageHeight) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(ImageHeight);
+      }
+      targetNodeIds_.WriteTo(output, _repeated_targetNodeIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1877,6 +3263,19 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(56);
         output.WriteUInt64(FrameId);
       }
+      if (HasImageJpeg) {
+        output.WriteRawTag(66);
+        output.WriteBytes(ImageJpeg);
+      }
+      if (HasImageWidth) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(ImageWidth);
+      }
+      if (HasImageHeight) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(ImageHeight);
+      }
+      targetNodeIds_.WriteTo(ref output, _repeated_targetNodeIds_codec);
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1908,6 +3307,16 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (HasFrameId) {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(FrameId);
       }
+      if (HasImageJpeg) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(ImageJpeg);
+      }
+      if (HasImageWidth) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ImageWidth);
+      }
+      if (HasImageHeight) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ImageHeight);
+      }
+      size += targetNodeIds_.CalculateSize(_repeated_targetNodeIds_codec);
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -1941,6 +3350,16 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (other.HasFrameId) {
         FrameId = other.FrameId;
       }
+      if (other.HasImageJpeg) {
+        ImageJpeg = other.ImageJpeg;
+      }
+      if (other.HasImageWidth) {
+        ImageWidth = other.ImageWidth;
+      }
+      if (other.HasImageHeight) {
+        ImageHeight = other.ImageHeight;
+      }
+      targetNodeIds_.Add(other.targetNodeIds_);
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -1982,6 +3401,22 @@ namespace Niantic.Lightship.AR.Protobuf {
           }
           case 56: {
             FrameId = input.ReadUInt64();
+            break;
+          }
+          case 66: {
+            ImageJpeg = input.ReadBytes();
+            break;
+          }
+          case 72: {
+            ImageWidth = input.ReadUInt32();
+            break;
+          }
+          case 80: {
+            ImageHeight = input.ReadUInt32();
+            break;
+          }
+          case 90: {
+            targetNodeIds_.AddEntriesFrom(input, _repeated_targetNodeIds_codec);
             break;
           }
         }
@@ -2027,6 +3462,22 @@ namespace Niantic.Lightship.AR.Protobuf {
             FrameId = input.ReadUInt64();
             break;
           }
+          case 66: {
+            ImageJpeg = input.ReadBytes();
+            break;
+          }
+          case 72: {
+            ImageWidth = input.ReadUInt32();
+            break;
+          }
+          case 80: {
+            ImageHeight = input.ReadUInt32();
+            break;
+          }
+          case 90: {
+            targetNodeIds_.AddEntriesFrom(ref input, _repeated_targetNodeIds_codec);
+            break;
+          }
         }
       }
     }
@@ -2042,6 +3493,7 @@ namespace Niantic.Lightship.AR.Protobuf {
   {
     private static readonly pb::MessageParser<LocalizationUpdate> _parser = new pb::MessageParser<LocalizationUpdate>(() => new LocalizationUpdate());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<LocalizationUpdate> Parser { get { return _parser; } }
@@ -2069,6 +3521,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LocalizationUpdate(LocalizationUpdate other) : this() {
+      _hasBits0 = other._hasBits0;
       localizationMethod_ = other.localizationMethod_;
       nodeIdentifier_ = other.nodeIdentifier_;
       status_ = other.status_;
@@ -2076,6 +3529,21 @@ namespace Niantic.Lightship.AR.Protobuf {
       frameId_ = other.frameId_;
       timestampMs_ = other.timestampMs_;
       trackingToNodePose_ = other.trackingToNodePose_.Clone();
+      localizedNodeIdentifier_ = other.localizedNodeIdentifier_;
+      trackingToLocalizedNodePose_ = other.trackingToLocalizedNodePose_.Clone();
+      frameTimestampMs_ = other.frameTimestampMs_;
+      requestIdentifier_ = other.requestIdentifier_;
+      graphResult_ = other.graphResult_;
+      graphEdgeIdentifier_ = other.graphEdgeIdentifier_;
+      requestGpsLatitude_ = other.requestGpsLatitude_;
+      requestGpsLongitude_ = other.requestGpsLongitude_;
+      requestGpsAltitude_ = other.requestGpsAltitude_;
+      requestGpsHorizontalAccuracy_ = other.requestGpsHorizontalAccuracy_;
+      requestGpsTimestampMs_ = other.requestGpsTimestampMs_;
+      impliedLatitude_ = other.impliedLatitude_;
+      impliedLongitude_ = other.impliedLongitude_;
+      impliedAltitude_ = other.impliedAltitude_;
+      impliedHeading_ = other.impliedHeading_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -2168,6 +3636,320 @@ namespace Niantic.Lightship.AR.Protobuf {
       get { return trackingToNodePose_; }
     }
 
+    /// <summary>Field number for the "localized_node_identifier" field.</summary>
+    public const int LocalizedNodeIdentifierFieldNumber = 8;
+    private pb::ByteString localizedNodeIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString LocalizedNodeIdentifier {
+      get { return localizedNodeIdentifier_; }
+      set {
+        localizedNodeIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "tracking_to_localized_node_pose" field.</summary>
+    public const int TrackingToLocalizedNodePoseFieldNumber = 9;
+    private static readonly pb::FieldCodec<float> _repeated_trackingToLocalizedNodePose_codec
+        = pb::FieldCodec.ForFloat(74);
+    private readonly pbc::RepeatedField<float> trackingToLocalizedNodePose_ = new pbc::RepeatedField<float>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<float> TrackingToLocalizedNodePose {
+      get { return trackingToLocalizedNodePose_; }
+    }
+
+    /// <summary>Field number for the "frame_timestamp_ms" field.</summary>
+    public const int FrameTimestampMsFieldNumber = 10;
+    private ulong frameTimestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong FrameTimestampMs {
+      get { return frameTimestampMs_; }
+      set {
+        frameTimestampMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "request_identifier" field.</summary>
+    public const int RequestIdentifierFieldNumber = 11;
+    private pb::ByteString requestIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString RequestIdentifier {
+      get { return requestIdentifier_; }
+      set {
+        requestIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "graph_result" field.</summary>
+    public const int GraphResultFieldNumber = 12;
+    private global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult graphResult_ = global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult.UnknownLocalizationGraphResult;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult GraphResult {
+      get { return graphResult_; }
+      set {
+        graphResult_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "graph_edge_identifier" field.</summary>
+    public const int GraphEdgeIdentifierFieldNumber = 13;
+    private pb::ByteString graphEdgeIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString GraphEdgeIdentifier {
+      get { return graphEdgeIdentifier_; }
+      set {
+        graphEdgeIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "request_gps_latitude" field.</summary>
+    public const int RequestGpsLatitudeFieldNumber = 14;
+    private readonly static double RequestGpsLatitudeDefaultValue = 0D;
+
+    private double requestGpsLatitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double RequestGpsLatitude {
+      get { if ((_hasBits0 & 1) != 0) { return requestGpsLatitude_; } else { return RequestGpsLatitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        requestGpsLatitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "request_gps_latitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRequestGpsLatitude {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "request_gps_latitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRequestGpsLatitude() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "request_gps_longitude" field.</summary>
+    public const int RequestGpsLongitudeFieldNumber = 15;
+    private readonly static double RequestGpsLongitudeDefaultValue = 0D;
+
+    private double requestGpsLongitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double RequestGpsLongitude {
+      get { if ((_hasBits0 & 2) != 0) { return requestGpsLongitude_; } else { return RequestGpsLongitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        requestGpsLongitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "request_gps_longitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRequestGpsLongitude {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "request_gps_longitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRequestGpsLongitude() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "request_gps_altitude" field.</summary>
+    public const int RequestGpsAltitudeFieldNumber = 16;
+    private readonly static double RequestGpsAltitudeDefaultValue = 0D;
+
+    private double requestGpsAltitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double RequestGpsAltitude {
+      get { if ((_hasBits0 & 4) != 0) { return requestGpsAltitude_; } else { return RequestGpsAltitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        requestGpsAltitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "request_gps_altitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRequestGpsAltitude {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "request_gps_altitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRequestGpsAltitude() {
+      _hasBits0 &= ~4;
+    }
+
+    /// <summary>Field number for the "request_gps_horizontal_accuracy" field.</summary>
+    public const int RequestGpsHorizontalAccuracyFieldNumber = 17;
+    private readonly static float RequestGpsHorizontalAccuracyDefaultValue = 0F;
+
+    private float requestGpsHorizontalAccuracy_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float RequestGpsHorizontalAccuracy {
+      get { if ((_hasBits0 & 8) != 0) { return requestGpsHorizontalAccuracy_; } else { return RequestGpsHorizontalAccuracyDefaultValue; } }
+      set {
+        _hasBits0 |= 8;
+        requestGpsHorizontalAccuracy_ = value;
+      }
+    }
+    /// <summary>Gets whether the "request_gps_horizontal_accuracy" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRequestGpsHorizontalAccuracy {
+      get { return (_hasBits0 & 8) != 0; }
+    }
+    /// <summary>Clears the value of the "request_gps_horizontal_accuracy" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRequestGpsHorizontalAccuracy() {
+      _hasBits0 &= ~8;
+    }
+
+    /// <summary>Field number for the "request_gps_timestamp_ms" field.</summary>
+    public const int RequestGpsTimestampMsFieldNumber = 18;
+    private readonly static ulong RequestGpsTimestampMsDefaultValue = 0UL;
+
+    private ulong requestGpsTimestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong RequestGpsTimestampMs {
+      get { if ((_hasBits0 & 16) != 0) { return requestGpsTimestampMs_; } else { return RequestGpsTimestampMsDefaultValue; } }
+      set {
+        _hasBits0 |= 16;
+        requestGpsTimestampMs_ = value;
+      }
+    }
+    /// <summary>Gets whether the "request_gps_timestamp_ms" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRequestGpsTimestampMs {
+      get { return (_hasBits0 & 16) != 0; }
+    }
+    /// <summary>Clears the value of the "request_gps_timestamp_ms" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRequestGpsTimestampMs() {
+      _hasBits0 &= ~16;
+    }
+
+    /// <summary>Field number for the "implied_latitude" field.</summary>
+    public const int ImpliedLatitudeFieldNumber = 19;
+    private readonly static double ImpliedLatitudeDefaultValue = 0D;
+
+    private double impliedLatitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double ImpliedLatitude {
+      get { if ((_hasBits0 & 32) != 0) { return impliedLatitude_; } else { return ImpliedLatitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 32;
+        impliedLatitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "implied_latitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasImpliedLatitude {
+      get { return (_hasBits0 & 32) != 0; }
+    }
+    /// <summary>Clears the value of the "implied_latitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearImpliedLatitude() {
+      _hasBits0 &= ~32;
+    }
+
+    /// <summary>Field number for the "implied_longitude" field.</summary>
+    public const int ImpliedLongitudeFieldNumber = 20;
+    private readonly static double ImpliedLongitudeDefaultValue = 0D;
+
+    private double impliedLongitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double ImpliedLongitude {
+      get { if ((_hasBits0 & 64) != 0) { return impliedLongitude_; } else { return ImpliedLongitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 64;
+        impliedLongitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "implied_longitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasImpliedLongitude {
+      get { return (_hasBits0 & 64) != 0; }
+    }
+    /// <summary>Clears the value of the "implied_longitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearImpliedLongitude() {
+      _hasBits0 &= ~64;
+    }
+
+    /// <summary>Field number for the "implied_altitude" field.</summary>
+    public const int ImpliedAltitudeFieldNumber = 21;
+    private readonly static double ImpliedAltitudeDefaultValue = 0D;
+
+    private double impliedAltitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double ImpliedAltitude {
+      get { if ((_hasBits0 & 128) != 0) { return impliedAltitude_; } else { return ImpliedAltitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 128;
+        impliedAltitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "implied_altitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasImpliedAltitude {
+      get { return (_hasBits0 & 128) != 0; }
+    }
+    /// <summary>Clears the value of the "implied_altitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearImpliedAltitude() {
+      _hasBits0 &= ~128;
+    }
+
+    /// <summary>Field number for the "implied_heading" field.</summary>
+    public const int ImpliedHeadingFieldNumber = 22;
+    private readonly static double ImpliedHeadingDefaultValue = 0D;
+
+    private double impliedHeading_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double ImpliedHeading {
+      get { if ((_hasBits0 & 256) != 0) { return impliedHeading_; } else { return ImpliedHeadingDefaultValue; } }
+      set {
+        _hasBits0 |= 256;
+        impliedHeading_ = value;
+      }
+    }
+    /// <summary>Gets whether the "implied_heading" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasImpliedHeading {
+      get { return (_hasBits0 & 256) != 0; }
+    }
+    /// <summary>Clears the value of the "implied_heading" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearImpliedHeading() {
+      _hasBits0 &= ~256;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -2190,6 +3972,21 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (FrameId != other.FrameId) return false;
       if (TimestampMs != other.TimestampMs) return false;
       if(!trackingToNodePose_.Equals(other.trackingToNodePose_)) return false;
+      if (LocalizedNodeIdentifier != other.LocalizedNodeIdentifier) return false;
+      if(!trackingToLocalizedNodePose_.Equals(other.trackingToLocalizedNodePose_)) return false;
+      if (FrameTimestampMs != other.FrameTimestampMs) return false;
+      if (RequestIdentifier != other.RequestIdentifier) return false;
+      if (GraphResult != other.GraphResult) return false;
+      if (GraphEdgeIdentifier != other.GraphEdgeIdentifier) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(RequestGpsLatitude, other.RequestGpsLatitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(RequestGpsLongitude, other.RequestGpsLongitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(RequestGpsAltitude, other.RequestGpsAltitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(RequestGpsHorizontalAccuracy, other.RequestGpsHorizontalAccuracy)) return false;
+      if (RequestGpsTimestampMs != other.RequestGpsTimestampMs) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(ImpliedLatitude, other.ImpliedLatitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(ImpliedLongitude, other.ImpliedLongitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(ImpliedAltitude, other.ImpliedAltitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(ImpliedHeading, other.ImpliedHeading)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -2204,6 +4001,21 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (FrameId != 0UL) hash ^= FrameId.GetHashCode();
       if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
       hash ^= trackingToNodePose_.GetHashCode();
+      if (LocalizedNodeIdentifier.Length != 0) hash ^= LocalizedNodeIdentifier.GetHashCode();
+      hash ^= trackingToLocalizedNodePose_.GetHashCode();
+      if (FrameTimestampMs != 0UL) hash ^= FrameTimestampMs.GetHashCode();
+      if (RequestIdentifier.Length != 0) hash ^= RequestIdentifier.GetHashCode();
+      if (GraphResult != global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult.UnknownLocalizationGraphResult) hash ^= GraphResult.GetHashCode();
+      if (GraphEdgeIdentifier.Length != 0) hash ^= GraphEdgeIdentifier.GetHashCode();
+      if (HasRequestGpsLatitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(RequestGpsLatitude);
+      if (HasRequestGpsLongitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(RequestGpsLongitude);
+      if (HasRequestGpsAltitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(RequestGpsAltitude);
+      if (HasRequestGpsHorizontalAccuracy) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(RequestGpsHorizontalAccuracy);
+      if (HasRequestGpsTimestampMs) hash ^= RequestGpsTimestampMs.GetHashCode();
+      if (HasImpliedLatitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(ImpliedLatitude);
+      if (HasImpliedLongitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(ImpliedLongitude);
+      if (HasImpliedAltitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(ImpliedAltitude);
+      if (HasImpliedHeading) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(ImpliedHeading);
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -2247,6 +4059,63 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteUInt64(TimestampMs);
       }
       trackingToNodePose_.WriteTo(output, _repeated_trackingToNodePose_codec);
+      if (LocalizedNodeIdentifier.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteBytes(LocalizedNodeIdentifier);
+      }
+      trackingToLocalizedNodePose_.WriteTo(output, _repeated_trackingToLocalizedNodePose_codec);
+      if (FrameTimestampMs != 0UL) {
+        output.WriteRawTag(80);
+        output.WriteUInt64(FrameTimestampMs);
+      }
+      if (RequestIdentifier.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteBytes(RequestIdentifier);
+      }
+      if (GraphResult != global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult.UnknownLocalizationGraphResult) {
+        output.WriteRawTag(96);
+        output.WriteEnum((int) GraphResult);
+      }
+      if (GraphEdgeIdentifier.Length != 0) {
+        output.WriteRawTag(106);
+        output.WriteBytes(GraphEdgeIdentifier);
+      }
+      if (HasRequestGpsLatitude) {
+        output.WriteRawTag(113);
+        output.WriteDouble(RequestGpsLatitude);
+      }
+      if (HasRequestGpsLongitude) {
+        output.WriteRawTag(121);
+        output.WriteDouble(RequestGpsLongitude);
+      }
+      if (HasRequestGpsAltitude) {
+        output.WriteRawTag(129, 1);
+        output.WriteDouble(RequestGpsAltitude);
+      }
+      if (HasRequestGpsHorizontalAccuracy) {
+        output.WriteRawTag(141, 1);
+        output.WriteFloat(RequestGpsHorizontalAccuracy);
+      }
+      if (HasRequestGpsTimestampMs) {
+        output.WriteRawTag(144, 1);
+        output.WriteUInt64(RequestGpsTimestampMs);
+      }
+      if (HasImpliedLatitude) {
+        output.WriteRawTag(153, 1);
+        output.WriteDouble(ImpliedLatitude);
+      }
+      if (HasImpliedLongitude) {
+        output.WriteRawTag(161, 1);
+        output.WriteDouble(ImpliedLongitude);
+      }
+      if (HasImpliedAltitude) {
+        output.WriteRawTag(169, 1);
+        output.WriteDouble(ImpliedAltitude);
+      }
+      if (HasImpliedHeading) {
+        output.WriteRawTag(177, 1);
+        output.WriteDouble(ImpliedHeading);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -2282,6 +4151,63 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteUInt64(TimestampMs);
       }
       trackingToNodePose_.WriteTo(ref output, _repeated_trackingToNodePose_codec);
+      if (LocalizedNodeIdentifier.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteBytes(LocalizedNodeIdentifier);
+      }
+      trackingToLocalizedNodePose_.WriteTo(ref output, _repeated_trackingToLocalizedNodePose_codec);
+      if (FrameTimestampMs != 0UL) {
+        output.WriteRawTag(80);
+        output.WriteUInt64(FrameTimestampMs);
+      }
+      if (RequestIdentifier.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteBytes(RequestIdentifier);
+      }
+      if (GraphResult != global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult.UnknownLocalizationGraphResult) {
+        output.WriteRawTag(96);
+        output.WriteEnum((int) GraphResult);
+      }
+      if (GraphEdgeIdentifier.Length != 0) {
+        output.WriteRawTag(106);
+        output.WriteBytes(GraphEdgeIdentifier);
+      }
+      if (HasRequestGpsLatitude) {
+        output.WriteRawTag(113);
+        output.WriteDouble(RequestGpsLatitude);
+      }
+      if (HasRequestGpsLongitude) {
+        output.WriteRawTag(121);
+        output.WriteDouble(RequestGpsLongitude);
+      }
+      if (HasRequestGpsAltitude) {
+        output.WriteRawTag(129, 1);
+        output.WriteDouble(RequestGpsAltitude);
+      }
+      if (HasRequestGpsHorizontalAccuracy) {
+        output.WriteRawTag(141, 1);
+        output.WriteFloat(RequestGpsHorizontalAccuracy);
+      }
+      if (HasRequestGpsTimestampMs) {
+        output.WriteRawTag(144, 1);
+        output.WriteUInt64(RequestGpsTimestampMs);
+      }
+      if (HasImpliedLatitude) {
+        output.WriteRawTag(153, 1);
+        output.WriteDouble(ImpliedLatitude);
+      }
+      if (HasImpliedLongitude) {
+        output.WriteRawTag(161, 1);
+        output.WriteDouble(ImpliedLongitude);
+      }
+      if (HasImpliedAltitude) {
+        output.WriteRawTag(169, 1);
+        output.WriteDouble(ImpliedAltitude);
+      }
+      if (HasImpliedHeading) {
+        output.WriteRawTag(177, 1);
+        output.WriteDouble(ImpliedHeading);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -2311,6 +4237,49 @@ namespace Niantic.Lightship.AR.Protobuf {
         size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
       }
       size += trackingToNodePose_.CalculateSize(_repeated_trackingToNodePose_codec);
+      if (LocalizedNodeIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(LocalizedNodeIdentifier);
+      }
+      size += trackingToLocalizedNodePose_.CalculateSize(_repeated_trackingToLocalizedNodePose_codec);
+      if (FrameTimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(FrameTimestampMs);
+      }
+      if (RequestIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(RequestIdentifier);
+      }
+      if (GraphResult != global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult.UnknownLocalizationGraphResult) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) GraphResult);
+      }
+      if (GraphEdgeIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(GraphEdgeIdentifier);
+      }
+      if (HasRequestGpsLatitude) {
+        size += 1 + 8;
+      }
+      if (HasRequestGpsLongitude) {
+        size += 1 + 8;
+      }
+      if (HasRequestGpsAltitude) {
+        size += 2 + 8;
+      }
+      if (HasRequestGpsHorizontalAccuracy) {
+        size += 2 + 4;
+      }
+      if (HasRequestGpsTimestampMs) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt64Size(RequestGpsTimestampMs);
+      }
+      if (HasImpliedLatitude) {
+        size += 2 + 8;
+      }
+      if (HasImpliedLongitude) {
+        size += 2 + 8;
+      }
+      if (HasImpliedAltitude) {
+        size += 2 + 8;
+      }
+      if (HasImpliedHeading) {
+        size += 2 + 8;
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -2342,6 +4311,49 @@ namespace Niantic.Lightship.AR.Protobuf {
         TimestampMs = other.TimestampMs;
       }
       trackingToNodePose_.Add(other.trackingToNodePose_);
+      if (other.LocalizedNodeIdentifier.Length != 0) {
+        LocalizedNodeIdentifier = other.LocalizedNodeIdentifier;
+      }
+      trackingToLocalizedNodePose_.Add(other.trackingToLocalizedNodePose_);
+      if (other.FrameTimestampMs != 0UL) {
+        FrameTimestampMs = other.FrameTimestampMs;
+      }
+      if (other.RequestIdentifier.Length != 0) {
+        RequestIdentifier = other.RequestIdentifier;
+      }
+      if (other.GraphResult != global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult.UnknownLocalizationGraphResult) {
+        GraphResult = other.GraphResult;
+      }
+      if (other.GraphEdgeIdentifier.Length != 0) {
+        GraphEdgeIdentifier = other.GraphEdgeIdentifier;
+      }
+      if (other.HasRequestGpsLatitude) {
+        RequestGpsLatitude = other.RequestGpsLatitude;
+      }
+      if (other.HasRequestGpsLongitude) {
+        RequestGpsLongitude = other.RequestGpsLongitude;
+      }
+      if (other.HasRequestGpsAltitude) {
+        RequestGpsAltitude = other.RequestGpsAltitude;
+      }
+      if (other.HasRequestGpsHorizontalAccuracy) {
+        RequestGpsHorizontalAccuracy = other.RequestGpsHorizontalAccuracy;
+      }
+      if (other.HasRequestGpsTimestampMs) {
+        RequestGpsTimestampMs = other.RequestGpsTimestampMs;
+      }
+      if (other.HasImpliedLatitude) {
+        ImpliedLatitude = other.ImpliedLatitude;
+      }
+      if (other.HasImpliedLongitude) {
+        ImpliedLongitude = other.ImpliedLongitude;
+      }
+      if (other.HasImpliedAltitude) {
+        ImpliedAltitude = other.ImpliedAltitude;
+      }
+      if (other.HasImpliedHeading) {
+        ImpliedHeading = other.ImpliedHeading;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -2386,6 +4398,67 @@ namespace Niantic.Lightship.AR.Protobuf {
             trackingToNodePose_.AddEntriesFrom(input, _repeated_trackingToNodePose_codec);
             break;
           }
+          case 66: {
+            LocalizedNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 74:
+          case 77: {
+            trackingToLocalizedNodePose_.AddEntriesFrom(input, _repeated_trackingToLocalizedNodePose_codec);
+            break;
+          }
+          case 80: {
+            FrameTimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 90: {
+            RequestIdentifier = input.ReadBytes();
+            break;
+          }
+          case 96: {
+            GraphResult = (global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult) input.ReadEnum();
+            break;
+          }
+          case 106: {
+            GraphEdgeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 113: {
+            RequestGpsLatitude = input.ReadDouble();
+            break;
+          }
+          case 121: {
+            RequestGpsLongitude = input.ReadDouble();
+            break;
+          }
+          case 129: {
+            RequestGpsAltitude = input.ReadDouble();
+            break;
+          }
+          case 141: {
+            RequestGpsHorizontalAccuracy = input.ReadFloat();
+            break;
+          }
+          case 144: {
+            RequestGpsTimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 153: {
+            ImpliedLatitude = input.ReadDouble();
+            break;
+          }
+          case 161: {
+            ImpliedLongitude = input.ReadDouble();
+            break;
+          }
+          case 169: {
+            ImpliedAltitude = input.ReadDouble();
+            break;
+          }
+          case 177: {
+            ImpliedHeading = input.ReadDouble();
+            break;
+          }
         }
       }
     #endif
@@ -2428,6 +4501,67 @@ namespace Niantic.Lightship.AR.Protobuf {
           case 58:
           case 61: {
             trackingToNodePose_.AddEntriesFrom(ref input, _repeated_trackingToNodePose_codec);
+            break;
+          }
+          case 66: {
+            LocalizedNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 74:
+          case 77: {
+            trackingToLocalizedNodePose_.AddEntriesFrom(ref input, _repeated_trackingToLocalizedNodePose_codec);
+            break;
+          }
+          case 80: {
+            FrameTimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 90: {
+            RequestIdentifier = input.ReadBytes();
+            break;
+          }
+          case 96: {
+            GraphResult = (global::Niantic.Lightship.AR.Protobuf.LocalizationGraphResult) input.ReadEnum();
+            break;
+          }
+          case 106: {
+            GraphEdgeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 113: {
+            RequestGpsLatitude = input.ReadDouble();
+            break;
+          }
+          case 121: {
+            RequestGpsLongitude = input.ReadDouble();
+            break;
+          }
+          case 129: {
+            RequestGpsAltitude = input.ReadDouble();
+            break;
+          }
+          case 141: {
+            RequestGpsHorizontalAccuracy = input.ReadFloat();
+            break;
+          }
+          case 144: {
+            RequestGpsTimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 153: {
+            ImpliedLatitude = input.ReadDouble();
+            break;
+          }
+          case 161: {
+            ImpliedLongitude = input.ReadDouble();
+            break;
+          }
+          case 169: {
+            ImpliedAltitude = input.ReadDouble();
+            break;
+          }
+          case 177: {
+            ImpliedHeading = input.ReadDouble();
             break;
           }
         }
@@ -5886,6 +8020,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public CustomData(CustomData other) : this() {
       label_ = other.label_;
+      timestampMs_ = other.timestampMs_;
       switch (other.ValueCase) {
         case ValueOneofCase.StringData:
           StringData = other.StringData;
@@ -5984,6 +8119,18 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
     }
 
+    /// <summary>Field number for the "timestamp_ms" field.</summary>
+    public const int TimestampMsFieldNumber = 6;
+    private ulong timestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TimestampMs {
+      get { return timestampMs_; }
+      set {
+        timestampMs_ = value;
+      }
+    }
+
     private object value_;
     /// <summary>Enum of possible cases for the "Value" oneof.</summary>
     public enum ValueOneofCase {
@@ -6027,6 +8174,7 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (!object.Equals(IntArray, other.IntArray)) return false;
       if (!object.Equals(FloatArray, other.FloatArray)) return false;
       if (!object.Equals(DoubleArray, other.DoubleArray)) return false;
+      if (TimestampMs != other.TimestampMs) return false;
       if (ValueCase != other.ValueCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -6040,6 +8188,7 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (valueCase_ == ValueOneofCase.IntArray) hash ^= IntArray.GetHashCode();
       if (valueCase_ == ValueOneofCase.FloatArray) hash ^= FloatArray.GetHashCode();
       if (valueCase_ == ValueOneofCase.DoubleArray) hash ^= DoubleArray.GetHashCode();
+      if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
       hash ^= (int) valueCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -6079,6 +8228,10 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(42);
         output.WriteMessage(DoubleArray);
       }
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(48);
+        output.WriteUInt64(TimestampMs);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6109,6 +8262,10 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(42);
         output.WriteMessage(DoubleArray);
       }
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(48);
+        output.WriteUInt64(TimestampMs);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6134,6 +8291,9 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (valueCase_ == ValueOneofCase.DoubleArray) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(DoubleArray);
       }
+      if (TimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -6148,6 +8308,9 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
       if (other.Label.Length != 0) {
         Label = other.Label;
+      }
+      if (other.TimestampMs != 0UL) {
+        TimestampMs = other.TimestampMs;
       }
       switch (other.ValueCase) {
         case ValueOneofCase.StringData:
@@ -6223,6 +8386,10 @@ namespace Niantic.Lightship.AR.Protobuf {
             DoubleArray = subBuilder;
             break;
           }
+          case 48: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
         }
       }
     #endif
@@ -6271,6 +8438,10 @@ namespace Niantic.Lightship.AR.Protobuf {
             }
             input.ReadMessage(subBuilder);
             DoubleArray = subBuilder;
+            break;
+          }
+          case 48: {
+            TimestampMs = input.ReadUInt64();
             break;
           }
         }
@@ -6322,6 +8493,8 @@ namespace Niantic.Lightship.AR.Protobuf {
       latitude_ = other.latitude_;
       longitude_ = other.longitude_;
       altitude_ = other.altitude_;
+      assetId_ = other.assetId_;
+      anchorPayload_ = other.anchorPayload_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -6414,6 +8587,30 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
     }
 
+    /// <summary>Field number for the "asset_id" field.</summary>
+    public const int AssetIdFieldNumber = 8;
+    private string assetId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AssetId {
+      get { return assetId_; }
+      set {
+        assetId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "anchor_payload" field.</summary>
+    public const int AnchorPayloadFieldNumber = 9;
+    private string anchorPayload_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AnchorPayload {
+      get { return anchorPayload_; }
+      set {
+        anchorPayload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -6436,6 +8633,8 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Latitude, other.Latitude)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Longitude, other.Longitude)) return false;
       if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Altitude, other.Altitude)) return false;
+      if (AssetId != other.AssetId) return false;
+      if (AnchorPayload != other.AnchorPayload) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -6450,6 +8649,8 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (Latitude != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Latitude);
       if (Longitude != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Longitude);
       if (Altitude != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Altitude);
+      if (AssetId.Length != 0) hash ^= AssetId.GetHashCode();
+      if (AnchorPayload.Length != 0) hash ^= AnchorPayload.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6493,6 +8694,14 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(57);
         output.WriteDouble(Altitude);
       }
+      if (AssetId.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(AssetId);
+      }
+      if (AnchorPayload.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(AnchorPayload);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6528,6 +8737,14 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(57);
         output.WriteDouble(Altitude);
       }
+      if (AssetId.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(AssetId);
+      }
+      if (AnchorPayload.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(AnchorPayload);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6556,6 +8773,12 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
       if (Altitude != 0D) {
         size += 1 + 8;
+      }
+      if (AssetId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AssetId);
+      }
+      if (AnchorPayload.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AnchorPayload);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -6587,6 +8810,12 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
       if (other.Altitude != 0D) {
         Altitude = other.Altitude;
+      }
+      if (other.AssetId.Length != 0) {
+        AssetId = other.AssetId;
+      }
+      if (other.AnchorPayload.Length != 0) {
+        AnchorPayload = other.AnchorPayload;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -6629,6 +8858,14 @@ namespace Niantic.Lightship.AR.Protobuf {
           }
           case 57: {
             Altitude = input.ReadDouble();
+            break;
+          }
+          case 66: {
+            AssetId = input.ReadString();
+            break;
+          }
+          case 74: {
+            AnchorPayload = input.ReadString();
             break;
           }
         }
@@ -6674,6 +8911,4201 @@ namespace Niantic.Lightship.AR.Protobuf {
             Altitude = input.ReadDouble();
             break;
           }
+          case 66: {
+            AssetId = input.ReadString();
+            break;
+          }
+          case 74: {
+            AnchorPayload = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class VpsSegmentTarget : pb::IMessage<VpsSegmentTarget>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<VpsSegmentTarget> _parser = new pb::MessageParser<VpsSegmentTarget>(() => new VpsSegmentTarget());
+    private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<VpsSegmentTarget> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[15]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public VpsSegmentTarget() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public VpsSegmentTarget(VpsSegmentTarget other) : this() {
+      _hasBits0 = other._hasBits0;
+      siteId_ = other.siteId_;
+      assetId_ = other.assetId_;
+      nodeIds_ = other.nodeIds_.Clone();
+      timestampMs_ = other.timestampMs_;
+      isTargeted_ = other.isTargeted_;
+      isLocalized_ = other.isLocalized_;
+      minLat_ = other.minLat_;
+      minLng_ = other.minLng_;
+      maxLat_ = other.maxLat_;
+      maxLng_ = other.maxLng_;
+      anchorId_ = other.anchorId_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public VpsSegmentTarget Clone() {
+      return new VpsSegmentTarget(this);
+    }
+
+    /// <summary>Field number for the "site_id" field.</summary>
+    public const int SiteIdFieldNumber = 1;
+    private pb::ByteString siteId_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString SiteId {
+      get { return siteId_; }
+      set {
+        siteId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "asset_id" field.</summary>
+    public const int AssetIdFieldNumber = 2;
+    private string assetId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AssetId {
+      get { return assetId_; }
+      set {
+        assetId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "node_ids" field.</summary>
+    public const int NodeIdsFieldNumber = 3;
+    private static readonly pb::FieldCodec<pb::ByteString> _repeated_nodeIds_codec
+        = pb::FieldCodec.ForBytes(26);
+    private readonly pbc::RepeatedField<pb::ByteString> nodeIds_ = new pbc::RepeatedField<pb::ByteString>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<pb::ByteString> NodeIds {
+      get { return nodeIds_; }
+    }
+
+    /// <summary>Field number for the "timestamp_ms" field.</summary>
+    public const int TimestampMsFieldNumber = 4;
+    private ulong timestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TimestampMs {
+      get { return timestampMs_; }
+      set {
+        timestampMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_targeted" field.</summary>
+    public const int IsTargetedFieldNumber = 5;
+    private bool isTargeted_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsTargeted {
+      get { return isTargeted_; }
+      set {
+        isTargeted_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_localized" field.</summary>
+    public const int IsLocalizedFieldNumber = 6;
+    private bool isLocalized_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsLocalized {
+      get { return isLocalized_; }
+      set {
+        isLocalized_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "min_lat" field.</summary>
+    public const int MinLatFieldNumber = 7;
+    private readonly static double MinLatDefaultValue = 0D;
+
+    private double minLat_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double MinLat {
+      get { if ((_hasBits0 & 1) != 0) { return minLat_; } else { return MinLatDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        minLat_ = value;
+      }
+    }
+    /// <summary>Gets whether the "min_lat" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasMinLat {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "min_lat" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearMinLat() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "min_lng" field.</summary>
+    public const int MinLngFieldNumber = 8;
+    private readonly static double MinLngDefaultValue = 0D;
+
+    private double minLng_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double MinLng {
+      get { if ((_hasBits0 & 2) != 0) { return minLng_; } else { return MinLngDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        minLng_ = value;
+      }
+    }
+    /// <summary>Gets whether the "min_lng" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasMinLng {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "min_lng" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearMinLng() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "max_lat" field.</summary>
+    public const int MaxLatFieldNumber = 9;
+    private readonly static double MaxLatDefaultValue = 0D;
+
+    private double maxLat_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double MaxLat {
+      get { if ((_hasBits0 & 4) != 0) { return maxLat_; } else { return MaxLatDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        maxLat_ = value;
+      }
+    }
+    /// <summary>Gets whether the "max_lat" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasMaxLat {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "max_lat" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearMaxLat() {
+      _hasBits0 &= ~4;
+    }
+
+    /// <summary>Field number for the "max_lng" field.</summary>
+    public const int MaxLngFieldNumber = 10;
+    private readonly static double MaxLngDefaultValue = 0D;
+
+    private double maxLng_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double MaxLng {
+      get { if ((_hasBits0 & 8) != 0) { return maxLng_; } else { return MaxLngDefaultValue; } }
+      set {
+        _hasBits0 |= 8;
+        maxLng_ = value;
+      }
+    }
+    /// <summary>Gets whether the "max_lng" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasMaxLng {
+      get { return (_hasBits0 & 8) != 0; }
+    }
+    /// <summary>Clears the value of the "max_lng" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearMaxLng() {
+      _hasBits0 &= ~8;
+    }
+
+    /// <summary>Field number for the "anchor_id" field.</summary>
+    public const int AnchorIdFieldNumber = 11;
+    private pb::ByteString anchorId_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString AnchorId {
+      get { return anchorId_; }
+      set {
+        anchorId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as VpsSegmentTarget);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(VpsSegmentTarget other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (SiteId != other.SiteId) return false;
+      if (AssetId != other.AssetId) return false;
+      if(!nodeIds_.Equals(other.nodeIds_)) return false;
+      if (TimestampMs != other.TimestampMs) return false;
+      if (IsTargeted != other.IsTargeted) return false;
+      if (IsLocalized != other.IsLocalized) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(MinLat, other.MinLat)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(MinLng, other.MinLng)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(MaxLat, other.MaxLat)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(MaxLng, other.MaxLng)) return false;
+      if (AnchorId != other.AnchorId) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (SiteId.Length != 0) hash ^= SiteId.GetHashCode();
+      if (AssetId.Length != 0) hash ^= AssetId.GetHashCode();
+      hash ^= nodeIds_.GetHashCode();
+      if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
+      if (IsTargeted != false) hash ^= IsTargeted.GetHashCode();
+      if (IsLocalized != false) hash ^= IsLocalized.GetHashCode();
+      if (HasMinLat) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(MinLat);
+      if (HasMinLng) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(MinLng);
+      if (HasMaxLat) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(MaxLat);
+      if (HasMaxLng) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(MaxLng);
+      if (AnchorId.Length != 0) hash ^= AnchorId.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (SiteId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteBytes(SiteId);
+      }
+      if (AssetId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(AssetId);
+      }
+      nodeIds_.WriteTo(output, _repeated_nodeIds_codec);
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(32);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (IsTargeted != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(IsTargeted);
+      }
+      if (IsLocalized != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(IsLocalized);
+      }
+      if (HasMinLat) {
+        output.WriteRawTag(57);
+        output.WriteDouble(MinLat);
+      }
+      if (HasMinLng) {
+        output.WriteRawTag(65);
+        output.WriteDouble(MinLng);
+      }
+      if (HasMaxLat) {
+        output.WriteRawTag(73);
+        output.WriteDouble(MaxLat);
+      }
+      if (HasMaxLng) {
+        output.WriteRawTag(81);
+        output.WriteDouble(MaxLng);
+      }
+      if (AnchorId.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteBytes(AnchorId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (SiteId.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteBytes(SiteId);
+      }
+      if (AssetId.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(AssetId);
+      }
+      nodeIds_.WriteTo(ref output, _repeated_nodeIds_codec);
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(32);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (IsTargeted != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(IsTargeted);
+      }
+      if (IsLocalized != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(IsLocalized);
+      }
+      if (HasMinLat) {
+        output.WriteRawTag(57);
+        output.WriteDouble(MinLat);
+      }
+      if (HasMinLng) {
+        output.WriteRawTag(65);
+        output.WriteDouble(MinLng);
+      }
+      if (HasMaxLat) {
+        output.WriteRawTag(73);
+        output.WriteDouble(MaxLat);
+      }
+      if (HasMaxLng) {
+        output.WriteRawTag(81);
+        output.WriteDouble(MaxLng);
+      }
+      if (AnchorId.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteBytes(AnchorId);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (SiteId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(SiteId);
+      }
+      if (AssetId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AssetId);
+      }
+      size += nodeIds_.CalculateSize(_repeated_nodeIds_codec);
+      if (TimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
+      }
+      if (IsTargeted != false) {
+        size += 1 + 1;
+      }
+      if (IsLocalized != false) {
+        size += 1 + 1;
+      }
+      if (HasMinLat) {
+        size += 1 + 8;
+      }
+      if (HasMinLng) {
+        size += 1 + 8;
+      }
+      if (HasMaxLat) {
+        size += 1 + 8;
+      }
+      if (HasMaxLng) {
+        size += 1 + 8;
+      }
+      if (AnchorId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(AnchorId);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(VpsSegmentTarget other) {
+      if (other == null) {
+        return;
+      }
+      if (other.SiteId.Length != 0) {
+        SiteId = other.SiteId;
+      }
+      if (other.AssetId.Length != 0) {
+        AssetId = other.AssetId;
+      }
+      nodeIds_.Add(other.nodeIds_);
+      if (other.TimestampMs != 0UL) {
+        TimestampMs = other.TimestampMs;
+      }
+      if (other.IsTargeted != false) {
+        IsTargeted = other.IsTargeted;
+      }
+      if (other.IsLocalized != false) {
+        IsLocalized = other.IsLocalized;
+      }
+      if (other.HasMinLat) {
+        MinLat = other.MinLat;
+      }
+      if (other.HasMinLng) {
+        MinLng = other.MinLng;
+      }
+      if (other.HasMaxLat) {
+        MaxLat = other.MaxLat;
+      }
+      if (other.HasMaxLng) {
+        MaxLng = other.MaxLng;
+      }
+      if (other.AnchorId.Length != 0) {
+        AnchorId = other.AnchorId;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            SiteId = input.ReadBytes();
+            break;
+          }
+          case 18: {
+            AssetId = input.ReadString();
+            break;
+          }
+          case 26: {
+            nodeIds_.AddEntriesFrom(input, _repeated_nodeIds_codec);
+            break;
+          }
+          case 32: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 40: {
+            IsTargeted = input.ReadBool();
+            break;
+          }
+          case 48: {
+            IsLocalized = input.ReadBool();
+            break;
+          }
+          case 57: {
+            MinLat = input.ReadDouble();
+            break;
+          }
+          case 65: {
+            MinLng = input.ReadDouble();
+            break;
+          }
+          case 73: {
+            MaxLat = input.ReadDouble();
+            break;
+          }
+          case 81: {
+            MaxLng = input.ReadDouble();
+            break;
+          }
+          case 90: {
+            AnchorId = input.ReadBytes();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            SiteId = input.ReadBytes();
+            break;
+          }
+          case 18: {
+            AssetId = input.ReadString();
+            break;
+          }
+          case 26: {
+            nodeIds_.AddEntriesFrom(ref input, _repeated_nodeIds_codec);
+            break;
+          }
+          case 32: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 40: {
+            IsTargeted = input.ReadBool();
+            break;
+          }
+          case 48: {
+            IsLocalized = input.ReadBool();
+            break;
+          }
+          case 57: {
+            MinLat = input.ReadDouble();
+            break;
+          }
+          case 65: {
+            MinLng = input.ReadDouble();
+            break;
+          }
+          case 73: {
+            MaxLat = input.ReadDouble();
+            break;
+          }
+          case 81: {
+            MaxLng = input.ReadDouble();
+            break;
+          }
+          case 90: {
+            AnchorId = input.ReadBytes();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class MapNodeUpdate : pb::IMessage<MapNodeUpdate>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<MapNodeUpdate> _parser = new pb::MessageParser<MapNodeUpdate>(() => new MapNodeUpdate());
+    private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<MapNodeUpdate> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[16]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public MapNodeUpdate() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public MapNodeUpdate(MapNodeUpdate other) : this() {
+      _hasBits0 = other._hasBits0;
+      eventType_ = other.eventType_;
+      nodeIdentifier_ = other.nodeIdentifier_;
+      timestampMs_ = other.timestampMs_;
+      nodeType_ = other.nodeType_;
+      sourceDevice_ = other.sourceDevice_;
+      spaceIdentifier_ = other.spaceIdentifier_;
+      isLiveNode_ = other.isLiveNode_;
+      isAnchorTarget_ = other.isAnchorTarget_;
+      existsInCloud_ = other.existsInCloud_;
+      cloudPermissionDenied_ = other.cloudPermissionDenied_;
+      geoReferenceDataProcessed_ = other.geoReferenceDataProcessed_;
+      isTooFar_ = other.isTooFar_;
+      localizationStatus_ = other.localizationStatus_;
+      latitude_ = other.latitude_;
+      longitude_ = other.longitude_;
+      altitude_ = other.altitude_;
+      hasDeviceMapData_ = other.hasDeviceMapData_;
+      availableLayers_ = other.availableLayers_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public MapNodeUpdate Clone() {
+      return new MapNodeUpdate(this);
+    }
+
+    /// <summary>Field number for the "event_type" field.</summary>
+    public const int EventTypeFieldNumber = 1;
+    private global::Niantic.Lightship.AR.Protobuf.MapNodeEventType eventType_ = global::Niantic.Lightship.AR.Protobuf.MapNodeEventType.UnknownMapNodeEventType;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.MapNodeEventType EventType {
+      get { return eventType_; }
+      set {
+        eventType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "node_identifier" field.</summary>
+    public const int NodeIdentifierFieldNumber = 2;
+    private pb::ByteString nodeIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString NodeIdentifier {
+      get { return nodeIdentifier_; }
+      set {
+        nodeIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "timestamp_ms" field.</summary>
+    public const int TimestampMsFieldNumber = 3;
+    private ulong timestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TimestampMs {
+      get { return timestampMs_; }
+      set {
+        timestampMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "node_type" field.</summary>
+    public const int NodeTypeFieldNumber = 4;
+    private global::Niantic.Lightship.AR.Protobuf.MapNodeType nodeType_ = global::Niantic.Lightship.AR.Protobuf.MapNodeType.UnknownMapNodeType;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.MapNodeType NodeType {
+      get { return nodeType_; }
+      set {
+        nodeType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "source_device" field.</summary>
+    public const int SourceDeviceFieldNumber = 5;
+    private global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice sourceDevice_ = global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice.UnknownMapNodeSourceDevice;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice SourceDevice {
+      get { return sourceDevice_; }
+      set {
+        sourceDevice_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "space_identifier" field.</summary>
+    public const int SpaceIdentifierFieldNumber = 6;
+    private pb::ByteString spaceIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString SpaceIdentifier {
+      get { return spaceIdentifier_; }
+      set {
+        spaceIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "is_live_node" field.</summary>
+    public const int IsLiveNodeFieldNumber = 8;
+    private bool isLiveNode_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsLiveNode {
+      get { return isLiveNode_; }
+      set {
+        isLiveNode_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_anchor_target" field.</summary>
+    public const int IsAnchorTargetFieldNumber = 9;
+    private bool isAnchorTarget_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsAnchorTarget {
+      get { return isAnchorTarget_; }
+      set {
+        isAnchorTarget_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "exists_in_cloud" field.</summary>
+    public const int ExistsInCloudFieldNumber = 10;
+    private bool existsInCloud_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool ExistsInCloud {
+      get { return existsInCloud_; }
+      set {
+        existsInCloud_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "cloud_permission_denied" field.</summary>
+    public const int CloudPermissionDeniedFieldNumber = 12;
+    private bool cloudPermissionDenied_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool CloudPermissionDenied {
+      get { return cloudPermissionDenied_; }
+      set {
+        cloudPermissionDenied_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "geo_reference_data_processed" field.</summary>
+    public const int GeoReferenceDataProcessedFieldNumber = 13;
+    private bool geoReferenceDataProcessed_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool GeoReferenceDataProcessed {
+      get { return geoReferenceDataProcessed_; }
+      set {
+        geoReferenceDataProcessed_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_too_far" field.</summary>
+    public const int IsTooFarFieldNumber = 14;
+    private bool isTooFar_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsTooFar {
+      get { return isTooFar_; }
+      set {
+        isTooFar_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "localization_status" field.</summary>
+    public const int LocalizationStatusFieldNumber = 15;
+    private global::Niantic.Lightship.AR.Protobuf.LocalizationStatus localizationStatus_ = global::Niantic.Lightship.AR.Protobuf.LocalizationStatus.UnknownLocalizationStatus;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.LocalizationStatus LocalizationStatus {
+      get { return localizationStatus_; }
+      set {
+        localizationStatus_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "latitude" field.</summary>
+    public const int LatitudeFieldNumber = 16;
+    private readonly static double LatitudeDefaultValue = 0D;
+
+    private double latitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Latitude {
+      get { if ((_hasBits0 & 1) != 0) { return latitude_; } else { return LatitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        latitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "latitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasLatitude {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "latitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearLatitude() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "longitude" field.</summary>
+    public const int LongitudeFieldNumber = 17;
+    private readonly static double LongitudeDefaultValue = 0D;
+
+    private double longitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Longitude {
+      get { if ((_hasBits0 & 2) != 0) { return longitude_; } else { return LongitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        longitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "longitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasLongitude {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "longitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearLongitude() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "altitude" field.</summary>
+    public const int AltitudeFieldNumber = 18;
+    private readonly static double AltitudeDefaultValue = 0D;
+
+    private double altitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Altitude {
+      get { if ((_hasBits0 & 4) != 0) { return altitude_; } else { return AltitudeDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        altitude_ = value;
+      }
+    }
+    /// <summary>Gets whether the "altitude" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasAltitude {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "altitude" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearAltitude() {
+      _hasBits0 &= ~4;
+    }
+
+    /// <summary>Field number for the "has_device_map_data" field.</summary>
+    public const int HasDeviceMapDataFieldNumber = 19;
+    private bool hasDeviceMapData_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasDeviceMapData {
+      get { return hasDeviceMapData_; }
+      set {
+        hasDeviceMapData_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "available_layers" field.</summary>
+    public const int AvailableLayersFieldNumber = 20;
+    private static readonly pb::FieldCodec<string> _repeated_availableLayers_codec
+        = pb::FieldCodec.ForString(162);
+    private readonly pbc::RepeatedField<string> availableLayers_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> AvailableLayers {
+      get { return availableLayers_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as MapNodeUpdate);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(MapNodeUpdate other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (EventType != other.EventType) return false;
+      if (NodeIdentifier != other.NodeIdentifier) return false;
+      if (TimestampMs != other.TimestampMs) return false;
+      if (NodeType != other.NodeType) return false;
+      if (SourceDevice != other.SourceDevice) return false;
+      if (SpaceIdentifier != other.SpaceIdentifier) return false;
+      if (IsLiveNode != other.IsLiveNode) return false;
+      if (IsAnchorTarget != other.IsAnchorTarget) return false;
+      if (ExistsInCloud != other.ExistsInCloud) return false;
+      if (CloudPermissionDenied != other.CloudPermissionDenied) return false;
+      if (GeoReferenceDataProcessed != other.GeoReferenceDataProcessed) return false;
+      if (IsTooFar != other.IsTooFar) return false;
+      if (LocalizationStatus != other.LocalizationStatus) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Latitude, other.Latitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Longitude, other.Longitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Altitude, other.Altitude)) return false;
+      if (HasDeviceMapData != other.HasDeviceMapData) return false;
+      if(!availableLayers_.Equals(other.availableLayers_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (EventType != global::Niantic.Lightship.AR.Protobuf.MapNodeEventType.UnknownMapNodeEventType) hash ^= EventType.GetHashCode();
+      if (NodeIdentifier.Length != 0) hash ^= NodeIdentifier.GetHashCode();
+      if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
+      if (NodeType != global::Niantic.Lightship.AR.Protobuf.MapNodeType.UnknownMapNodeType) hash ^= NodeType.GetHashCode();
+      if (SourceDevice != global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice.UnknownMapNodeSourceDevice) hash ^= SourceDevice.GetHashCode();
+      if (SpaceIdentifier.Length != 0) hash ^= SpaceIdentifier.GetHashCode();
+      if (IsLiveNode != false) hash ^= IsLiveNode.GetHashCode();
+      if (IsAnchorTarget != false) hash ^= IsAnchorTarget.GetHashCode();
+      if (ExistsInCloud != false) hash ^= ExistsInCloud.GetHashCode();
+      if (CloudPermissionDenied != false) hash ^= CloudPermissionDenied.GetHashCode();
+      if (GeoReferenceDataProcessed != false) hash ^= GeoReferenceDataProcessed.GetHashCode();
+      if (IsTooFar != false) hash ^= IsTooFar.GetHashCode();
+      if (LocalizationStatus != global::Niantic.Lightship.AR.Protobuf.LocalizationStatus.UnknownLocalizationStatus) hash ^= LocalizationStatus.GetHashCode();
+      if (HasLatitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Latitude);
+      if (HasLongitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Longitude);
+      if (HasAltitude) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Altitude);
+      if (HasDeviceMapData != false) hash ^= HasDeviceMapData.GetHashCode();
+      hash ^= availableLayers_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (EventType != global::Niantic.Lightship.AR.Protobuf.MapNodeEventType.UnknownMapNodeEventType) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) EventType);
+      }
+      if (NodeIdentifier.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(NodeIdentifier);
+      }
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(24);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (NodeType != global::Niantic.Lightship.AR.Protobuf.MapNodeType.UnknownMapNodeType) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) NodeType);
+      }
+      if (SourceDevice != global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice.UnknownMapNodeSourceDevice) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) SourceDevice);
+      }
+      if (SpaceIdentifier.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteBytes(SpaceIdentifier);
+      }
+      if (IsLiveNode != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsLiveNode);
+      }
+      if (IsAnchorTarget != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(IsAnchorTarget);
+      }
+      if (ExistsInCloud != false) {
+        output.WriteRawTag(80);
+        output.WriteBool(ExistsInCloud);
+      }
+      if (CloudPermissionDenied != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(CloudPermissionDenied);
+      }
+      if (GeoReferenceDataProcessed != false) {
+        output.WriteRawTag(104);
+        output.WriteBool(GeoReferenceDataProcessed);
+      }
+      if (IsTooFar != false) {
+        output.WriteRawTag(112);
+        output.WriteBool(IsTooFar);
+      }
+      if (LocalizationStatus != global::Niantic.Lightship.AR.Protobuf.LocalizationStatus.UnknownLocalizationStatus) {
+        output.WriteRawTag(120);
+        output.WriteEnum((int) LocalizationStatus);
+      }
+      if (HasLatitude) {
+        output.WriteRawTag(129, 1);
+        output.WriteDouble(Latitude);
+      }
+      if (HasLongitude) {
+        output.WriteRawTag(137, 1);
+        output.WriteDouble(Longitude);
+      }
+      if (HasAltitude) {
+        output.WriteRawTag(145, 1);
+        output.WriteDouble(Altitude);
+      }
+      if (HasDeviceMapData != false) {
+        output.WriteRawTag(152, 1);
+        output.WriteBool(HasDeviceMapData);
+      }
+      availableLayers_.WriteTo(output, _repeated_availableLayers_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (EventType != global::Niantic.Lightship.AR.Protobuf.MapNodeEventType.UnknownMapNodeEventType) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) EventType);
+      }
+      if (NodeIdentifier.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(NodeIdentifier);
+      }
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(24);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (NodeType != global::Niantic.Lightship.AR.Protobuf.MapNodeType.UnknownMapNodeType) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) NodeType);
+      }
+      if (SourceDevice != global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice.UnknownMapNodeSourceDevice) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) SourceDevice);
+      }
+      if (SpaceIdentifier.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteBytes(SpaceIdentifier);
+      }
+      if (IsLiveNode != false) {
+        output.WriteRawTag(64);
+        output.WriteBool(IsLiveNode);
+      }
+      if (IsAnchorTarget != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(IsAnchorTarget);
+      }
+      if (ExistsInCloud != false) {
+        output.WriteRawTag(80);
+        output.WriteBool(ExistsInCloud);
+      }
+      if (CloudPermissionDenied != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(CloudPermissionDenied);
+      }
+      if (GeoReferenceDataProcessed != false) {
+        output.WriteRawTag(104);
+        output.WriteBool(GeoReferenceDataProcessed);
+      }
+      if (IsTooFar != false) {
+        output.WriteRawTag(112);
+        output.WriteBool(IsTooFar);
+      }
+      if (LocalizationStatus != global::Niantic.Lightship.AR.Protobuf.LocalizationStatus.UnknownLocalizationStatus) {
+        output.WriteRawTag(120);
+        output.WriteEnum((int) LocalizationStatus);
+      }
+      if (HasLatitude) {
+        output.WriteRawTag(129, 1);
+        output.WriteDouble(Latitude);
+      }
+      if (HasLongitude) {
+        output.WriteRawTag(137, 1);
+        output.WriteDouble(Longitude);
+      }
+      if (HasAltitude) {
+        output.WriteRawTag(145, 1);
+        output.WriteDouble(Altitude);
+      }
+      if (HasDeviceMapData != false) {
+        output.WriteRawTag(152, 1);
+        output.WriteBool(HasDeviceMapData);
+      }
+      availableLayers_.WriteTo(ref output, _repeated_availableLayers_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (EventType != global::Niantic.Lightship.AR.Protobuf.MapNodeEventType.UnknownMapNodeEventType) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EventType);
+      }
+      if (NodeIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(NodeIdentifier);
+      }
+      if (TimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
+      }
+      if (NodeType != global::Niantic.Lightship.AR.Protobuf.MapNodeType.UnknownMapNodeType) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) NodeType);
+      }
+      if (SourceDevice != global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice.UnknownMapNodeSourceDevice) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) SourceDevice);
+      }
+      if (SpaceIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(SpaceIdentifier);
+      }
+      if (IsLiveNode != false) {
+        size += 1 + 1;
+      }
+      if (IsAnchorTarget != false) {
+        size += 1 + 1;
+      }
+      if (ExistsInCloud != false) {
+        size += 1 + 1;
+      }
+      if (CloudPermissionDenied != false) {
+        size += 1 + 1;
+      }
+      if (GeoReferenceDataProcessed != false) {
+        size += 1 + 1;
+      }
+      if (IsTooFar != false) {
+        size += 1 + 1;
+      }
+      if (LocalizationStatus != global::Niantic.Lightship.AR.Protobuf.LocalizationStatus.UnknownLocalizationStatus) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) LocalizationStatus);
+      }
+      if (HasLatitude) {
+        size += 2 + 8;
+      }
+      if (HasLongitude) {
+        size += 2 + 8;
+      }
+      if (HasAltitude) {
+        size += 2 + 8;
+      }
+      if (HasDeviceMapData != false) {
+        size += 2 + 1;
+      }
+      size += availableLayers_.CalculateSize(_repeated_availableLayers_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(MapNodeUpdate other) {
+      if (other == null) {
+        return;
+      }
+      if (other.EventType != global::Niantic.Lightship.AR.Protobuf.MapNodeEventType.UnknownMapNodeEventType) {
+        EventType = other.EventType;
+      }
+      if (other.NodeIdentifier.Length != 0) {
+        NodeIdentifier = other.NodeIdentifier;
+      }
+      if (other.TimestampMs != 0UL) {
+        TimestampMs = other.TimestampMs;
+      }
+      if (other.NodeType != global::Niantic.Lightship.AR.Protobuf.MapNodeType.UnknownMapNodeType) {
+        NodeType = other.NodeType;
+      }
+      if (other.SourceDevice != global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice.UnknownMapNodeSourceDevice) {
+        SourceDevice = other.SourceDevice;
+      }
+      if (other.SpaceIdentifier.Length != 0) {
+        SpaceIdentifier = other.SpaceIdentifier;
+      }
+      if (other.IsLiveNode != false) {
+        IsLiveNode = other.IsLiveNode;
+      }
+      if (other.IsAnchorTarget != false) {
+        IsAnchorTarget = other.IsAnchorTarget;
+      }
+      if (other.ExistsInCloud != false) {
+        ExistsInCloud = other.ExistsInCloud;
+      }
+      if (other.CloudPermissionDenied != false) {
+        CloudPermissionDenied = other.CloudPermissionDenied;
+      }
+      if (other.GeoReferenceDataProcessed != false) {
+        GeoReferenceDataProcessed = other.GeoReferenceDataProcessed;
+      }
+      if (other.IsTooFar != false) {
+        IsTooFar = other.IsTooFar;
+      }
+      if (other.LocalizationStatus != global::Niantic.Lightship.AR.Protobuf.LocalizationStatus.UnknownLocalizationStatus) {
+        LocalizationStatus = other.LocalizationStatus;
+      }
+      if (other.HasLatitude) {
+        Latitude = other.Latitude;
+      }
+      if (other.HasLongitude) {
+        Longitude = other.Longitude;
+      }
+      if (other.HasAltitude) {
+        Altitude = other.Altitude;
+      }
+      if (other.HasDeviceMapData != false) {
+        HasDeviceMapData = other.HasDeviceMapData;
+      }
+      availableLayers_.Add(other.availableLayers_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            EventType = (global::Niantic.Lightship.AR.Protobuf.MapNodeEventType) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            NodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 24: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 32: {
+            NodeType = (global::Niantic.Lightship.AR.Protobuf.MapNodeType) input.ReadEnum();
+            break;
+          }
+          case 40: {
+            SourceDevice = (global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice) input.ReadEnum();
+            break;
+          }
+          case 50: {
+            SpaceIdentifier = input.ReadBytes();
+            break;
+          }
+          case 64: {
+            IsLiveNode = input.ReadBool();
+            break;
+          }
+          case 72: {
+            IsAnchorTarget = input.ReadBool();
+            break;
+          }
+          case 80: {
+            ExistsInCloud = input.ReadBool();
+            break;
+          }
+          case 96: {
+            CloudPermissionDenied = input.ReadBool();
+            break;
+          }
+          case 104: {
+            GeoReferenceDataProcessed = input.ReadBool();
+            break;
+          }
+          case 112: {
+            IsTooFar = input.ReadBool();
+            break;
+          }
+          case 120: {
+            LocalizationStatus = (global::Niantic.Lightship.AR.Protobuf.LocalizationStatus) input.ReadEnum();
+            break;
+          }
+          case 129: {
+            Latitude = input.ReadDouble();
+            break;
+          }
+          case 137: {
+            Longitude = input.ReadDouble();
+            break;
+          }
+          case 145: {
+            Altitude = input.ReadDouble();
+            break;
+          }
+          case 152: {
+            HasDeviceMapData = input.ReadBool();
+            break;
+          }
+          case 162: {
+            availableLayers_.AddEntriesFrom(input, _repeated_availableLayers_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            EventType = (global::Niantic.Lightship.AR.Protobuf.MapNodeEventType) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            NodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 24: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 32: {
+            NodeType = (global::Niantic.Lightship.AR.Protobuf.MapNodeType) input.ReadEnum();
+            break;
+          }
+          case 40: {
+            SourceDevice = (global::Niantic.Lightship.AR.Protobuf.MapNodeSourceDevice) input.ReadEnum();
+            break;
+          }
+          case 50: {
+            SpaceIdentifier = input.ReadBytes();
+            break;
+          }
+          case 64: {
+            IsLiveNode = input.ReadBool();
+            break;
+          }
+          case 72: {
+            IsAnchorTarget = input.ReadBool();
+            break;
+          }
+          case 80: {
+            ExistsInCloud = input.ReadBool();
+            break;
+          }
+          case 96: {
+            CloudPermissionDenied = input.ReadBool();
+            break;
+          }
+          case 104: {
+            GeoReferenceDataProcessed = input.ReadBool();
+            break;
+          }
+          case 112: {
+            IsTooFar = input.ReadBool();
+            break;
+          }
+          case 120: {
+            LocalizationStatus = (global::Niantic.Lightship.AR.Protobuf.LocalizationStatus) input.ReadEnum();
+            break;
+          }
+          case 129: {
+            Latitude = input.ReadDouble();
+            break;
+          }
+          case 137: {
+            Longitude = input.ReadDouble();
+            break;
+          }
+          case 145: {
+            Altitude = input.ReadDouble();
+            break;
+          }
+          case 152: {
+            HasDeviceMapData = input.ReadBool();
+            break;
+          }
+          case 162: {
+            availableLayers_.AddEntriesFrom(ref input, _repeated_availableLayers_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class GraphEdgeUpdate : pb::IMessage<GraphEdgeUpdate>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<GraphEdgeUpdate> _parser = new pb::MessageParser<GraphEdgeUpdate>(() => new GraphEdgeUpdate());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<GraphEdgeUpdate> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[17]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GraphEdgeUpdate() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GraphEdgeUpdate(GraphEdgeUpdate other) : this() {
+      eventType_ = other.eventType_;
+      edgeIdentifier_ = other.edgeIdentifier_;
+      sourceNodeIdentifier_ = other.sourceNodeIdentifier_;
+      destinationNodeIdentifier_ = other.destinationNodeIdentifier_;
+      sourceLayerName_ = other.sourceLayerName_;
+      destinationLayerName_ = other.destinationLayerName_;
+      edgeType_ = other.edgeType_;
+      confidence_ = other.confidence_;
+      existsInCloud_ = other.existsInCloud_;
+      uploadPermitted_ = other.uploadPermitted_;
+      timestampMs_ = other.timestampMs_;
+      sourceToDestinationPose_ = other.sourceToDestinationPose_.Clone();
+      creationTimestampMs_ = other.creationTimestampMs_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GraphEdgeUpdate Clone() {
+      return new GraphEdgeUpdate(this);
+    }
+
+    /// <summary>Field number for the "event_type" field.</summary>
+    public const int EventTypeFieldNumber = 1;
+    private global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType eventType_ = global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType.UnknownGraphEdgeEventType;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType EventType {
+      get { return eventType_; }
+      set {
+        eventType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "edge_identifier" field.</summary>
+    public const int EdgeIdentifierFieldNumber = 2;
+    private pb::ByteString edgeIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString EdgeIdentifier {
+      get { return edgeIdentifier_; }
+      set {
+        edgeIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "source_node_identifier" field.</summary>
+    public const int SourceNodeIdentifierFieldNumber = 3;
+    private pb::ByteString sourceNodeIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString SourceNodeIdentifier {
+      get { return sourceNodeIdentifier_; }
+      set {
+        sourceNodeIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "destination_node_identifier" field.</summary>
+    public const int DestinationNodeIdentifierFieldNumber = 4;
+    private pb::ByteString destinationNodeIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString DestinationNodeIdentifier {
+      get { return destinationNodeIdentifier_; }
+      set {
+        destinationNodeIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "source_layer_name" field.</summary>
+    public const int SourceLayerNameFieldNumber = 5;
+    private string sourceLayerName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string SourceLayerName {
+      get { return sourceLayerName_; }
+      set {
+        sourceLayerName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "destination_layer_name" field.</summary>
+    public const int DestinationLayerNameFieldNumber = 6;
+    private string destinationLayerName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DestinationLayerName {
+      get { return destinationLayerName_; }
+      set {
+        destinationLayerName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "edge_type" field.</summary>
+    public const int EdgeTypeFieldNumber = 7;
+    private global::Niantic.Lightship.AR.Protobuf.GraphEdgeType edgeType_ = global::Niantic.Lightship.AR.Protobuf.GraphEdgeType.UnknownGraphEdgeType;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.GraphEdgeType EdgeType {
+      get { return edgeType_; }
+      set {
+        edgeType_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "confidence" field.</summary>
+    public const int ConfidenceFieldNumber = 8;
+    private float confidence_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float Confidence {
+      get { return confidence_; }
+      set {
+        confidence_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "exists_in_cloud" field.</summary>
+    public const int ExistsInCloudFieldNumber = 9;
+    private bool existsInCloud_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool ExistsInCloud {
+      get { return existsInCloud_; }
+      set {
+        existsInCloud_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "upload_permitted" field.</summary>
+    public const int UploadPermittedFieldNumber = 10;
+    private bool uploadPermitted_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool UploadPermitted {
+      get { return uploadPermitted_; }
+      set {
+        uploadPermitted_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "timestamp_ms" field.</summary>
+    public const int TimestampMsFieldNumber = 11;
+    private ulong timestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TimestampMs {
+      get { return timestampMs_; }
+      set {
+        timestampMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "source_to_destination_pose" field.</summary>
+    public const int SourceToDestinationPoseFieldNumber = 12;
+    private static readonly pb::FieldCodec<float> _repeated_sourceToDestinationPose_codec
+        = pb::FieldCodec.ForFloat(98);
+    private readonly pbc::RepeatedField<float> sourceToDestinationPose_ = new pbc::RepeatedField<float>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<float> SourceToDestinationPose {
+      get { return sourceToDestinationPose_; }
+    }
+
+    /// <summary>Field number for the "creation_timestamp_ms" field.</summary>
+    public const int CreationTimestampMsFieldNumber = 13;
+    private ulong creationTimestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong CreationTimestampMs {
+      get { return creationTimestampMs_; }
+      set {
+        creationTimestampMs_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as GraphEdgeUpdate);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(GraphEdgeUpdate other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (EventType != other.EventType) return false;
+      if (EdgeIdentifier != other.EdgeIdentifier) return false;
+      if (SourceNodeIdentifier != other.SourceNodeIdentifier) return false;
+      if (DestinationNodeIdentifier != other.DestinationNodeIdentifier) return false;
+      if (SourceLayerName != other.SourceLayerName) return false;
+      if (DestinationLayerName != other.DestinationLayerName) return false;
+      if (EdgeType != other.EdgeType) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(Confidence, other.Confidence)) return false;
+      if (ExistsInCloud != other.ExistsInCloud) return false;
+      if (UploadPermitted != other.UploadPermitted) return false;
+      if (TimestampMs != other.TimestampMs) return false;
+      if(!sourceToDestinationPose_.Equals(other.sourceToDestinationPose_)) return false;
+      if (CreationTimestampMs != other.CreationTimestampMs) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (EventType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType.UnknownGraphEdgeEventType) hash ^= EventType.GetHashCode();
+      if (EdgeIdentifier.Length != 0) hash ^= EdgeIdentifier.GetHashCode();
+      if (SourceNodeIdentifier.Length != 0) hash ^= SourceNodeIdentifier.GetHashCode();
+      if (DestinationNodeIdentifier.Length != 0) hash ^= DestinationNodeIdentifier.GetHashCode();
+      if (SourceLayerName.Length != 0) hash ^= SourceLayerName.GetHashCode();
+      if (DestinationLayerName.Length != 0) hash ^= DestinationLayerName.GetHashCode();
+      if (EdgeType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeType.UnknownGraphEdgeType) hash ^= EdgeType.GetHashCode();
+      if (Confidence != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(Confidence);
+      if (ExistsInCloud != false) hash ^= ExistsInCloud.GetHashCode();
+      if (UploadPermitted != false) hash ^= UploadPermitted.GetHashCode();
+      if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
+      hash ^= sourceToDestinationPose_.GetHashCode();
+      if (CreationTimestampMs != 0UL) hash ^= CreationTimestampMs.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (EventType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType.UnknownGraphEdgeEventType) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) EventType);
+      }
+      if (EdgeIdentifier.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(EdgeIdentifier);
+      }
+      if (SourceNodeIdentifier.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteBytes(SourceNodeIdentifier);
+      }
+      if (DestinationNodeIdentifier.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteBytes(DestinationNodeIdentifier);
+      }
+      if (SourceLayerName.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(SourceLayerName);
+      }
+      if (DestinationLayerName.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(DestinationLayerName);
+      }
+      if (EdgeType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeType.UnknownGraphEdgeType) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) EdgeType);
+      }
+      if (Confidence != 0F) {
+        output.WriteRawTag(69);
+        output.WriteFloat(Confidence);
+      }
+      if (ExistsInCloud != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(ExistsInCloud);
+      }
+      if (UploadPermitted != false) {
+        output.WriteRawTag(80);
+        output.WriteBool(UploadPermitted);
+      }
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(88);
+        output.WriteUInt64(TimestampMs);
+      }
+      sourceToDestinationPose_.WriteTo(output, _repeated_sourceToDestinationPose_codec);
+      if (CreationTimestampMs != 0UL) {
+        output.WriteRawTag(104);
+        output.WriteUInt64(CreationTimestampMs);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (EventType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType.UnknownGraphEdgeEventType) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) EventType);
+      }
+      if (EdgeIdentifier.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(EdgeIdentifier);
+      }
+      if (SourceNodeIdentifier.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteBytes(SourceNodeIdentifier);
+      }
+      if (DestinationNodeIdentifier.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteBytes(DestinationNodeIdentifier);
+      }
+      if (SourceLayerName.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(SourceLayerName);
+      }
+      if (DestinationLayerName.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(DestinationLayerName);
+      }
+      if (EdgeType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeType.UnknownGraphEdgeType) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) EdgeType);
+      }
+      if (Confidence != 0F) {
+        output.WriteRawTag(69);
+        output.WriteFloat(Confidence);
+      }
+      if (ExistsInCloud != false) {
+        output.WriteRawTag(72);
+        output.WriteBool(ExistsInCloud);
+      }
+      if (UploadPermitted != false) {
+        output.WriteRawTag(80);
+        output.WriteBool(UploadPermitted);
+      }
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(88);
+        output.WriteUInt64(TimestampMs);
+      }
+      sourceToDestinationPose_.WriteTo(ref output, _repeated_sourceToDestinationPose_codec);
+      if (CreationTimestampMs != 0UL) {
+        output.WriteRawTag(104);
+        output.WriteUInt64(CreationTimestampMs);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (EventType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType.UnknownGraphEdgeEventType) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EventType);
+      }
+      if (EdgeIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(EdgeIdentifier);
+      }
+      if (SourceNodeIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(SourceNodeIdentifier);
+      }
+      if (DestinationNodeIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(DestinationNodeIdentifier);
+      }
+      if (SourceLayerName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SourceLayerName);
+      }
+      if (DestinationLayerName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DestinationLayerName);
+      }
+      if (EdgeType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeType.UnknownGraphEdgeType) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EdgeType);
+      }
+      if (Confidence != 0F) {
+        size += 1 + 4;
+      }
+      if (ExistsInCloud != false) {
+        size += 1 + 1;
+      }
+      if (UploadPermitted != false) {
+        size += 1 + 1;
+      }
+      if (TimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
+      }
+      size += sourceToDestinationPose_.CalculateSize(_repeated_sourceToDestinationPose_codec);
+      if (CreationTimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(CreationTimestampMs);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(GraphEdgeUpdate other) {
+      if (other == null) {
+        return;
+      }
+      if (other.EventType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType.UnknownGraphEdgeEventType) {
+        EventType = other.EventType;
+      }
+      if (other.EdgeIdentifier.Length != 0) {
+        EdgeIdentifier = other.EdgeIdentifier;
+      }
+      if (other.SourceNodeIdentifier.Length != 0) {
+        SourceNodeIdentifier = other.SourceNodeIdentifier;
+      }
+      if (other.DestinationNodeIdentifier.Length != 0) {
+        DestinationNodeIdentifier = other.DestinationNodeIdentifier;
+      }
+      if (other.SourceLayerName.Length != 0) {
+        SourceLayerName = other.SourceLayerName;
+      }
+      if (other.DestinationLayerName.Length != 0) {
+        DestinationLayerName = other.DestinationLayerName;
+      }
+      if (other.EdgeType != global::Niantic.Lightship.AR.Protobuf.GraphEdgeType.UnknownGraphEdgeType) {
+        EdgeType = other.EdgeType;
+      }
+      if (other.Confidence != 0F) {
+        Confidence = other.Confidence;
+      }
+      if (other.ExistsInCloud != false) {
+        ExistsInCloud = other.ExistsInCloud;
+      }
+      if (other.UploadPermitted != false) {
+        UploadPermitted = other.UploadPermitted;
+      }
+      if (other.TimestampMs != 0UL) {
+        TimestampMs = other.TimestampMs;
+      }
+      sourceToDestinationPose_.Add(other.sourceToDestinationPose_);
+      if (other.CreationTimestampMs != 0UL) {
+        CreationTimestampMs = other.CreationTimestampMs;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            EventType = (global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            EdgeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 26: {
+            SourceNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 34: {
+            DestinationNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 42: {
+            SourceLayerName = input.ReadString();
+            break;
+          }
+          case 50: {
+            DestinationLayerName = input.ReadString();
+            break;
+          }
+          case 56: {
+            EdgeType = (global::Niantic.Lightship.AR.Protobuf.GraphEdgeType) input.ReadEnum();
+            break;
+          }
+          case 69: {
+            Confidence = input.ReadFloat();
+            break;
+          }
+          case 72: {
+            ExistsInCloud = input.ReadBool();
+            break;
+          }
+          case 80: {
+            UploadPermitted = input.ReadBool();
+            break;
+          }
+          case 88: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 98:
+          case 101: {
+            sourceToDestinationPose_.AddEntriesFrom(input, _repeated_sourceToDestinationPose_codec);
+            break;
+          }
+          case 104: {
+            CreationTimestampMs = input.ReadUInt64();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            EventType = (global::Niantic.Lightship.AR.Protobuf.GraphEdgeEventType) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            EdgeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 26: {
+            SourceNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 34: {
+            DestinationNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 42: {
+            SourceLayerName = input.ReadString();
+            break;
+          }
+          case 50: {
+            DestinationLayerName = input.ReadString();
+            break;
+          }
+          case 56: {
+            EdgeType = (global::Niantic.Lightship.AR.Protobuf.GraphEdgeType) input.ReadEnum();
+            break;
+          }
+          case 69: {
+            Confidence = input.ReadFloat();
+            break;
+          }
+          case 72: {
+            ExistsInCloud = input.ReadBool();
+            break;
+          }
+          case 80: {
+            UploadPermitted = input.ReadBool();
+            break;
+          }
+          case 88: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 98:
+          case 101: {
+            sourceToDestinationPose_.AddEntriesFrom(ref input, _repeated_sourceToDestinationPose_codec);
+            break;
+          }
+          case 104: {
+            CreationTimestampMs = input.ReadUInt64();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class FusionHypothesis : pb::IMessage<FusionHypothesis>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<FusionHypothesis> _parser = new pb::MessageParser<FusionHypothesis>(() => new FusionHypothesis());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<FusionHypothesis> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[18]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypothesis() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypothesis(FusionHypothesis other) : this() {
+      sourceClusterIdentifier_ = other.sourceClusterIdentifier_;
+      destinationClusterIdentifier_ = other.destinationClusterIdentifier_;
+      edgeIdentifiers_ = other.edgeIdentifiers_.Clone();
+      confidence_ = other.confidence_;
+      weight_ = other.weight_;
+      selected_ = other.selected_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypothesis Clone() {
+      return new FusionHypothesis(this);
+    }
+
+    /// <summary>Field number for the "source_cluster_identifier" field.</summary>
+    public const int SourceClusterIdentifierFieldNumber = 1;
+    private pb::ByteString sourceClusterIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString SourceClusterIdentifier {
+      get { return sourceClusterIdentifier_; }
+      set {
+        sourceClusterIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "destination_cluster_identifier" field.</summary>
+    public const int DestinationClusterIdentifierFieldNumber = 2;
+    private pb::ByteString destinationClusterIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString DestinationClusterIdentifier {
+      get { return destinationClusterIdentifier_; }
+      set {
+        destinationClusterIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "edge_identifiers" field.</summary>
+    public const int EdgeIdentifiersFieldNumber = 3;
+    private static readonly pb::FieldCodec<pb::ByteString> _repeated_edgeIdentifiers_codec
+        = pb::FieldCodec.ForBytes(26);
+    private readonly pbc::RepeatedField<pb::ByteString> edgeIdentifiers_ = new pbc::RepeatedField<pb::ByteString>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<pb::ByteString> EdgeIdentifiers {
+      get { return edgeIdentifiers_; }
+    }
+
+    /// <summary>Field number for the "confidence" field.</summary>
+    public const int ConfidenceFieldNumber = 4;
+    private double confidence_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Confidence {
+      get { return confidence_; }
+      set {
+        confidence_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "weight" field.</summary>
+    public const int WeightFieldNumber = 5;
+    private double weight_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Weight {
+      get { return weight_; }
+      set {
+        weight_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "selected" field.</summary>
+    public const int SelectedFieldNumber = 6;
+    private bool selected_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Selected {
+      get { return selected_; }
+      set {
+        selected_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as FusionHypothesis);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(FusionHypothesis other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (SourceClusterIdentifier != other.SourceClusterIdentifier) return false;
+      if (DestinationClusterIdentifier != other.DestinationClusterIdentifier) return false;
+      if(!edgeIdentifiers_.Equals(other.edgeIdentifiers_)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Confidence, other.Confidence)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Weight, other.Weight)) return false;
+      if (Selected != other.Selected) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (SourceClusterIdentifier.Length != 0) hash ^= SourceClusterIdentifier.GetHashCode();
+      if (DestinationClusterIdentifier.Length != 0) hash ^= DestinationClusterIdentifier.GetHashCode();
+      hash ^= edgeIdentifiers_.GetHashCode();
+      if (Confidence != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Confidence);
+      if (Weight != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Weight);
+      if (Selected != false) hash ^= Selected.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (SourceClusterIdentifier.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteBytes(SourceClusterIdentifier);
+      }
+      if (DestinationClusterIdentifier.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(DestinationClusterIdentifier);
+      }
+      edgeIdentifiers_.WriteTo(output, _repeated_edgeIdentifiers_codec);
+      if (Confidence != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(Confidence);
+      }
+      if (Weight != 0D) {
+        output.WriteRawTag(41);
+        output.WriteDouble(Weight);
+      }
+      if (Selected != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(Selected);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (SourceClusterIdentifier.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteBytes(SourceClusterIdentifier);
+      }
+      if (DestinationClusterIdentifier.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(DestinationClusterIdentifier);
+      }
+      edgeIdentifiers_.WriteTo(ref output, _repeated_edgeIdentifiers_codec);
+      if (Confidence != 0D) {
+        output.WriteRawTag(33);
+        output.WriteDouble(Confidence);
+      }
+      if (Weight != 0D) {
+        output.WriteRawTag(41);
+        output.WriteDouble(Weight);
+      }
+      if (Selected != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(Selected);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (SourceClusterIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(SourceClusterIdentifier);
+      }
+      if (DestinationClusterIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(DestinationClusterIdentifier);
+      }
+      size += edgeIdentifiers_.CalculateSize(_repeated_edgeIdentifiers_codec);
+      if (Confidence != 0D) {
+        size += 1 + 8;
+      }
+      if (Weight != 0D) {
+        size += 1 + 8;
+      }
+      if (Selected != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(FusionHypothesis other) {
+      if (other == null) {
+        return;
+      }
+      if (other.SourceClusterIdentifier.Length != 0) {
+        SourceClusterIdentifier = other.SourceClusterIdentifier;
+      }
+      if (other.DestinationClusterIdentifier.Length != 0) {
+        DestinationClusterIdentifier = other.DestinationClusterIdentifier;
+      }
+      edgeIdentifiers_.Add(other.edgeIdentifiers_);
+      if (other.Confidence != 0D) {
+        Confidence = other.Confidence;
+      }
+      if (other.Weight != 0D) {
+        Weight = other.Weight;
+      }
+      if (other.Selected != false) {
+        Selected = other.Selected;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            SourceClusterIdentifier = input.ReadBytes();
+            break;
+          }
+          case 18: {
+            DestinationClusterIdentifier = input.ReadBytes();
+            break;
+          }
+          case 26: {
+            edgeIdentifiers_.AddEntriesFrom(input, _repeated_edgeIdentifiers_codec);
+            break;
+          }
+          case 33: {
+            Confidence = input.ReadDouble();
+            break;
+          }
+          case 41: {
+            Weight = input.ReadDouble();
+            break;
+          }
+          case 48: {
+            Selected = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            SourceClusterIdentifier = input.ReadBytes();
+            break;
+          }
+          case 18: {
+            DestinationClusterIdentifier = input.ReadBytes();
+            break;
+          }
+          case 26: {
+            edgeIdentifiers_.AddEntriesFrom(ref input, _repeated_edgeIdentifiers_codec);
+            break;
+          }
+          case 33: {
+            Confidence = input.ReadDouble();
+            break;
+          }
+          case 41: {
+            Weight = input.ReadDouble();
+            break;
+          }
+          case 48: {
+            Selected = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class FusionHypotheses : pb::IMessage<FusionHypotheses>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<FusionHypotheses> _parser = new pb::MessageParser<FusionHypotheses>(() => new FusionHypotheses());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<FusionHypotheses> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[19]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypotheses() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypotheses(FusionHypotheses other) : this() {
+      timestampMs_ = other.timestampMs_;
+      hypotheses_ = other.hypotheses_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypotheses Clone() {
+      return new FusionHypotheses(this);
+    }
+
+    /// <summary>Field number for the "timestamp_ms" field.</summary>
+    public const int TimestampMsFieldNumber = 1;
+    private ulong timestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TimestampMs {
+      get { return timestampMs_; }
+      set {
+        timestampMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "hypotheses" field.</summary>
+    public const int HypothesesFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Niantic.Lightship.AR.Protobuf.FusionHypothesis> _repeated_hypotheses_codec
+        = pb::FieldCodec.ForMessage(18, global::Niantic.Lightship.AR.Protobuf.FusionHypothesis.Parser);
+    private readonly pbc::RepeatedField<global::Niantic.Lightship.AR.Protobuf.FusionHypothesis> hypotheses_ = new pbc::RepeatedField<global::Niantic.Lightship.AR.Protobuf.FusionHypothesis>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::Niantic.Lightship.AR.Protobuf.FusionHypothesis> Hypotheses {
+      get { return hypotheses_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as FusionHypotheses);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(FusionHypotheses other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TimestampMs != other.TimestampMs) return false;
+      if(!hypotheses_.Equals(other.hypotheses_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
+      hash ^= hypotheses_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(TimestampMs);
+      }
+      hypotheses_.WriteTo(output, _repeated_hypotheses_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(TimestampMs);
+      }
+      hypotheses_.WriteTo(ref output, _repeated_hypotheses_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (TimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
+      }
+      size += hypotheses_.CalculateSize(_repeated_hypotheses_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(FusionHypotheses other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TimestampMs != 0UL) {
+        TimestampMs = other.TimestampMs;
+      }
+      hypotheses_.Add(other.hypotheses_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 18: {
+            hypotheses_.AddEntriesFrom(input, _repeated_hypotheses_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 18: {
+            hypotheses_.AddEntriesFrom(ref input, _repeated_hypotheses_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class FusionHypothesisSelected : pb::IMessage<FusionHypothesisSelected>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<FusionHypothesisSelected> _parser = new pb::MessageParser<FusionHypothesisSelected>(() => new FusionHypothesisSelected());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<FusionHypothesisSelected> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[20]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypothesisSelected() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypothesisSelected(FusionHypothesisSelected other) : this() {
+      timestampMs_ = other.timestampMs_;
+      destinationClusterIdentifier_ = other.destinationClusterIdentifier_;
+      sourceClusterIdentifier_ = other.sourceClusterIdentifier_;
+      previousEdgeIdentifiers_ = other.previousEdgeIdentifiers_.Clone();
+      edgeIdentifiers_ = other.edgeIdentifiers_.Clone();
+      previousConfidence_ = other.previousConfidence_;
+      confidence_ = other.confidence_;
+      previousStillPresent_ = other.previousStillPresent_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public FusionHypothesisSelected Clone() {
+      return new FusionHypothesisSelected(this);
+    }
+
+    /// <summary>Field number for the "timestamp_ms" field.</summary>
+    public const int TimestampMsFieldNumber = 1;
+    private ulong timestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TimestampMs {
+      get { return timestampMs_; }
+      set {
+        timestampMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "destination_cluster_identifier" field.</summary>
+    public const int DestinationClusterIdentifierFieldNumber = 2;
+    private pb::ByteString destinationClusterIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString DestinationClusterIdentifier {
+      get { return destinationClusterIdentifier_; }
+      set {
+        destinationClusterIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "source_cluster_identifier" field.</summary>
+    public const int SourceClusterIdentifierFieldNumber = 8;
+    private pb::ByteString sourceClusterIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString SourceClusterIdentifier {
+      get { return sourceClusterIdentifier_; }
+      set {
+        sourceClusterIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "previous_edge_identifiers" field.</summary>
+    public const int PreviousEdgeIdentifiersFieldNumber = 3;
+    private static readonly pb::FieldCodec<pb::ByteString> _repeated_previousEdgeIdentifiers_codec
+        = pb::FieldCodec.ForBytes(26);
+    private readonly pbc::RepeatedField<pb::ByteString> previousEdgeIdentifiers_ = new pbc::RepeatedField<pb::ByteString>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<pb::ByteString> PreviousEdgeIdentifiers {
+      get { return previousEdgeIdentifiers_; }
+    }
+
+    /// <summary>Field number for the "edge_identifiers" field.</summary>
+    public const int EdgeIdentifiersFieldNumber = 4;
+    private static readonly pb::FieldCodec<pb::ByteString> _repeated_edgeIdentifiers_codec
+        = pb::FieldCodec.ForBytes(34);
+    private readonly pbc::RepeatedField<pb::ByteString> edgeIdentifiers_ = new pbc::RepeatedField<pb::ByteString>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<pb::ByteString> EdgeIdentifiers {
+      get { return edgeIdentifiers_; }
+    }
+
+    /// <summary>Field number for the "previous_confidence" field.</summary>
+    public const int PreviousConfidenceFieldNumber = 5;
+    private double previousConfidence_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double PreviousConfidence {
+      get { return previousConfidence_; }
+      set {
+        previousConfidence_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "confidence" field.</summary>
+    public const int ConfidenceFieldNumber = 6;
+    private double confidence_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Confidence {
+      get { return confidence_; }
+      set {
+        confidence_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "previous_still_present" field.</summary>
+    public const int PreviousStillPresentFieldNumber = 7;
+    private bool previousStillPresent_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool PreviousStillPresent {
+      get { return previousStillPresent_; }
+      set {
+        previousStillPresent_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as FusionHypothesisSelected);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(FusionHypothesisSelected other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TimestampMs != other.TimestampMs) return false;
+      if (DestinationClusterIdentifier != other.DestinationClusterIdentifier) return false;
+      if (SourceClusterIdentifier != other.SourceClusterIdentifier) return false;
+      if(!previousEdgeIdentifiers_.Equals(other.previousEdgeIdentifiers_)) return false;
+      if(!edgeIdentifiers_.Equals(other.edgeIdentifiers_)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(PreviousConfidence, other.PreviousConfidence)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Confidence, other.Confidence)) return false;
+      if (PreviousStillPresent != other.PreviousStillPresent) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
+      if (DestinationClusterIdentifier.Length != 0) hash ^= DestinationClusterIdentifier.GetHashCode();
+      if (SourceClusterIdentifier.Length != 0) hash ^= SourceClusterIdentifier.GetHashCode();
+      hash ^= previousEdgeIdentifiers_.GetHashCode();
+      hash ^= edgeIdentifiers_.GetHashCode();
+      if (PreviousConfidence != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(PreviousConfidence);
+      if (Confidence != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Confidence);
+      if (PreviousStillPresent != false) hash ^= PreviousStillPresent.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (DestinationClusterIdentifier.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(DestinationClusterIdentifier);
+      }
+      previousEdgeIdentifiers_.WriteTo(output, _repeated_previousEdgeIdentifiers_codec);
+      edgeIdentifiers_.WriteTo(output, _repeated_edgeIdentifiers_codec);
+      if (PreviousConfidence != 0D) {
+        output.WriteRawTag(41);
+        output.WriteDouble(PreviousConfidence);
+      }
+      if (Confidence != 0D) {
+        output.WriteRawTag(49);
+        output.WriteDouble(Confidence);
+      }
+      if (PreviousStillPresent != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(PreviousStillPresent);
+      }
+      if (SourceClusterIdentifier.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteBytes(SourceClusterIdentifier);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (DestinationClusterIdentifier.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteBytes(DestinationClusterIdentifier);
+      }
+      previousEdgeIdentifiers_.WriteTo(ref output, _repeated_previousEdgeIdentifiers_codec);
+      edgeIdentifiers_.WriteTo(ref output, _repeated_edgeIdentifiers_codec);
+      if (PreviousConfidence != 0D) {
+        output.WriteRawTag(41);
+        output.WriteDouble(PreviousConfidence);
+      }
+      if (Confidence != 0D) {
+        output.WriteRawTag(49);
+        output.WriteDouble(Confidence);
+      }
+      if (PreviousStillPresent != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(PreviousStillPresent);
+      }
+      if (SourceClusterIdentifier.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteBytes(SourceClusterIdentifier);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (TimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
+      }
+      if (DestinationClusterIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(DestinationClusterIdentifier);
+      }
+      if (SourceClusterIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(SourceClusterIdentifier);
+      }
+      size += previousEdgeIdentifiers_.CalculateSize(_repeated_previousEdgeIdentifiers_codec);
+      size += edgeIdentifiers_.CalculateSize(_repeated_edgeIdentifiers_codec);
+      if (PreviousConfidence != 0D) {
+        size += 1 + 8;
+      }
+      if (Confidence != 0D) {
+        size += 1 + 8;
+      }
+      if (PreviousStillPresent != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(FusionHypothesisSelected other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TimestampMs != 0UL) {
+        TimestampMs = other.TimestampMs;
+      }
+      if (other.DestinationClusterIdentifier.Length != 0) {
+        DestinationClusterIdentifier = other.DestinationClusterIdentifier;
+      }
+      if (other.SourceClusterIdentifier.Length != 0) {
+        SourceClusterIdentifier = other.SourceClusterIdentifier;
+      }
+      previousEdgeIdentifiers_.Add(other.previousEdgeIdentifiers_);
+      edgeIdentifiers_.Add(other.edgeIdentifiers_);
+      if (other.PreviousConfidence != 0D) {
+        PreviousConfidence = other.PreviousConfidence;
+      }
+      if (other.Confidence != 0D) {
+        Confidence = other.Confidence;
+      }
+      if (other.PreviousStillPresent != false) {
+        PreviousStillPresent = other.PreviousStillPresent;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 18: {
+            DestinationClusterIdentifier = input.ReadBytes();
+            break;
+          }
+          case 26: {
+            previousEdgeIdentifiers_.AddEntriesFrom(input, _repeated_previousEdgeIdentifiers_codec);
+            break;
+          }
+          case 34: {
+            edgeIdentifiers_.AddEntriesFrom(input, _repeated_edgeIdentifiers_codec);
+            break;
+          }
+          case 41: {
+            PreviousConfidence = input.ReadDouble();
+            break;
+          }
+          case 49: {
+            Confidence = input.ReadDouble();
+            break;
+          }
+          case 56: {
+            PreviousStillPresent = input.ReadBool();
+            break;
+          }
+          case 66: {
+            SourceClusterIdentifier = input.ReadBytes();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 18: {
+            DestinationClusterIdentifier = input.ReadBytes();
+            break;
+          }
+          case 26: {
+            previousEdgeIdentifiers_.AddEntriesFrom(ref input, _repeated_previousEdgeIdentifiers_codec);
+            break;
+          }
+          case 34: {
+            edgeIdentifiers_.AddEntriesFrom(ref input, _repeated_edgeIdentifiers_codec);
+            break;
+          }
+          case 41: {
+            PreviousConfidence = input.ReadDouble();
+            break;
+          }
+          case 49: {
+            Confidence = input.ReadDouble();
+            break;
+          }
+          case 56: {
+            PreviousStillPresent = input.ReadBool();
+            break;
+          }
+          case 66: {
+            SourceClusterIdentifier = input.ReadBytes();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class GeolocationTransition : pb::IMessage<GeolocationTransition>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<GeolocationTransition> _parser = new pb::MessageParser<GeolocationTransition>(() => new GeolocationTransition());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<GeolocationTransition> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[21]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GeolocationTransition() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GeolocationTransition(GeolocationTransition other) : this() {
+      timestampMs_ = other.timestampMs_;
+      previousSource_ = other.previousSource_;
+      source_ = other.source_;
+      reason_ = other.reason_;
+      bestMapNodeIdentifier_ = other.bestMapNodeIdentifier_;
+      bestConfidence_ = other.bestConfidence_;
+      minConfidence_ = other.minConfidence_;
+      georeferencedMapNodes_ = other.georeferencedMapNodes_;
+      connectedMapNodes_ = other.connectedMapNodes_;
+      trackingNodeIdentifier_ = other.trackingNodeIdentifier_;
+      trackingNodeChanged_ = other.trackingNodeChanged_;
+      vpsGeoreferenceHeld_ = other.vpsGeoreferenceHeld_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public GeolocationTransition Clone() {
+      return new GeolocationTransition(this);
+    }
+
+    /// <summary>Field number for the "timestamp_ms" field.</summary>
+    public const int TimestampMsFieldNumber = 1;
+    private ulong timestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TimestampMs {
+      get { return timestampMs_; }
+      set {
+        timestampMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "previous_source" field.</summary>
+    public const int PreviousSourceFieldNumber = 2;
+    private global::Niantic.Lightship.AR.Protobuf.GeolocationSource previousSource_ = global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.GeolocationSource PreviousSource {
+      get { return previousSource_; }
+      set {
+        previousSource_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "source" field.</summary>
+    public const int SourceFieldNumber = 3;
+    private global::Niantic.Lightship.AR.Protobuf.GeolocationSource source_ = global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.GeolocationSource Source {
+      get { return source_; }
+      set {
+        source_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "reason" field.</summary>
+    public const int ReasonFieldNumber = 4;
+    private global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason reason_ = global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason.VpsGeoreferenceAvailable;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason Reason {
+      get { return reason_; }
+      set {
+        reason_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "best_map_node_identifier" field.</summary>
+    public const int BestMapNodeIdentifierFieldNumber = 5;
+    private pb::ByteString bestMapNodeIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString BestMapNodeIdentifier {
+      get { return bestMapNodeIdentifier_; }
+      set {
+        bestMapNodeIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "best_confidence" field.</summary>
+    public const int BestConfidenceFieldNumber = 6;
+    private float bestConfidence_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float BestConfidence {
+      get { return bestConfidence_; }
+      set {
+        bestConfidence_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "min_confidence" field.</summary>
+    public const int MinConfidenceFieldNumber = 7;
+    private float minConfidence_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public float MinConfidence {
+      get { return minConfidence_; }
+      set {
+        minConfidence_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "georeferenced_map_nodes" field.</summary>
+    public const int GeoreferencedMapNodesFieldNumber = 8;
+    private uint georeferencedMapNodes_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint GeoreferencedMapNodes {
+      get { return georeferencedMapNodes_; }
+      set {
+        georeferencedMapNodes_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "connected_map_nodes" field.</summary>
+    public const int ConnectedMapNodesFieldNumber = 9;
+    private uint connectedMapNodes_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint ConnectedMapNodes {
+      get { return connectedMapNodes_; }
+      set {
+        connectedMapNodes_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "tracking_node_identifier" field.</summary>
+    public const int TrackingNodeIdentifierFieldNumber = 10;
+    private pb::ByteString trackingNodeIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString TrackingNodeIdentifier {
+      get { return trackingNodeIdentifier_; }
+      set {
+        trackingNodeIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "tracking_node_changed" field.</summary>
+    public const int TrackingNodeChangedFieldNumber = 11;
+    private bool trackingNodeChanged_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool TrackingNodeChanged {
+      get { return trackingNodeChanged_; }
+      set {
+        trackingNodeChanged_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "vps_georeference_held" field.</summary>
+    public const int VpsGeoreferenceHeldFieldNumber = 12;
+    private bool vpsGeoreferenceHeld_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool VpsGeoreferenceHeld {
+      get { return vpsGeoreferenceHeld_; }
+      set {
+        vpsGeoreferenceHeld_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as GeolocationTransition);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(GeolocationTransition other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TimestampMs != other.TimestampMs) return false;
+      if (PreviousSource != other.PreviousSource) return false;
+      if (Source != other.Source) return false;
+      if (Reason != other.Reason) return false;
+      if (BestMapNodeIdentifier != other.BestMapNodeIdentifier) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(BestConfidence, other.BestConfidence)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.Equals(MinConfidence, other.MinConfidence)) return false;
+      if (GeoreferencedMapNodes != other.GeoreferencedMapNodes) return false;
+      if (ConnectedMapNodes != other.ConnectedMapNodes) return false;
+      if (TrackingNodeIdentifier != other.TrackingNodeIdentifier) return false;
+      if (TrackingNodeChanged != other.TrackingNodeChanged) return false;
+      if (VpsGeoreferenceHeld != other.VpsGeoreferenceHeld) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
+      if (PreviousSource != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) hash ^= PreviousSource.GetHashCode();
+      if (Source != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) hash ^= Source.GetHashCode();
+      if (Reason != global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason.VpsGeoreferenceAvailable) hash ^= Reason.GetHashCode();
+      if (BestMapNodeIdentifier.Length != 0) hash ^= BestMapNodeIdentifier.GetHashCode();
+      if (BestConfidence != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(BestConfidence);
+      if (MinConfidence != 0F) hash ^= pbc::ProtobufEqualityComparers.BitwiseSingleEqualityComparer.GetHashCode(MinConfidence);
+      if (GeoreferencedMapNodes != 0) hash ^= GeoreferencedMapNodes.GetHashCode();
+      if (ConnectedMapNodes != 0) hash ^= ConnectedMapNodes.GetHashCode();
+      if (TrackingNodeIdentifier.Length != 0) hash ^= TrackingNodeIdentifier.GetHashCode();
+      if (TrackingNodeChanged != false) hash ^= TrackingNodeChanged.GetHashCode();
+      if (VpsGeoreferenceHeld != false) hash ^= VpsGeoreferenceHeld.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (PreviousSource != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) PreviousSource);
+      }
+      if (Source != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Source);
+      }
+      if (Reason != global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason.VpsGeoreferenceAvailable) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) Reason);
+      }
+      if (BestMapNodeIdentifier.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteBytes(BestMapNodeIdentifier);
+      }
+      if (BestConfidence != 0F) {
+        output.WriteRawTag(53);
+        output.WriteFloat(BestConfidence);
+      }
+      if (MinConfidence != 0F) {
+        output.WriteRawTag(61);
+        output.WriteFloat(MinConfidence);
+      }
+      if (GeoreferencedMapNodes != 0) {
+        output.WriteRawTag(64);
+        output.WriteUInt32(GeoreferencedMapNodes);
+      }
+      if (ConnectedMapNodes != 0) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(ConnectedMapNodes);
+      }
+      if (TrackingNodeIdentifier.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteBytes(TrackingNodeIdentifier);
+      }
+      if (TrackingNodeChanged != false) {
+        output.WriteRawTag(88);
+        output.WriteBool(TrackingNodeChanged);
+      }
+      if (VpsGeoreferenceHeld != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(VpsGeoreferenceHeld);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (PreviousSource != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) PreviousSource);
+      }
+      if (Source != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) {
+        output.WriteRawTag(24);
+        output.WriteEnum((int) Source);
+      }
+      if (Reason != global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason.VpsGeoreferenceAvailable) {
+        output.WriteRawTag(32);
+        output.WriteEnum((int) Reason);
+      }
+      if (BestMapNodeIdentifier.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteBytes(BestMapNodeIdentifier);
+      }
+      if (BestConfidence != 0F) {
+        output.WriteRawTag(53);
+        output.WriteFloat(BestConfidence);
+      }
+      if (MinConfidence != 0F) {
+        output.WriteRawTag(61);
+        output.WriteFloat(MinConfidence);
+      }
+      if (GeoreferencedMapNodes != 0) {
+        output.WriteRawTag(64);
+        output.WriteUInt32(GeoreferencedMapNodes);
+      }
+      if (ConnectedMapNodes != 0) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(ConnectedMapNodes);
+      }
+      if (TrackingNodeIdentifier.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteBytes(TrackingNodeIdentifier);
+      }
+      if (TrackingNodeChanged != false) {
+        output.WriteRawTag(88);
+        output.WriteBool(TrackingNodeChanged);
+      }
+      if (VpsGeoreferenceHeld != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(VpsGeoreferenceHeld);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (TimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
+      }
+      if (PreviousSource != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) PreviousSource);
+      }
+      if (Source != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Source);
+      }
+      if (Reason != global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason.VpsGeoreferenceAvailable) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Reason);
+      }
+      if (BestMapNodeIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(BestMapNodeIdentifier);
+      }
+      if (BestConfidence != 0F) {
+        size += 1 + 4;
+      }
+      if (MinConfidence != 0F) {
+        size += 1 + 4;
+      }
+      if (GeoreferencedMapNodes != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(GeoreferencedMapNodes);
+      }
+      if (ConnectedMapNodes != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ConnectedMapNodes);
+      }
+      if (TrackingNodeIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(TrackingNodeIdentifier);
+      }
+      if (TrackingNodeChanged != false) {
+        size += 1 + 1;
+      }
+      if (VpsGeoreferenceHeld != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(GeolocationTransition other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TimestampMs != 0UL) {
+        TimestampMs = other.TimestampMs;
+      }
+      if (other.PreviousSource != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) {
+        PreviousSource = other.PreviousSource;
+      }
+      if (other.Source != global::Niantic.Lightship.AR.Protobuf.GeolocationSource.None) {
+        Source = other.Source;
+      }
+      if (other.Reason != global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason.VpsGeoreferenceAvailable) {
+        Reason = other.Reason;
+      }
+      if (other.BestMapNodeIdentifier.Length != 0) {
+        BestMapNodeIdentifier = other.BestMapNodeIdentifier;
+      }
+      if (other.BestConfidence != 0F) {
+        BestConfidence = other.BestConfidence;
+      }
+      if (other.MinConfidence != 0F) {
+        MinConfidence = other.MinConfidence;
+      }
+      if (other.GeoreferencedMapNodes != 0) {
+        GeoreferencedMapNodes = other.GeoreferencedMapNodes;
+      }
+      if (other.ConnectedMapNodes != 0) {
+        ConnectedMapNodes = other.ConnectedMapNodes;
+      }
+      if (other.TrackingNodeIdentifier.Length != 0) {
+        TrackingNodeIdentifier = other.TrackingNodeIdentifier;
+      }
+      if (other.TrackingNodeChanged != false) {
+        TrackingNodeChanged = other.TrackingNodeChanged;
+      }
+      if (other.VpsGeoreferenceHeld != false) {
+        VpsGeoreferenceHeld = other.VpsGeoreferenceHeld;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            PreviousSource = (global::Niantic.Lightship.AR.Protobuf.GeolocationSource) input.ReadEnum();
+            break;
+          }
+          case 24: {
+            Source = (global::Niantic.Lightship.AR.Protobuf.GeolocationSource) input.ReadEnum();
+            break;
+          }
+          case 32: {
+            Reason = (global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason) input.ReadEnum();
+            break;
+          }
+          case 42: {
+            BestMapNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 53: {
+            BestConfidence = input.ReadFloat();
+            break;
+          }
+          case 61: {
+            MinConfidence = input.ReadFloat();
+            break;
+          }
+          case 64: {
+            GeoreferencedMapNodes = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            ConnectedMapNodes = input.ReadUInt32();
+            break;
+          }
+          case 82: {
+            TrackingNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 88: {
+            TrackingNodeChanged = input.ReadBool();
+            break;
+          }
+          case 96: {
+            VpsGeoreferenceHeld = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            PreviousSource = (global::Niantic.Lightship.AR.Protobuf.GeolocationSource) input.ReadEnum();
+            break;
+          }
+          case 24: {
+            Source = (global::Niantic.Lightship.AR.Protobuf.GeolocationSource) input.ReadEnum();
+            break;
+          }
+          case 32: {
+            Reason = (global::Niantic.Lightship.AR.Protobuf.VpsGeoreferenceUnavailableReason) input.ReadEnum();
+            break;
+          }
+          case 42: {
+            BestMapNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 53: {
+            BestConfidence = input.ReadFloat();
+            break;
+          }
+          case 61: {
+            MinConfidence = input.ReadFloat();
+            break;
+          }
+          case 64: {
+            GeoreferencedMapNodes = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            ConnectedMapNodes = input.ReadUInt32();
+            break;
+          }
+          case 82: {
+            TrackingNodeIdentifier = input.ReadBytes();
+            break;
+          }
+          case 88: {
+            TrackingNodeChanged = input.ReadBool();
+            break;
+          }
+          case 96: {
+            VpsGeoreferenceHeld = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class TargetRequested : pb::IMessage<TargetRequested>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<TargetRequested> _parser = new pb::MessageParser<TargetRequested>(() => new TargetRequested());
+    private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<TargetRequested> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[22]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TargetRequested() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TargetRequested(TargetRequested other) : this() {
+      _hasBits0 = other._hasBits0;
+      timestampMs_ = other.timestampMs_;
+      type_ = other.type_;
+      anchorIdentifier_ = other.anchorIdentifier_;
+      anchorPayload_ = other.anchorPayload_;
+      siteId_ = other.siteId_;
+      assetIdFilter_ = other.assetIdFilter_.Clone();
+      latitude_ = other.latitude_;
+      longitude_ = other.longitude_;
+      radiusMeters_ = other.radiusMeters_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TargetRequested Clone() {
+      return new TargetRequested(this);
+    }
+
+    /// <summary>Field number for the "timestamp_ms" field.</summary>
+    public const int TimestampMsFieldNumber = 1;
+    private ulong timestampMs_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ulong TimestampMs {
+      get { return timestampMs_; }
+      set {
+        timestampMs_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "type" field.</summary>
+    public const int TypeFieldNumber = 2;
+    private global::Niantic.Lightship.AR.Protobuf.TargetRequestType type_ = global::Niantic.Lightship.AR.Protobuf.TargetRequestType.UnknownTargetRequestType;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.TargetRequestType Type {
+      get { return type_; }
+      set {
+        type_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "anchor_identifier" field.</summary>
+    public const int AnchorIdentifierFieldNumber = 3;
+    private pb::ByteString anchorIdentifier_ = pb::ByteString.Empty;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pb::ByteString AnchorIdentifier {
+      get { return anchorIdentifier_; }
+      set {
+        anchorIdentifier_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "anchor_payload" field.</summary>
+    public const int AnchorPayloadFieldNumber = 4;
+    private string anchorPayload_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string AnchorPayload {
+      get { return anchorPayload_; }
+      set {
+        anchorPayload_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "site_id" field.</summary>
+    public const int SiteIdFieldNumber = 5;
+    private string siteId_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string SiteId {
+      get { return siteId_; }
+      set {
+        siteId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "asset_id_filter" field.</summary>
+    public const int AssetIdFilterFieldNumber = 6;
+    private static readonly pb::FieldCodec<string> _repeated_assetIdFilter_codec
+        = pb::FieldCodec.ForString(50);
+    private readonly pbc::RepeatedField<string> assetIdFilter_ = new pbc::RepeatedField<string>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<string> AssetIdFilter {
+      get { return assetIdFilter_; }
+    }
+
+    /// <summary>Field number for the "latitude" field.</summary>
+    public const int LatitudeFieldNumber = 7;
+    private double latitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Latitude {
+      get { return latitude_; }
+      set {
+        latitude_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "longitude" field.</summary>
+    public const int LongitudeFieldNumber = 8;
+    private double longitude_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Longitude {
+      get { return longitude_; }
+      set {
+        longitude_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "radius_meters" field.</summary>
+    public const int RadiusMetersFieldNumber = 9;
+    private readonly static double RadiusMetersDefaultValue = 0D;
+
+    private double radiusMeters_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double RadiusMeters {
+      get { if ((_hasBits0 & 1) != 0) { return radiusMeters_; } else { return RadiusMetersDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        radiusMeters_ = value;
+      }
+    }
+    /// <summary>Gets whether the "radius_meters" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRadiusMeters {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "radius_meters" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRadiusMeters() {
+      _hasBits0 &= ~1;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as TargetRequested);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(TargetRequested other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TimestampMs != other.TimestampMs) return false;
+      if (Type != other.Type) return false;
+      if (AnchorIdentifier != other.AnchorIdentifier) return false;
+      if (AnchorPayload != other.AnchorPayload) return false;
+      if (SiteId != other.SiteId) return false;
+      if(!assetIdFilter_.Equals(other.assetIdFilter_)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Latitude, other.Latitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Longitude, other.Longitude)) return false;
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(RadiusMeters, other.RadiusMeters)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TimestampMs != 0UL) hash ^= TimestampMs.GetHashCode();
+      if (Type != global::Niantic.Lightship.AR.Protobuf.TargetRequestType.UnknownTargetRequestType) hash ^= Type.GetHashCode();
+      if (AnchorIdentifier.Length != 0) hash ^= AnchorIdentifier.GetHashCode();
+      if (AnchorPayload.Length != 0) hash ^= AnchorPayload.GetHashCode();
+      if (SiteId.Length != 0) hash ^= SiteId.GetHashCode();
+      hash ^= assetIdFilter_.GetHashCode();
+      if (Latitude != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Latitude);
+      if (Longitude != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Longitude);
+      if (HasRadiusMeters) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(RadiusMeters);
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (Type != global::Niantic.Lightship.AR.Protobuf.TargetRequestType.UnknownTargetRequestType) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Type);
+      }
+      if (AnchorIdentifier.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteBytes(AnchorIdentifier);
+      }
+      if (AnchorPayload.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(AnchorPayload);
+      }
+      if (SiteId.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(SiteId);
+      }
+      assetIdFilter_.WriteTo(output, _repeated_assetIdFilter_codec);
+      if (Latitude != 0D) {
+        output.WriteRawTag(57);
+        output.WriteDouble(Latitude);
+      }
+      if (Longitude != 0D) {
+        output.WriteRawTag(65);
+        output.WriteDouble(Longitude);
+      }
+      if (HasRadiusMeters) {
+        output.WriteRawTag(73);
+        output.WriteDouble(RadiusMeters);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (TimestampMs != 0UL) {
+        output.WriteRawTag(8);
+        output.WriteUInt64(TimestampMs);
+      }
+      if (Type != global::Niantic.Lightship.AR.Protobuf.TargetRequestType.UnknownTargetRequestType) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Type);
+      }
+      if (AnchorIdentifier.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteBytes(AnchorIdentifier);
+      }
+      if (AnchorPayload.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(AnchorPayload);
+      }
+      if (SiteId.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(SiteId);
+      }
+      assetIdFilter_.WriteTo(ref output, _repeated_assetIdFilter_codec);
+      if (Latitude != 0D) {
+        output.WriteRawTag(57);
+        output.WriteDouble(Latitude);
+      }
+      if (Longitude != 0D) {
+        output.WriteRawTag(65);
+        output.WriteDouble(Longitude);
+      }
+      if (HasRadiusMeters) {
+        output.WriteRawTag(73);
+        output.WriteDouble(RadiusMeters);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (TimestampMs != 0UL) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt64Size(TimestampMs);
+      }
+      if (Type != global::Niantic.Lightship.AR.Protobuf.TargetRequestType.UnknownTargetRequestType) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Type);
+      }
+      if (AnchorIdentifier.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeBytesSize(AnchorIdentifier);
+      }
+      if (AnchorPayload.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(AnchorPayload);
+      }
+      if (SiteId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(SiteId);
+      }
+      size += assetIdFilter_.CalculateSize(_repeated_assetIdFilter_codec);
+      if (Latitude != 0D) {
+        size += 1 + 8;
+      }
+      if (Longitude != 0D) {
+        size += 1 + 8;
+      }
+      if (HasRadiusMeters) {
+        size += 1 + 8;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(TargetRequested other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TimestampMs != 0UL) {
+        TimestampMs = other.TimestampMs;
+      }
+      if (other.Type != global::Niantic.Lightship.AR.Protobuf.TargetRequestType.UnknownTargetRequestType) {
+        Type = other.Type;
+      }
+      if (other.AnchorIdentifier.Length != 0) {
+        AnchorIdentifier = other.AnchorIdentifier;
+      }
+      if (other.AnchorPayload.Length != 0) {
+        AnchorPayload = other.AnchorPayload;
+      }
+      if (other.SiteId.Length != 0) {
+        SiteId = other.SiteId;
+      }
+      assetIdFilter_.Add(other.assetIdFilter_);
+      if (other.Latitude != 0D) {
+        Latitude = other.Latitude;
+      }
+      if (other.Longitude != 0D) {
+        Longitude = other.Longitude;
+      }
+      if (other.HasRadiusMeters) {
+        RadiusMeters = other.RadiusMeters;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            Type = (global::Niantic.Lightship.AR.Protobuf.TargetRequestType) input.ReadEnum();
+            break;
+          }
+          case 26: {
+            AnchorIdentifier = input.ReadBytes();
+            break;
+          }
+          case 34: {
+            AnchorPayload = input.ReadString();
+            break;
+          }
+          case 42: {
+            SiteId = input.ReadString();
+            break;
+          }
+          case 50: {
+            assetIdFilter_.AddEntriesFrom(input, _repeated_assetIdFilter_codec);
+            break;
+          }
+          case 57: {
+            Latitude = input.ReadDouble();
+            break;
+          }
+          case 65: {
+            Longitude = input.ReadDouble();
+            break;
+          }
+          case 73: {
+            RadiusMeters = input.ReadDouble();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            TimestampMs = input.ReadUInt64();
+            break;
+          }
+          case 16: {
+            Type = (global::Niantic.Lightship.AR.Protobuf.TargetRequestType) input.ReadEnum();
+            break;
+          }
+          case 26: {
+            AnchorIdentifier = input.ReadBytes();
+            break;
+          }
+          case 34: {
+            AnchorPayload = input.ReadString();
+            break;
+          }
+          case 42: {
+            SiteId = input.ReadString();
+            break;
+          }
+          case 50: {
+            assetIdFilter_.AddEntriesFrom(ref input, _repeated_assetIdFilter_codec);
+            break;
+          }
+          case 57: {
+            Latitude = input.ReadDouble();
+            break;
+          }
+          case 65: {
+            Longitude = input.ReadDouble();
+            break;
+          }
+          case 73: {
+            RadiusMeters = input.ReadDouble();
+            break;
+          }
         }
       }
     }
@@ -6696,7 +13128,7 @@ namespace Niantic.Lightship.AR.Protobuf {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[15]; }
+      get { return global::Niantic.Lightship.AR.Protobuf.ArdkVpsDebuggerReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6752,6 +13184,27 @@ namespace Niantic.Lightship.AR.Protobuf {
           break;
         case VpsDebuggerEventOneofCase.AssetReceived:
           AssetReceived = other.AssetReceived.Clone();
+          break;
+        case VpsDebuggerEventOneofCase.MapNodeUpdate:
+          MapNodeUpdate = other.MapNodeUpdate.Clone();
+          break;
+        case VpsDebuggerEventOneofCase.GraphEdgeUpdate:
+          GraphEdgeUpdate = other.GraphEdgeUpdate.Clone();
+          break;
+        case VpsDebuggerEventOneofCase.VpsSegmentTarget:
+          VpsSegmentTarget = other.VpsSegmentTarget.Clone();
+          break;
+        case VpsDebuggerEventOneofCase.FusionHypotheses:
+          FusionHypotheses = other.FusionHypotheses.Clone();
+          break;
+        case VpsDebuggerEventOneofCase.FusionHypothesisSelected:
+          FusionHypothesisSelected = other.FusionHypothesisSelected.Clone();
+          break;
+        case VpsDebuggerEventOneofCase.GeolocationTransition:
+          GeolocationTransition = other.GeolocationTransition.Clone();
+          break;
+        case VpsDebuggerEventOneofCase.TargetRequested:
+          TargetRequested = other.TargetRequested.Clone();
           break;
       }
 
@@ -6908,6 +13361,90 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
     }
 
+    /// <summary>Field number for the "map_node_update" field.</summary>
+    public const int MapNodeUpdateFieldNumber = 13;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate MapNodeUpdate {
+      get { return vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.MapNodeUpdate ? (global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate) vpsDebuggerEvent_ : null; }
+      set {
+        vpsDebuggerEvent_ = value;
+        vpsDebuggerEventCase_ = value == null ? VpsDebuggerEventOneofCase.None : VpsDebuggerEventOneofCase.MapNodeUpdate;
+      }
+    }
+
+    /// <summary>Field number for the "graph_edge_update" field.</summary>
+    public const int GraphEdgeUpdateFieldNumber = 14;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate GraphEdgeUpdate {
+      get { return vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GraphEdgeUpdate ? (global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate) vpsDebuggerEvent_ : null; }
+      set {
+        vpsDebuggerEvent_ = value;
+        vpsDebuggerEventCase_ = value == null ? VpsDebuggerEventOneofCase.None : VpsDebuggerEventOneofCase.GraphEdgeUpdate;
+      }
+    }
+
+    /// <summary>Field number for the "vps_segment_target" field.</summary>
+    public const int VpsSegmentTargetFieldNumber = 15;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget VpsSegmentTarget {
+      get { return vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.VpsSegmentTarget ? (global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget) vpsDebuggerEvent_ : null; }
+      set {
+        vpsDebuggerEvent_ = value;
+        vpsDebuggerEventCase_ = value == null ? VpsDebuggerEventOneofCase.None : VpsDebuggerEventOneofCase.VpsSegmentTarget;
+      }
+    }
+
+    /// <summary>Field number for the "fusion_hypotheses" field.</summary>
+    public const int FusionHypothesesFieldNumber = 16;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.FusionHypotheses FusionHypotheses {
+      get { return vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypotheses ? (global::Niantic.Lightship.AR.Protobuf.FusionHypotheses) vpsDebuggerEvent_ : null; }
+      set {
+        vpsDebuggerEvent_ = value;
+        vpsDebuggerEventCase_ = value == null ? VpsDebuggerEventOneofCase.None : VpsDebuggerEventOneofCase.FusionHypotheses;
+      }
+    }
+
+    /// <summary>Field number for the "fusion_hypothesis_selected" field.</summary>
+    public const int FusionHypothesisSelectedFieldNumber = 17;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected FusionHypothesisSelected {
+      get { return vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypothesisSelected ? (global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected) vpsDebuggerEvent_ : null; }
+      set {
+        vpsDebuggerEvent_ = value;
+        vpsDebuggerEventCase_ = value == null ? VpsDebuggerEventOneofCase.None : VpsDebuggerEventOneofCase.FusionHypothesisSelected;
+      }
+    }
+
+    /// <summary>Field number for the "geolocation_transition" field.</summary>
+    public const int GeolocationTransitionFieldNumber = 18;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.GeolocationTransition GeolocationTransition {
+      get { return vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GeolocationTransition ? (global::Niantic.Lightship.AR.Protobuf.GeolocationTransition) vpsDebuggerEvent_ : null; }
+      set {
+        vpsDebuggerEvent_ = value;
+        vpsDebuggerEventCase_ = value == null ? VpsDebuggerEventOneofCase.None : VpsDebuggerEventOneofCase.GeolocationTransition;
+      }
+    }
+
+    /// <summary>Field number for the "target_requested" field.</summary>
+    public const int TargetRequestedFieldNumber = 19;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::Niantic.Lightship.AR.Protobuf.TargetRequested TargetRequested {
+      get { return vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.TargetRequested ? (global::Niantic.Lightship.AR.Protobuf.TargetRequested) vpsDebuggerEvent_ : null; }
+      set {
+        vpsDebuggerEvent_ = value;
+        vpsDebuggerEventCase_ = value == null ? VpsDebuggerEventOneofCase.None : VpsDebuggerEventOneofCase.TargetRequested;
+      }
+    }
+
     private object vpsDebuggerEvent_;
     /// <summary>Enum of possible cases for the "vps_debugger_event" oneof.</summary>
     public enum VpsDebuggerEventOneofCase {
@@ -6924,6 +13461,13 @@ namespace Niantic.Lightship.AR.Protobuf {
       CustomData = 10,
       BevLocalizationUpdate = 11,
       AssetReceived = 12,
+      MapNodeUpdate = 13,
+      GraphEdgeUpdate = 14,
+      VpsSegmentTarget = 15,
+      FusionHypotheses = 16,
+      FusionHypothesisSelected = 17,
+      GeolocationTransition = 18,
+      TargetRequested = 19,
     }
     private VpsDebuggerEventOneofCase vpsDebuggerEventCase_ = VpsDebuggerEventOneofCase.None;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6966,6 +13510,13 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (!object.Equals(CustomData, other.CustomData)) return false;
       if (!object.Equals(BevLocalizationUpdate, other.BevLocalizationUpdate)) return false;
       if (!object.Equals(AssetReceived, other.AssetReceived)) return false;
+      if (!object.Equals(MapNodeUpdate, other.MapNodeUpdate)) return false;
+      if (!object.Equals(GraphEdgeUpdate, other.GraphEdgeUpdate)) return false;
+      if (!object.Equals(VpsSegmentTarget, other.VpsSegmentTarget)) return false;
+      if (!object.Equals(FusionHypotheses, other.FusionHypotheses)) return false;
+      if (!object.Equals(FusionHypothesisSelected, other.FusionHypothesisSelected)) return false;
+      if (!object.Equals(GeolocationTransition, other.GeolocationTransition)) return false;
+      if (!object.Equals(TargetRequested, other.TargetRequested)) return false;
       if (VpsDebuggerEventCase != other.VpsDebuggerEventCase) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
@@ -6986,6 +13537,13 @@ namespace Niantic.Lightship.AR.Protobuf {
       if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.CustomData) hash ^= CustomData.GetHashCode();
       if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.BevLocalizationUpdate) hash ^= BevLocalizationUpdate.GetHashCode();
       if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.AssetReceived) hash ^= AssetReceived.GetHashCode();
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.MapNodeUpdate) hash ^= MapNodeUpdate.GetHashCode();
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GraphEdgeUpdate) hash ^= GraphEdgeUpdate.GetHashCode();
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.VpsSegmentTarget) hash ^= VpsSegmentTarget.GetHashCode();
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypotheses) hash ^= FusionHypotheses.GetHashCode();
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypothesisSelected) hash ^= FusionHypothesisSelected.GetHashCode();
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GeolocationTransition) hash ^= GeolocationTransition.GetHashCode();
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.TargetRequested) hash ^= TargetRequested.GetHashCode();
       hash ^= (int) vpsDebuggerEventCase_;
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
@@ -7053,6 +13611,34 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(98);
         output.WriteMessage(AssetReceived);
       }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.MapNodeUpdate) {
+        output.WriteRawTag(106);
+        output.WriteMessage(MapNodeUpdate);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GraphEdgeUpdate) {
+        output.WriteRawTag(114);
+        output.WriteMessage(GraphEdgeUpdate);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.VpsSegmentTarget) {
+        output.WriteRawTag(122);
+        output.WriteMessage(VpsSegmentTarget);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypotheses) {
+        output.WriteRawTag(130, 1);
+        output.WriteMessage(FusionHypotheses);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypothesisSelected) {
+        output.WriteRawTag(138, 1);
+        output.WriteMessage(FusionHypothesisSelected);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GeolocationTransition) {
+        output.WriteRawTag(146, 1);
+        output.WriteMessage(GeolocationTransition);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.TargetRequested) {
+        output.WriteRawTag(154, 1);
+        output.WriteMessage(TargetRequested);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -7111,6 +13697,34 @@ namespace Niantic.Lightship.AR.Protobuf {
         output.WriteRawTag(98);
         output.WriteMessage(AssetReceived);
       }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.MapNodeUpdate) {
+        output.WriteRawTag(106);
+        output.WriteMessage(MapNodeUpdate);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GraphEdgeUpdate) {
+        output.WriteRawTag(114);
+        output.WriteMessage(GraphEdgeUpdate);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.VpsSegmentTarget) {
+        output.WriteRawTag(122);
+        output.WriteMessage(VpsSegmentTarget);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypotheses) {
+        output.WriteRawTag(130, 1);
+        output.WriteMessage(FusionHypotheses);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypothesisSelected) {
+        output.WriteRawTag(138, 1);
+        output.WriteMessage(FusionHypothesisSelected);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GeolocationTransition) {
+        output.WriteRawTag(146, 1);
+        output.WriteMessage(GeolocationTransition);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.TargetRequested) {
+        output.WriteRawTag(154, 1);
+        output.WriteMessage(TargetRequested);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -7156,6 +13770,27 @@ namespace Niantic.Lightship.AR.Protobuf {
       }
       if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.AssetReceived) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(AssetReceived);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.MapNodeUpdate) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(MapNodeUpdate);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GraphEdgeUpdate) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(GraphEdgeUpdate);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.VpsSegmentTarget) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(VpsSegmentTarget);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypotheses) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(FusionHypotheses);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypothesisSelected) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(FusionHypothesisSelected);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GeolocationTransition) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(GeolocationTransition);
+      }
+      if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.TargetRequested) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(TargetRequested);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -7241,6 +13876,48 @@ namespace Niantic.Lightship.AR.Protobuf {
             AssetReceived = new global::Niantic.Lightship.AR.Protobuf.AssetReceived();
           }
           AssetReceived.MergeFrom(other.AssetReceived);
+          break;
+        case VpsDebuggerEventOneofCase.MapNodeUpdate:
+          if (MapNodeUpdate == null) {
+            MapNodeUpdate = new global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate();
+          }
+          MapNodeUpdate.MergeFrom(other.MapNodeUpdate);
+          break;
+        case VpsDebuggerEventOneofCase.GraphEdgeUpdate:
+          if (GraphEdgeUpdate == null) {
+            GraphEdgeUpdate = new global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate();
+          }
+          GraphEdgeUpdate.MergeFrom(other.GraphEdgeUpdate);
+          break;
+        case VpsDebuggerEventOneofCase.VpsSegmentTarget:
+          if (VpsSegmentTarget == null) {
+            VpsSegmentTarget = new global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget();
+          }
+          VpsSegmentTarget.MergeFrom(other.VpsSegmentTarget);
+          break;
+        case VpsDebuggerEventOneofCase.FusionHypotheses:
+          if (FusionHypotheses == null) {
+            FusionHypotheses = new global::Niantic.Lightship.AR.Protobuf.FusionHypotheses();
+          }
+          FusionHypotheses.MergeFrom(other.FusionHypotheses);
+          break;
+        case VpsDebuggerEventOneofCase.FusionHypothesisSelected:
+          if (FusionHypothesisSelected == null) {
+            FusionHypothesisSelected = new global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected();
+          }
+          FusionHypothesisSelected.MergeFrom(other.FusionHypothesisSelected);
+          break;
+        case VpsDebuggerEventOneofCase.GeolocationTransition:
+          if (GeolocationTransition == null) {
+            GeolocationTransition = new global::Niantic.Lightship.AR.Protobuf.GeolocationTransition();
+          }
+          GeolocationTransition.MergeFrom(other.GeolocationTransition);
+          break;
+        case VpsDebuggerEventOneofCase.TargetRequested:
+          if (TargetRequested == null) {
+            TargetRequested = new global::Niantic.Lightship.AR.Protobuf.TargetRequested();
+          }
+          TargetRequested.MergeFrom(other.TargetRequested);
           break;
       }
 
@@ -7367,6 +14044,69 @@ namespace Niantic.Lightship.AR.Protobuf {
             AssetReceived = subBuilder;
             break;
           }
+          case 106: {
+            global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate subBuilder = new global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.MapNodeUpdate) {
+              subBuilder.MergeFrom(MapNodeUpdate);
+            }
+            input.ReadMessage(subBuilder);
+            MapNodeUpdate = subBuilder;
+            break;
+          }
+          case 114: {
+            global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate subBuilder = new global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GraphEdgeUpdate) {
+              subBuilder.MergeFrom(GraphEdgeUpdate);
+            }
+            input.ReadMessage(subBuilder);
+            GraphEdgeUpdate = subBuilder;
+            break;
+          }
+          case 122: {
+            global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget subBuilder = new global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.VpsSegmentTarget) {
+              subBuilder.MergeFrom(VpsSegmentTarget);
+            }
+            input.ReadMessage(subBuilder);
+            VpsSegmentTarget = subBuilder;
+            break;
+          }
+          case 130: {
+            global::Niantic.Lightship.AR.Protobuf.FusionHypotheses subBuilder = new global::Niantic.Lightship.AR.Protobuf.FusionHypotheses();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypotheses) {
+              subBuilder.MergeFrom(FusionHypotheses);
+            }
+            input.ReadMessage(subBuilder);
+            FusionHypotheses = subBuilder;
+            break;
+          }
+          case 138: {
+            global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected subBuilder = new global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypothesisSelected) {
+              subBuilder.MergeFrom(FusionHypothesisSelected);
+            }
+            input.ReadMessage(subBuilder);
+            FusionHypothesisSelected = subBuilder;
+            break;
+          }
+          case 146: {
+            global::Niantic.Lightship.AR.Protobuf.GeolocationTransition subBuilder = new global::Niantic.Lightship.AR.Protobuf.GeolocationTransition();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GeolocationTransition) {
+              subBuilder.MergeFrom(GeolocationTransition);
+            }
+            input.ReadMessage(subBuilder);
+            GeolocationTransition = subBuilder;
+            break;
+          }
+          case 154: {
+            global::Niantic.Lightship.AR.Protobuf.TargetRequested subBuilder = new global::Niantic.Lightship.AR.Protobuf.TargetRequested();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.TargetRequested) {
+              subBuilder.MergeFrom(TargetRequested);
+            }
+            input.ReadMessage(subBuilder);
+            TargetRequested = subBuilder;
+            break;
+          }
         }
       }
     #endif
@@ -7488,6 +14228,69 @@ namespace Niantic.Lightship.AR.Protobuf {
             }
             input.ReadMessage(subBuilder);
             AssetReceived = subBuilder;
+            break;
+          }
+          case 106: {
+            global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate subBuilder = new global::Niantic.Lightship.AR.Protobuf.MapNodeUpdate();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.MapNodeUpdate) {
+              subBuilder.MergeFrom(MapNodeUpdate);
+            }
+            input.ReadMessage(subBuilder);
+            MapNodeUpdate = subBuilder;
+            break;
+          }
+          case 114: {
+            global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate subBuilder = new global::Niantic.Lightship.AR.Protobuf.GraphEdgeUpdate();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GraphEdgeUpdate) {
+              subBuilder.MergeFrom(GraphEdgeUpdate);
+            }
+            input.ReadMessage(subBuilder);
+            GraphEdgeUpdate = subBuilder;
+            break;
+          }
+          case 122: {
+            global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget subBuilder = new global::Niantic.Lightship.AR.Protobuf.VpsSegmentTarget();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.VpsSegmentTarget) {
+              subBuilder.MergeFrom(VpsSegmentTarget);
+            }
+            input.ReadMessage(subBuilder);
+            VpsSegmentTarget = subBuilder;
+            break;
+          }
+          case 130: {
+            global::Niantic.Lightship.AR.Protobuf.FusionHypotheses subBuilder = new global::Niantic.Lightship.AR.Protobuf.FusionHypotheses();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypotheses) {
+              subBuilder.MergeFrom(FusionHypotheses);
+            }
+            input.ReadMessage(subBuilder);
+            FusionHypotheses = subBuilder;
+            break;
+          }
+          case 138: {
+            global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected subBuilder = new global::Niantic.Lightship.AR.Protobuf.FusionHypothesisSelected();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.FusionHypothesisSelected) {
+              subBuilder.MergeFrom(FusionHypothesisSelected);
+            }
+            input.ReadMessage(subBuilder);
+            FusionHypothesisSelected = subBuilder;
+            break;
+          }
+          case 146: {
+            global::Niantic.Lightship.AR.Protobuf.GeolocationTransition subBuilder = new global::Niantic.Lightship.AR.Protobuf.GeolocationTransition();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.GeolocationTransition) {
+              subBuilder.MergeFrom(GeolocationTransition);
+            }
+            input.ReadMessage(subBuilder);
+            GeolocationTransition = subBuilder;
+            break;
+          }
+          case 154: {
+            global::Niantic.Lightship.AR.Protobuf.TargetRequested subBuilder = new global::Niantic.Lightship.AR.Protobuf.TargetRequested();
+            if (vpsDebuggerEventCase_ == VpsDebuggerEventOneofCase.TargetRequested) {
+              subBuilder.MergeFrom(TargetRequested);
+            }
+            input.ReadMessage(subBuilder);
+            TargetRequested = subBuilder;
             break;
           }
         }

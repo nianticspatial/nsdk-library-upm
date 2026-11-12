@@ -7,6 +7,7 @@ using NianticSpatial.NSDK.AR.Core;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using UnityEngine;
 using NianticSpatial.NSDK.AR.Settings;
+using NianticSpatial.NSDK.AR.Subsystems.Playback;
 using NianticSpatial.NSDK.AR.Utilities.Auth;
 
 namespace NianticSpatial.NSDK.AR.Loader
@@ -212,6 +213,15 @@ namespace NianticSpatial.NSDK.AR.Loader
             get => _playbackSettings.PlaybackDatasetPath;
             set => _playbackSettings.PlaybackDatasetPath = value;
         }
+
+        /// <summary>
+        /// The dataset to play instead of <see cref="PlaybackDatasetPath"/> when <see cref="UsePlayback"/> is set,
+        /// from the next XR initialization until cleared. It plays the whole recording:
+        /// <see cref="StartFrame"/> and <see cref="EndFrame"/> apply only to the dataset path, while
+        /// <see cref="LoopPlaybackInfinitely"/> applies to both. It must stay open until XR deinitializes; only then
+        /// may the caller close it.
+        /// </summary>
+        public PlaybackDataset PlaybackDataset { get; set; }
 
         public bool RunPlaybackManually
         {

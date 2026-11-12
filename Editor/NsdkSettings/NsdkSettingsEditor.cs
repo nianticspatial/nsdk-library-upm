@@ -46,6 +46,16 @@ namespace NianticSpatial.NSDK.AR.Editor
             };
 
             public static readonly GUIContent enabledLabel = new GUIContent("Enabled");
+
+            public static readonly GUIContent environmentLabel =
+                new GUIContent
+                (
+                    "Environment",
+                    "Which cloud environment NSDK talks to. Switching repoints every endpoint " +
+                    "(VPS, BEV, portal, scanning, telemetry and identity) and applies to device builds " +
+                    "as well as the Editor. Changing environments logs you out, as tokens are per-environment."
+                );
+
             public static readonly GUIContent preferLidarLabel = new GUIContent("Prefer LiDAR if Available");
             public static readonly GUIContent environmentViewLabel = new GUIContent("Environment Prefab");
             public static readonly GUIContent environmentViewButton =
@@ -199,6 +209,19 @@ namespace NianticSpatial.NSDK.AR.Editor
             _accessTokenOverrideProperty = _authBuildSettings.FindProperty("_accessTokenOverride");
         }
 
+        private void OnDisable()
+        {
+            if (_playbackSettingsEditors == null)
+            {
+                return;
+            }
+
+            foreach (var editor in _playbackSettingsEditors)
+            {
+                (editor as BasePlaybackSettingsEditor)?.Release();
+            }
+        }
+
         public override void OnInspectorGUI()
         {
             _nsdkSettings.Update();
@@ -258,6 +281,8 @@ namespace NianticSpatial.NSDK.AR.Editor
 
             EditorGUILayout.LabelField("Credentials", EditorStyles.boldLabel);
 
+            DrawEnvironmentSelector();
+
             EditorGUILayout.PropertyField(
                 _accessTokenOverrideProperty,
                 new GUIContent(
@@ -283,28 +308,6 @@ namespace NianticSpatial.NSDK.AR.Editor
 #if NIANTICSPATIAL_NSDK_AUTH_DEBUG
             var editorSettings = AuthEditorSettings.Instance;
             var settings = AuthEditorBuildSettings.Instance;
-            var authEnvironmentNames = Enum.GetNames(typeof(AuthEnvironmentType));
-            var newEnvironment = (AuthEnvironmentType)GUILayout.Toolbar(
-                (int)editorSettings.AuthEnvironment, authEnvironmentNames, EditorStyles.toolbarButton);
-
-            // When the environment changes, we need to clear all access tokens (effectively "log out")
-            if (editorSettings.AuthEnvironment != newEnvironment)
-            {
-                if (IsLoggedIn())
-                {
-                    if (EditorUtility.DisplayDialog("Change Environment", "This will log you out of the current environment. Continue?", "Yes", "No"))
-                    {
-                        AuthEditorLogoutCommand.Instance.Execute();
-                        editorSettings.AuthEnvironment = newEnvironment;
-                    }
-                }
-                else
-                {
-                    editorSettings.AuthEnvironment = newEnvironment;
-                    editorSettings.UpdateEditorAccess(string.Empty, 0, string.Empty, 0);
-                    settings.UpdateAccess(string.Empty, 0, string.Empty, 0);
-                }
-            }
 
             DrawToken("Editor Refresh", editorSettings.EditorRefreshToken, editorSettings.EditorRefreshExpiresAt);
             DrawToken("Editor Access", editorSettings.EditorAccessToken, editorSettings.EditorAccessExpiresAt);
@@ -414,6 +417,69 @@ namespace NianticSpatial.NSDK.AR.Editor
 
             EditorGUILayout.Space(10);
             DrawLoggingSettings();
+        }
+
+        /// <summary>
+        /// Radio button for the cloud environment NSDK targets. Selecting an environment repoints every endpoint
+        /// via <see cref="EndpointSettings.GetFromFileOrDefault"/>, and is carried into device builds
+        /// through AuthBuildSettings.
+        /// </summary>
+        /// <remarks>
+        /// The non-production endpoints live in StreamingAssets/Internal/EndpointConfigs/{Environment}/,
+        /// so dev and staging only resolve in projects that carry those configs - elsewhere the selection
+        /// falls back to production. An nsdkConfig.json at the root of StreamingAssets still takes priority
+        /// over whatever is selected here.
+        /// </remarks>
+        private void DrawEnvironmentSelector()
+        {
+#if NIANTICSPATIAL_NSDK_AUTH_DEBUG
+            var editorSettings = AuthEditorSettings.Instance;
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField(Contents.environmentLabel, GUILayout.Width(EditorGUIUtility.labelWidth));
+            var newEnvironment =
+                (AuthEnvironmentType)GUILayout.Toolbar
+                (
+                    (int)editorSettings.AuthEnvironment,
+                    Enum.GetNames(typeof(AuthEnvironmentType)),
+                    EditorStyles.toolbarButton
+                );
+            EditorGUILayout.EndHorizontal();
+
+            if (editorSettings.AuthEnvironment == newEnvironment)
+            {
+                return;
+            }
+
+            // Tokens are issued per environment, so changing it clears all access tokens ("log out")
+            if (IsLoggedIn())
+            {
+                bool confirmed =
+                    EditorUtility.DisplayDialog
+                    (
+                        "Change Environment",
+                        "This will log you out of the current environment. Continue?",
+                        "Yes",
+                        "No"
+                    );
+
+                if (!confirmed)
+                {
+                    return;
+                }
+
+                AuthEditorLogoutCommand.Instance.Execute();
+            }
+
+            // This setter also syncs the environment into NsdkSettings/AuthBuildSettings, which is what
+            // carries it into device builds.
+            editorSettings.AuthEnvironment = newEnvironment;
+
+            // Persist the new environment alongside the cleared tokens. Logging out above writes the editor
+            // store before the environment is assigned, so it has to be saved again here.
+            editorSettings.UpdateEditorAccess(string.Empty, 0, string.Empty, 0);
+            AuthEditorBuildSettings.Instance.UpdateAccess(string.Empty, 0, string.Empty, 0);
+#endif
         }
 
         private void DrawLoginUI()

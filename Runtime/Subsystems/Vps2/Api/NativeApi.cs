@@ -4,9 +4,6 @@ using System;
 using System.Runtime.InteropServices;
 using NianticSpatial.NSDK.AR.API;
 using NianticSpatial.NSDK.AR.Core;
-using NianticSpatial.NSDK.AR.XRSubsystems;
-using UnityEngine;
-using UnityEngine.XR.ARSubsystems;
 
 namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
 {
@@ -45,6 +42,37 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             return Native.GetLatestLocalization(providerHandle, out localization);
         }
 
+        public NsdkStatus LocalizeToSite(IntPtr providerHandle, NsdkString siteId, NsdkString assetId)
+        {
+            return Native.LocalizeToSite(providerHandle, siteId, assetId);
+        }
+
+        public NsdkStatus LocalizeToNearbySites
+        (
+            IntPtr providerHandle,
+            double latitude,
+            double longitude,
+            double radiusMeters
+        )
+        {
+            return Native.LocalizeToNearbySites(providerHandle, latitude, longitude, radiusMeters);
+        }
+
+        public NsdkStatus StopLocalize(IntPtr providerHandle, NsdkString siteId)
+        {
+            return Native.StopLocalize(providerHandle, siteId);
+        }
+
+        public NsdkStatus GetAssetTrackingData
+        (
+            IntPtr providerHandle,
+            NsdkString[] assetId,
+            out IApi.NsdkVps2AssetTrackingData trackingData
+        )
+        {
+            return Native.GetAssetTrackingData(providerHandle, assetId, out trackingData);
+        }
+
         public NsdkStatus GetDeviceGeolocation(IntPtr providerHandle, HeadingMode headingMode, out IApi.NsdkVps2GeolocationData location)
         {
             return Native.GetDeviceGeolocation(providerHandle, (int)headingMode, out location);
@@ -55,46 +83,14 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             return Native.GetPose(ref localization, ref location, out pose);
         }
 
-        public NsdkStatus CreateAnchor(IntPtr providerHandle, NsdkTransform pose, ref byte[] anchorId)
+        public NsdkStatus GetPoseFromLatestLocalization(IntPtr providerHandle, NsdkGeolocationData location, out IApi.NsdkVps2Pose pose)
         {
-            return Native.CreateAnchor(providerHandle, pose, anchorId);
+            return Native.GetPoseFromLatestLocalization(providerHandle, ref location, out pose);
         }
 
-        public NsdkStatus TrackAnchor(IntPtr providerHandle, NsdkString anchorPayload, ref byte[] anchorId)
+        public NsdkStatus GetGeolocationFromLatestLocalization(IntPtr providerHandle, NsdkTransform pose, out IApi.NsdkVps2GeolocationData geolocation)
         {
-            return Native.TrackAnchor(providerHandle, anchorPayload, anchorId);
-        }
-
-        public NsdkStatus RemoveAnchor(IntPtr providerHandle, byte[] anchorId)
-        {
-            return Native.RemoveAnchor(providerHandle, anchorId);
-        }
-
-        public NsdkStatus GetAnchorUpdate
-        (
-            IntPtr providerHandle,
-            byte[] anchorId,
-            out IApi.NsdkVpsAnchorUpdate updateOut
-        )
-        {
-            return Native.GetAnchorUpdate
-            (
-                providerHandle,
-                anchorId,
-                out updateOut
-            );
-        }
-
-        public NsdkStatus GetAnchorPayload
-        (
-            IntPtr providerHandle,
-            byte[] anchorId,
-            out IntPtr anchorPayloadPtr,
-            out int anchorPayloadSize,
-            out IntPtr resourceHandle
-        )
-        {
-            return Native.GetAnchorPayload(providerHandle, anchorId, out anchorPayloadPtr, out anchorPayloadSize, out resourceHandle);
+            return Native.GetGeolocationFromLatestLocalization(providerHandle, ref pose, out geolocation);
         }
 
         public NsdkStatus GetLatestLocalizationRequestRecords(IntPtr providerHandle, out IntPtr networkRequestRecords, out int size, out IntPtr handle)
@@ -111,84 +107,6 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
         public NsdkStatus GetSessionId(IntPtr providerHandle, ref byte[] sessionId)
         {
             return Native.GetSessionId(providerHandle, sessionId);
-        }
-
-        // Defined in ardk_vps_tracking_state.h
-        /**
-        typedef enum ARDK_VPS_AnchorTrackingState : uint8_t {
-            /// @brief    The anchor is not being tracked. Find the corresponding
-            ///           \c ARDK_VPS_AnchorTrackingStateReason for more information as to why.
-            ARDK_VPS_AnchorTrackingState_NotTracked,
-
-            /// @brief    The anchor is being tracked, but VPS has limited confidence in the
-            ///           accuracy of the anchor's transform.
-            ARDK_VPS_AnchorTrackingState_Limited,
-
-            /// @brief    The anchor is being tracked.
-            ARDK_VPS_AnchorTrackingState_Tracked,
-        } ARDK_VPS_AnchorTrackingState;
-        */
-        public TrackingState ConvertTrackingStateToUnity(int nativeTrackingState)
-        {
-            switch (nativeTrackingState)
-            {
-                case 0:
-                    return TrackingState.None;
-                case 1:
-                    return TrackingState.Limited;
-                case 2:
-                    return TrackingState.Tracking;
-            }
-
-            throw new ArgumentOutOfRangeException(nameof(nativeTrackingState));
-        }
-
-        /**
-         typedef enum ARDK_VPS_AnchorTrackingStateReason : uint8_t {
-              /// @brief    No reason for the tracking state is available. Anchor tracking
-              ///           should be active.
-              ARDK_VPS_AnchorTrackingStateReason_None,
-
-              /// @brief    VPS has not yet successfully localized, or the anchor is still
-              ///           being initialized.
-              ARDK_VPS_AnchorTrackingStateReason_Initializing,
-
-              /// @brief    Tracking has been stopped for this anchor.
-              ARDK_VPS_AnchorTrackingStateReason_Removed,
-
-              /// @brief    An internal error has occurred in ARDK.
-              ARDK_VPS_AnchorTrackingStateReason_InternalError,
-
-              /// @brief    This anchor is part of a private VPS location that this app does
-              ///           not have permission to localize to.
-              ARDK_VPS_AnchorTrackingStateReason_PermissionDenied,
-
-              /// @brief    Anchor tracking has failed due to an unrecoverable network error.
-              /// @details  See \c ARDK_VPS_GetFeatureStatus for more information.
-              ARDK_VPS_AnchorTrackingStateReason_FatalNetworkError
-            } ARDK_VPS_AnchorTrackingStateReason;
-         */
-        public Vps2AnchorTrackingStateReason ConvertTrackingStateReasonToUnity(int nativeReason)
-        {
-            switch (nativeReason)
-            {
-                case 0:
-                    return Vps2AnchorTrackingStateReason.None;
-                case 1:
-                    return Vps2AnchorTrackingStateReason.Initializing;
-                case 2:
-                    return Vps2AnchorTrackingStateReason.Removed;
-                case 3:
-                    return Vps2AnchorTrackingStateReason.InternalError;
-                case 4:
-                    return Vps2AnchorTrackingStateReason.PermissionDenied;
-                case 5:
-                    return Vps2AnchorTrackingStateReason.FatalNetworkError;
-                case 6:
-                    return Vps2AnchorTrackingStateReason.NoVisualLocalization;
-            }
-
-            throw new ArgumentOutOfRangeException(nameof(nativeReason));
         }
 
         private static class Native
@@ -220,36 +138,35 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetPose")]
             public static extern NsdkStatus GetPose(ref IApi.NsdkVps2Localization localization, ref NsdkGeolocationData location, out IApi.NsdkVps2Pose pose);
 
-            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_CreateAnchor")]
-            public static extern NsdkStatus CreateAnchor(IntPtr providerHandle, NsdkTransform pose, [Out] byte[] anchorIdOut);
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetPoseFromLatestLocalization")]
+            public static extern NsdkStatus GetPoseFromLatestLocalization(IntPtr providerHandle, ref NsdkGeolocationData location, out IApi.NsdkVps2Pose pose);
 
-            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_TrackAnchor")]
-            public static extern NsdkStatus TrackAnchor
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetGeolocationFromLatestLocalization")]
+            public static extern NsdkStatus GetGeolocationFromLatestLocalization(IntPtr providerHandle, ref NsdkTransform pose, out IApi.NsdkVps2GeolocationData geolocation);
+
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_LocalizeToSite")]
+            public static extern NsdkStatus LocalizeToSite(IntPtr providerHandle, NsdkString siteId, NsdkString assetId);
+
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_LocalizeToNearbySites")]
+            public static extern NsdkStatus LocalizeToNearbySites
             (
                 IntPtr providerHandle,
-                NsdkString anchorPayload,
-                [Out] byte[] anchorIdOut
+                double latitude,
+                double longitude,
+                double radiusMeters
             );
 
-            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_RemoveAnchor")]
-            public static extern NsdkStatus RemoveAnchor(IntPtr providerHandle, byte[] anchorId);
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_StopLocalize")]
+            public static extern NsdkStatus StopLocalize(IntPtr providerHandle, NsdkString siteId);
 
-            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetAnchorUpdate")]
-            public static extern NsdkStatus GetAnchorUpdate
+            // assetId is marshalled as a nullable pointer: pass null for the currently
+            // localized asset, or a single-element array to name one.
+            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetAssetTrackingData")]
+            public static extern NsdkStatus GetAssetTrackingData
             (
                 IntPtr providerHandle,
-                byte[] anchorId,
-                out IApi.NsdkVpsAnchorUpdate updateOut
-            );
-
-            [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetAnchorPayload")]
-            public static extern NsdkStatus GetAnchorPayload
-            (
-                IntPtr providerHandle,
-                byte[] anchorId,
-                out IntPtr anchorPayloadPtr,
-                out int anchorPayloadSize,
-                out IntPtr resourceHandle
+                NsdkString[] assetId,
+                out IApi.NsdkVps2AssetTrackingData trackingData
             );
 
             [DllImport(NsdkPlugin.Name, EntryPoint = "Lightship_ARDK_Unity_VPS2_Provider_GetLatestLocalizationRequestRecords")]

@@ -1,19 +1,24 @@
 # NSDK Unity Package
-This Unity Package Manager (UPM) package provides the Niantic Spatial SDK (NSDK) for Unity—native integration for AR features such as meshing, occlusion, object detection, localization, and more.
 
-## __Quick links:__
+This Unity Package Manager (UPM) package provides the Niantic Spatial SDK (NSDK) for Unity, with native integration for AR features such as meshing, occlusion, object detection, localization, and more.
+
+## Quick Links
 * [NSDK API Reference](https://www.nianticspatial.com/docs/api/unity/?platform=unity)
-* [Documentation](https://www.nianticspatial.com/docs/nsdk/create_account/?platform=unity)
-* [Niantic Spatial Platform](https://www.nianticspatial.com/docs)
+* [Documentation](https://www.nianticspatial.com/docs/nsdk/?platform=unity)
+* [Niantic Spatial Platform](https://www.nianticspatial.com)
 
-# Getting Started
+## Getting Started
 
-Add the package to your Unity project via the Package Manager:
+The recommended way to install the package is the Git URL flow described in [Set up the Niantic SDK for Unity](https://www.nianticspatial.com/docs/nsdk/setup/?platform=unity). To install from disk instead, follow these steps:
 
-1. In Unity, open **Window** → **Package Manager**.
-2. Click the **+** button and choose **Add package from git URL...**
-3. Enter: `https://github.com/nianticspatial/nsdk-library-upm.git`
+1. Download the **Source code (zip)** from the Unity package [releases](https://github.com/nianticspatial/nsdk-library-upm/releases), then unzip it.
+2. In Unity, open **Window > Package Management > Package Manager**.
+3. Open the drop-down menu next to the **+** button in the top-left of the window.
+4. Select **Install Package from Disk**.
+5. Select the `package.json` file from the unzipped package.
 
-To use a specific version, download the `.tgz` from the [releases page](https://github.com/nianticspatial/nsdk-library-upm/releases), then in Package Manager choose **Add package from tarball...** and select the file.
+Do not use the GitHub source archives (**Download ZIP** / **tar.gz**) or **Add package from tarball** for this workflow.
 
-If you run into issues or need platform setup (Android, iOS, etc.), see our [Setup Guide](https://www.nianticspatial.com/docs/nsdk/setup/?platform=unity). For sample projects and feature walkthroughs, see the [documentation](https://www.nianticspatial.com/docs/nsdk/create_account/?platform=unity).
+For more information:
+* Setup — see the [Setup Guide](https://www.nianticspatial.com/docs/nsdk/setup/?platform=unity).
+* Features and product walkthroughs — see [Sample projects](https://www.nianticspatial.com/docs/nsdk/sample_projects/?platform=unity).

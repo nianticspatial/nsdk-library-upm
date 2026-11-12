@@ -7,8 +7,10 @@ namespace NianticSpatial.NSDK.AR
     /// A utility class to help grepping information from matrices.
     public static class MatrixUtils
     {
+        /// <summary>
         /// Returns the position from a transform matrix.
-        /// @param matrix The matrix from which to extract the position.
+        /// </summary>
+        /// <param name="matrix">The matrix from which to extract the position.</param>
         public static Vector3 PositionFromMatrix(Matrix4x4 matrix)
         {
             Vector3 position = matrix.GetColumn(3);
@@ -20,18 +22,22 @@ namespace NianticSpatial.NSDK.AR
             return PositionFromMatrix(matrix);
         }
 
+        /// <summary>
         /// Returns the rotation as a quaternion from a transform matrix
-        /// @param matrix The matrix from which to extract the rotation.
         /// @note This does not work on matrices with negative scale values.
+        /// </summary>
+        /// <param name="matrix">The matrix from which to extract the rotation.</param>
         public static Quaternion RotationFromMatrix(Matrix4x4 matrix)
         {
             // Adapted from https://answers.unity.com/questions/402280/how-to-decompose-a-trs-matrix.html
             return Quaternion.LookRotation(matrix.GetColumn(2), matrix.GetColumn(1));
         }
 
+        /// <summary>
         /// Returns the rotation as a quaternion from a transform matrix
-        /// @param matrix The matrix from which to extract the rotation.
         /// @note This does not work on matrices with negative scaled values.
+        /// </summary>
+        /// <param name="matrix">The matrix from which to extract the rotation.</param>
         public static Quaternion ToRotation(this Matrix4x4 matrix)
         {
             return RotationFromMatrix(matrix);

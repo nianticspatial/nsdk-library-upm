@@ -262,13 +262,15 @@ namespace NianticSpatial.NSDK.AR.Sites
         /// <param name="radiusMeters">Search radius around the coordinate, in meters.</param>
         /// <param name="assetType">The type of assets to filter results by.</param>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <param name="scope">Production assets only (the default), or every asset.</param>
         /// <returns>The site-assets result ordered by distance.</returns>
         public Task<SiteAssetsResult> GetSiteAssetsByLocationAsync(
             double latitude,
             double longitude,
             double radiusMeters,
             AssetType assetType,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            AssetScope scope = AssetScope.Production)
         {
             if (_sitesClient == null)
             {
@@ -277,7 +279,8 @@ namespace NianticSpatial.NSDK.AR.Sites
             }
 
             return _sitesClient.RequestSiteAssetsByLocationAsync(
-                latitude, longitude, radiusMeters, assetType, _requestTimeoutSeconds * 1000, cancellationToken);
+                latitude, longitude, radiusMeters, assetType, _requestTimeoutSeconds * 1000, cancellationToken,
+                scope);
         }
     }
 }

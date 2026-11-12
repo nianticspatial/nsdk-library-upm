@@ -16,6 +16,8 @@ namespace NianticSpatial.NSDK.AR.Editor
             public string AnchorPayload;
             public string LocalizationTargetName;
             public string LocalizationTargetID;
+            // Scan Portal and Scaniverse exports spell the field LocalizationTargetId
+            public string LocalizationTargetId;
             public EdgeRepresentation LocalToSpace;
             public GpsLocation GpsLocation;
         }

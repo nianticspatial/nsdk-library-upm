@@ -143,7 +143,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
 
             public override bool autoFocusEnabled
             {
-                get { return _datasetReader?.GetAutofocusEnabled() ?? false; }
+                get { return false; }
             }
 
             public override bool autoFocusRequested
@@ -425,8 +425,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Playback
                         tex = new Texture2D(_textureWidth, _textureHeight, _textureFormat, false);
                     }
 
-                    var path = Path.Combine(_datasetReader.GetDatasetPath(), frame.ImagePath);
-                    byte[] buffer = FileUtilities.GetAllBytes(path);
+                    byte[] buffer = _datasetReader.GetCurrentImageData();
                     _encodedTexHolder.LoadImage(buffer);
                     tex.LoadMirroredOverXAxis(_encodedTexHolder, _textureFormat.BytesPerPixel());
                     tex.Apply();

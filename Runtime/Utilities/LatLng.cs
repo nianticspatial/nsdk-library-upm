@@ -73,8 +73,10 @@ namespace NianticSpatial.NSDK.AR.Utilities
             return Equals((LatLng)obj);
         }
 
+        /// <summary>
         /// Calculates "as-the-crow-flies" distance between points using the Haversine formula.
-        /// @returns Distance between points in meters.
+        /// </summary>
+        /// <returns>Distance between points in meters.</returns>
         public double Distance(LatLng other)
         {
             if (Equals(other))
@@ -101,13 +103,17 @@ namespace NianticSpatial.NSDK.AR.Utilities
             return 2.0 * EarthRadius * Math.Asin(Math.Sqrt(a));
         }
 
+        /// <summary>
         /// Calculates "as-the-crow-flies" distance between points using the Haversine formula.
-        /// @returns Distance between points in meters.
+        /// </summary>
+        /// <returns>Distance between points in meters.</returns>
         public static double Distance(LatLng l1, LatLng l2) => l1.Distance(l2);
 
+        /// <summary>
         /// Calculates the initial bearing (sometimes referred to as forward azimuth) which if
         /// followed in a straight line along a great-circle arc will take you from the l1 to l2 points.
-        /// @returns Initial bearing in degrees
+        /// </summary>
+        /// <returns>Initial bearing in degrees</returns>
         public static double Bearing(LatLng l1, LatLng l2)
         {
             var rad1 = l1.ToRadian();
@@ -125,8 +131,8 @@ namespace NianticSpatial.NSDK.AR.Utilities
             return (r * 180.0 / Math.PI + 360) % 360.0;
         }
 
-        /// @param bearing Bearing in degrees, clockwise from north
-        /// @param distance Distance travelled in meters
+        /// <param name="bearing">Bearing in degrees, clockwise from north</param>
+        /// <param name="distance">Distance travelled in meters</param>
         public LatLng Add(double bearing, double distance)
         {
             var rad = ToRadian();

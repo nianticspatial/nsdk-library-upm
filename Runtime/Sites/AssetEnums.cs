@@ -5,74 +5,91 @@ using NianticSpatial.NSDK.AR.Utilities;
 namespace NianticSpatial.NSDK.AR.Sites
 {
     /// <summary>
-    /// Asset type - determines which typed asset data is present.
-    /// Maps to proto enum AssetType.
+    /// Asset type - determines which fields of <see cref="AssetArea"/> are meaningful.
     /// </summary>
     [PublicAPI]
     public enum AssetType
     {
-        /// <summary>Asset type not specified.</summary>
+        /// <summary>No type reported; no typed data present.</summary>
         Unspecified = 0,
-        /// <summary>Mesh asset - has AssetMeshData.</summary>
+        /// <summary>A 3D mesh of the site. RootNodeId, NodeIds and MeshCoverage are meaningful.</summary>
         Mesh = 1,
-        /// <summary>Splat asset - has AssetSplatData.</summary>
+        /// <summary>A Gaussian splat of the site. RootNodeId is meaningful.</summary>
         Splat = 2,
-        /// <summary>VPS Info asset - has AssetVpsData.</summary>
+        /// <summary>The site's localization map. AnchorPayload and the bounds are meaningful.</summary>
         VpsInfo = 3
     }
 
     /// <summary>
-    /// Asset status.
-    /// Maps to proto enum AssetStatusType.
+    /// Asset status - where the asset is in its lifecycle.
+    ///
+    /// DEPRECATED - the asset status is no longer reported, so
+    /// <see cref="AssetInfo.AssetStatus"/> is always <see cref="Unspecified"/>.
     /// </summary>
     [PublicAPI]
     public enum AssetStatusType
     {
-        /// <summary>Status not specified.</summary>
+        /// <summary>No status reported.</summary>
         Unspecified = 0,
-        /// <summary>Asset is active.</summary>
+        /// <summary>The asset is in use.</summary>
         Active = 1,
-        /// <summary>Asset is inactive.</summary>
+        /// <summary>The asset is not in use.</summary>
         Inactive = 2,
-        /// <summary>Asset is pending.</summary>
+        /// <summary>The asset is awaiting activation.</summary>
         Pending = 3
     }
 
     /// <summary>
-    /// Asset deployment type.
-    /// Maps to proto enum AssetDeploymentType.
+    /// Asset deployment type - whether an asset is live.
     /// </summary>
     [PublicAPI]
     public enum AssetDeploymentType
     {
-        /// <summary>Deployment type not specified.</summary>
+        /// <summary>No deployment state.</summary>
         Unspecified = 0,
-        /// <summary>Asset is deployed to production.</summary>
-        Production = 1
+        /// <summary>Deployed and live. The only kind VPS localizes against unless it is given an asset ID.</summary>
+        Production = 1,
+        /// <summary>Deployed but not live.</summary>
+        Published = 2,
+        /// <summary>Authored but not deployed.</summary>
+        Draft = 3
     }
 
     /// <summary>
-    /// Asset pipeline job status.
-    /// Maps to proto enum AssetPipelineJobStatus.
+    /// Whether a location query returns production assets only, or every asset.
+    /// </summary>
+    [PublicAPI]
+    public enum AssetScope
+    {
+        /// <summary>Production assets only: the ones nearby localization uses.</summary>
+        Production = 0,
+        /// <summary>Every asset, production or not.</summary>
+        All = 1
+    }
+
+    /// <summary>
+    /// Asset pipeline job status - how far the mapping pipeline got in producing this asset.
     /// </summary>
     [PublicAPI]
     public enum AssetPipelineJobStatus
     {
-        /// <summary>Status not specified.</summary>
+        /// <summary>No status reported.</summary>
         Unspecified = 0,
-        /// <summary>Job is pending.</summary>
+        /// <summary>Queued, not started.</summary>
         Pending = 1,
-        /// <summary>Job is running.</summary>
+        /// <summary>Currently being built.</summary>
         Running = 2,
-        /// <summary>Job succeeded.</summary>
+        /// <summary>Finished; the asset is usable.</summary>
         Succeeded = 3,
-        /// <summary>Job failed.</summary>
+        /// <summary>Finished with an error; no asset will arrive.</summary>
         Failed = 4,
-        /// <summary>Job status is unknown.</summary>
+        /// <summary>The pipeline reported a state NSDK does not recognize.</summary>
         Unknown = 5,
-        /// <summary>Job not found.</summary>
+        /// <summary>The pipeline has no record of the job.</summary>
         NotFound = 6,
-        /// <summary>Job is ready.</summary>
-        Ready = 7
+        /// <summary>DEPRECATED on the v2 endpoints - never reported.</summary>
+        Ready = 7,
+        /// <summary>Stopped before finishing; no asset will arrive.</summary>
+        Canceled = 8
     }
 }

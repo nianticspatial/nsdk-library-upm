@@ -53,6 +53,11 @@ namespace NianticSpatial.NSDK.AR.Sites
         /// <summary>
         /// An unexpected error occurred.
         /// </summary>
-        UnexpectedError = 8
+        UnexpectedError = 8,
+
+        /// <summary>
+        /// HTTP 401 Unauthorized - the access token is missing, expired or invalid.
+        /// </summary>
+        HttpUnauthorized = 9
     }
 }

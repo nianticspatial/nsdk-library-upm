@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -43,6 +44,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems
         }
 
         private const int TIMEOUT_SECONDS = 10;
+        internal const uint DefaultMaxDecodedSizeKb = 256 * 1024;
         private readonly IMeshDownloaderApi _api;
         private IntPtr _nsdkHandle;
         private readonly Material _defaultMaterial;
@@ -76,6 +78,15 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             _nsdkHandle =
                 new IntPtr(1); // This will never be dereferenced, just there to pass the nullptr check in method calls
             _api = mockApi;
+        }
+
+        /// <summary>
+        /// Apply on-disk cache settings to the native mesh downloader. Throws if native rejects
+        /// them, as it does for an enabled cache with a zero budget.
+        /// </summary>
+        internal void Configure(NsdkMeshDownloaderConfiguration configuration)
+        {
+            _api.NSDK_MeshDownloader_Configure(_nsdkHandle, ref configuration).ThrowExceptionIfNeeded();
         }
 
         private void CleanupResources(List<Mesh> meshes, List<Texture> textures, List<Material> materials)
@@ -112,6 +123,20 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             }
 
             materials.Clear();
+        }
+
+        private static void CopyFloatBuffer(IntPtr source, uint size, float[] destination)
+        {
+            if (size == 0 || source == IntPtr.Zero)
+                return;
+            Marshal.Copy(source, destination, 0, (int)size);
+        }
+
+        private static void CopyIntBuffer(IntPtr source, uint size, int[] destination)
+        {
+            if (size == 0 || source == IntPtr.Zero)
+                return;
+            Marshal.Copy(source, destination, 0, (int)size);
         }
 
         private GameObject BuildMeshFromNsdkMeshDataResult(
@@ -176,7 +201,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems
                 int uvCount = (int)meshData.uvs_size / 2;
                 var uvs = new Vector2[uvCount];
                 var uvFloats = new float[meshData.uvs_size];
-                Marshal.Copy(meshData.uvs, uvFloats, 0, (int)meshData.uvs_size);
+                CopyFloatBuffer(meshData.uvs, meshData.uvs_size, uvFloats);
 
                 for (var u = 0; u < uvCount; u++)
                 {
@@ -194,7 +219,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems
                 // Convert colors (uint32* to Color[])
                 var colorsNormalized = new Color[meshData.colors_size / 4]; // Divide by 4 since each color uses 4 values
                 var colorsRaw = new int[meshData.colors_size];
-                Marshal.Copy(meshData.colors, colorsRaw, 0, (int)meshData.colors_size);
+                CopyIntBuffer(meshData.colors, meshData.colors_size, colorsRaw);
 
                 for (var c = 0; c < colorsNormalized.Length; c++)
                 {
@@ -256,7 +281,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems
                     }
                     else
                     {
-                        Log.Info("texturedMaterial provided is null, using standard material");
+                        Log.Info("texturelessMaterial provided is null, using standard material");
                         material = _defaultMaterial;
                     }
                 }
@@ -412,6 +437,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             return new Result(NsdkStatus.Ok, ClientRequestError.Timeout, null);
         }
 
+        [Obsolete("Use DownloadLocationMeshChunksByVpsMapAssetId instead. Site IDs and asset IDs are the preferred mechanisms for identifying maps in NSDK. This function is deprecated and does not support maps created from 360 camera captures.")]
         public async Task<GameObject> GenerateLocationMeshAsyncFromPayload(
             string payload,
             bool getTexture = false,
@@ -462,6 +488,304 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Copies a ready chunk out of native memory. Must run before the chunk's handle is
+        /// released; the returned data does not depend on it.
+        /// </summary>
+        /// <returns>Null when the chunk data is invalid.</returns>
+        private static MeshChunkData ReadChunkData(NsdkMeshDownloaderChunk chunk)
+        {
+            var meshData = chunk.mesh_data;
+            var imageData = chunk.image_data;
+            var transform = chunk.transform;
+
+            if (!IsMeshDataValid(meshData))
+                return null;
+
+            if (imageData.data_size > 0 && imageData.data == IntPtr.Zero)
+            {
+                Log.Error("Image data is null while indicating it has size greater than zero");
+                return null;
+            }
+
+            if (transform.Values == IntPtr.Zero)
+            {
+                Log.Error("Mesh generation failed, transform values are null");
+                return null;
+            }
+
+            int vertexCount = (int)meshData.vertices_size / 3;
+            var vertices = new Vector3[vertexCount];
+            var vertexFloats = new float[meshData.vertices_size];
+            Marshal.Copy(meshData.vertices, vertexFloats, 0, (int)meshData.vertices_size);
+            for (var v = 0; v < vertexCount; v++)
+            {
+                vertices[v] = new Vector3(vertexFloats[v * 3], vertexFloats[v * 3 + 1], vertexFloats[v * 3 + 2]);
+            }
+
+            int uvCount = (int)meshData.uvs_size / 2;
+            var uvs = new Vector2[uvCount];
+            var uvFloats = new float[meshData.uvs_size];
+            CopyFloatBuffer(meshData.uvs, meshData.uvs_size, uvFloats);
+            for (var u = 0; u < uvCount; u++)
+            {
+                uvs[u] = new Vector2(uvFloats[u * 2], uvFloats[u * 2 + 1]);
+            }
+
+            var indices = new int[meshData.indices_size];
+            Marshal.Copy(meshData.indices, indices, 0, (int)meshData.indices_size);
+
+            var colorsNormalized = new Color[meshData.colors_size / 4];
+            var colorsRaw = new int[meshData.colors_size];
+            CopyIntBuffer(meshData.colors, meshData.colors_size, colorsRaw);
+            for (var c = 0; c < colorsNormalized.Length; c++)
+            {
+                int baseIndex = c * 4;
+                uint r = (uint)colorsRaw[baseIndex];
+                uint g = (uint)colorsRaw[baseIndex + 1];
+                uint b = (uint)colorsRaw[baseIndex + 2];
+                uint a = (uint)colorsRaw[baseIndex + 3];
+                colorsNormalized[c] = new Color(r / 255f, g / 255f, b / 255f, a / 255f);
+            }
+
+            byte[] imageDataBytes = null;
+            if (imageData.data_size > 0)
+            {
+                imageDataBytes = new byte[imageData.data_size];
+                Marshal.Copy(imageData.data, imageDataBytes, 0, (int)imageData.data_size);
+            }
+
+            var matrixValues = new float[16];
+            Marshal.Copy(transform.Values, matrixValues, 0, 16);
+            var transformMatrix = new Matrix4x4(
+                new Vector4(matrixValues[0], matrixValues[1], matrixValues[2], matrixValues[3]),
+                new Vector4(matrixValues[4], matrixValues[5], matrixValues[6], matrixValues[7]),
+                new Vector4(matrixValues[8], matrixValues[9], matrixValues[10], matrixValues[11]),
+                new Vector4(matrixValues[12], matrixValues[13], matrixValues[14], matrixValues[15])
+            );
+
+            // The ids and georeference came across by value, so unlike the geometry they do not
+            // depend on chunk.handle still being alive.
+            return new MeshChunkData(
+                NsdkIdString.Decode(chunk.vps_map_asset_id),
+                NsdkIdString.Decode(chunk.area_id),
+                vertices, uvs, indices, colorsNormalized, imageDataBytes, transformMatrix,
+                chunk.geo_reference);
+        }
+
+        /// <summary>
+        /// Builds a chunk GameObject that owns fresh Unity Mesh, Texture and Material assets for
+        /// <paramref name="data"/>. Destroying the GameObject frees them; the data is left intact
+        /// and can be built again.
+        /// </summary>
+        internal GameObject BuildMeshFromChunkData(
+            MeshChunkData data,
+            bool addCollider = false,
+            Material texturelessMaterial = null,
+            Material texturedMaterial = null)
+        {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
+            var chunkGo = new GameObject($"Asset {data.VpsMapAssetId} Chunk");
+            var meshContainer = new GameObject("MeshContainer");
+            meshContainer.transform.SetParent(chunkGo.transform, false);
+
+            var meshes = new List<Mesh>();
+            var textures = new List<Texture>();
+            var materials = new List<Material>();
+
+            Material material;
+            if (data.ImageData != null)
+            {
+                var texture = new Texture2D(2, 2);
+                if (!texture.LoadImage(data.ImageData))
+                    Log.Error("Failed to load image data into texture");
+
+                textures.Add(texture);
+
+                if (texturedMaterial != null)
+                {
+                    material = new Material(texturedMaterial);
+                    material.mainTexture = texture;
+                    materials.Add(material);
+                }
+                else
+                {
+                    Log.Info("texturedMaterial provided is null, using standard material");
+                    material = _defaultMaterial;
+                }
+            }
+            else
+            {
+                if (texturelessMaterial != null)
+                {
+                    material = new Material(texturelessMaterial);
+                    materials.Add(material);
+                }
+                else
+                {
+                    Log.Info("texturelessMaterial provided is null, using standard material");
+                    material = _defaultMaterial;
+                }
+            }
+
+            var mesh = new Mesh();
+            mesh.name = "Submesh 0";
+            mesh.vertices = data.Vertices;
+            mesh.uv = data.Uvs;
+            mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
+            mesh.triangles = data.Indices;
+            mesh.colors = data.Colors;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            meshes.Add(mesh);
+
+            var meshObject = new GameObject("Submesh 0");
+            MeshFilter meshFilter = meshObject.AddComponent<MeshFilter>();
+            MeshRenderer meshRenderer = meshObject.AddComponent<MeshRenderer>();
+            meshFilter.sharedMesh = mesh;
+            meshRenderer.sharedMaterial = material;
+
+            if (addCollider)
+            {
+                MeshCollider newCollider = meshObject.AddComponent<MeshCollider>();
+                newCollider.sharedMesh = mesh;
+            }
+
+            var transformMatrix = data.Transform;
+            Vector3 position = MatrixUtils.PositionFromMatrix(transformMatrix);
+            Quaternion rotation = MatrixUtils.RotationFromMatrix(transformMatrix);
+            var scale = new Vector3(
+                transformMatrix.GetColumn(0).magnitude,
+                transformMatrix.GetColumn(1).magnitude,
+                transformMatrix.GetColumn(2).magnitude
+            );
+
+            meshObject.transform.SetParent(meshContainer.transform, false);
+            meshObject.transform.localPosition = position;
+            meshObject.transform.localRotation = rotation;
+            meshObject.transform.localScale = scale;
+
+            meshContainer.transform.localScale = new Vector3(1, -1, 1);
+
+            // Own runtime assets so Destroy(chunkGo) frees Mesh/Texture/Material (Unity does not).
+            var resources = chunkGo.AddComponent<DownloadedMeshResources>();
+            resources.Register(meshes, textures, materials);
+
+            // Carries the asset's georeference alongside the chunk GameObject; identical on every
+            // chunk of one download.
+            var geoReference = chunkGo.AddComponent<MeshGeoReference>();
+            geoReference.Initialize(data.GeoReference);
+
+            var chunkInfo = chunkGo.AddComponent<MeshChunkInfo>();
+            chunkInfo.Initialize(data.VpsMapAssetId, data.AreaId);
+
+            // Inactive until the sample parents the chunk under the anchor; avoids a one-frame
+            // flash at the scene origin while the async enumerable consumer runs.
+            // Pulse active first: Unity skips OnDestroy on objects that were never activated, which
+            // would leave owned Mesh/Texture/Material leaked when the inactive chunk is Destroyed.
+            chunkGo.SetActive(true);
+            chunkGo.SetActive(false);
+            return chunkGo;
+        }
+
+        internal async IAsyncEnumerable<GameObject> DownloadLocationMeshChunksByVpsMapAssetId(
+            string vpsMapAssetId,
+            double latitude,
+            double longitude,
+            bool getTexture = false,
+            uint maxChunks = 0,
+            uint maxSizeKb = 0,
+            uint maxDecodedSizeKb = DefaultMaxDecodedSizeKb,
+            bool addCollider = false,
+            Material texturelessMaterial = null,
+            Material texturedMaterial = null,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            await foreach (var data in DownloadLocationMeshChunkDataByVpsMapAssetId(
+                               vpsMapAssetId, latitude, longitude, getTexture, maxChunks, maxSizeKb,
+                               maxDecodedSizeKb, cancellationToken))
+            {
+                yield return BuildMeshFromChunkData(data, addCollider, texturelessMaterial, texturedMaterial);
+            }
+        }
+
+        internal async IAsyncEnumerable<MeshChunkData> DownloadLocationMeshChunkDataByVpsMapAssetId(
+            string vpsMapAssetId,
+            double latitude,
+            double longitude,
+            bool getTexture = false,
+            uint maxChunks = 0,
+            uint maxSizeKb = 0,
+            uint maxDecodedSizeKb = DefaultMaxDecodedSizeKb,
+            [EnumeratorCancellation] CancellationToken cancellationToken = default)
+        {
+            if (_api == null)
+                throw new InvalidOperationException("MeshDownloader api is null");
+            if (!_nsdkHandle.IsValidHandle())
+                throw new InvalidOperationException("Handle to NSDK's native library is null");
+
+            ulong requestId;
+            NsdkStatus status;
+            using (ManagedNsdkString nsdkVpsMapAssetId = new ManagedNsdkString(vpsMapAssetId))
+            {
+                status = _api.NSDK_MeshDownloader_RequestLocationMeshByAsset(
+                    _nsdkHandle, nsdkVpsMapAssetId.ToNsdkString(),
+                    latitude, longitude, getTexture, maxChunks, maxSizeKb, maxDecodedSizeKb,
+                    out requestId);
+            }
+
+            if (status != NsdkStatus.Ok)
+            {
+                Log.Error($"Failed to start asset mesh download: {status}");
+                yield break;
+            }
+
+            while (true)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    yield break;
+
+                status = _api.NSDK_MeshDownloader_GetNextMeshChunk(_nsdkHandle, requestId, out NsdkMeshDownloaderChunk chunk);
+                if (status != NsdkStatus.Ok)
+                {
+                    Log.Error($"Error polling mesh chunk: {status}");
+                    yield break;
+                }
+
+                switch (chunk.status)
+                {
+                    case NsdkMeshDownloaderChunkStatus.ChunkReady:
+                        MeshChunkData data;
+                        try
+                        {
+                            data = ReadChunkData(chunk);
+                        }
+                        finally
+                        {
+                            _api.NSDK_Release_Resource(chunk.handle);
+                        }
+
+                        if (data != null)
+                            yield return data;
+                        break; // poll immediately for next chunk
+
+                    case NsdkMeshDownloaderChunkStatus.Complete:
+                    case NsdkMeshDownloaderChunkStatus.SizeLimitReached:
+                        yield break;
+
+                    case NsdkMeshDownloaderChunkStatus.Error:
+                        Log.Error("Mesh chunk download encountered an error");
+                        yield break;
+
+                    default: // NoChunkYet
+                        await Task.Delay(100, cancellationToken);
+                        break;
+                }
+            }
         }
 
         private static bool IsMeshDataValid(NsdkMeshData meshData)
@@ -543,11 +867,25 @@ namespace NianticSpatial.NSDK.AR.Subsystems
         }
 
         [StructLayout(LayoutKind.Sequential)]
+        internal struct NsdkMeshGeoReference
+        {
+            public MeshGeoReferenceMode mode;
+            private int _modePadding; // pad to 8-byte boundary before the doubles
+            public double reference_latitude;
+            public double reference_longitude;
+            public double reference_altitude;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+            public float[] tracking_to_reference;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
         internal struct NsdkMeshDownloaderData
         {
             public NsdkMeshData mesh_data;
             public NsdkBuffer image_data;
             public NsdkMatrix4F transform;
+            public NsdkMeshGeoReference geo_reference;
         }
 
         internal enum NsdkRequestStatus // Using int as the underlying type
@@ -577,6 +915,44 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             public int num_results;
         }
 
+        internal enum NsdkMeshDownloaderChunkStatus
+        {
+            NoChunkYet = 0,
+            ChunkReady = 1,
+            Complete = 2,
+            Error = 3,
+            SizeLimitReached = 4,
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NsdkMeshDownloaderChunk
+        {
+            public IntPtr handle;
+            public NsdkMeshDownloaderChunkStatus status;
+            private int _statusPadding; // pad to 8-byte boundary before mesh_data
+            public NsdkMeshData mesh_data;
+            public NsdkBuffer image_data;
+            public NsdkMatrix4F transform;
+            public NsdkMeshGeoReference geo_reference;
+
+            // ARDK_IdString: NUL-terminated ids carried by value, not pointers the handle owns.
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = NsdkIdString.Size)]
+            public byte[] vps_map_asset_id;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = NsdkIdString.Size)]
+            public byte[] area_id;
+        }
+
+        // Mirrors the native ARDK_MeshDownloader_Configuration struct.
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NsdkMeshDownloaderConfiguration
+        {
+            [MarshalAs(UnmanagedType.U1)]
+            public bool CacheEnabled;
+
+            public uint CacheMaxMb;
+        }
+
         private class MeshDownloaderApi : IMeshDownloaderApi
         {
             public NsdkStatus NSDK_MeshDownloader_Create(IntPtr nsdkHandle) =>
@@ -584,6 +960,11 @@ namespace NianticSpatial.NSDK.AR.Subsystems
 
             public NsdkStatus NSDK_MeshDownloader_Destroy(IntPtr nsdkHandle) =>
                 NativeApi.ARDK_MeshDownloader_Destroy(nsdkHandle);
+
+            public NsdkStatus NSDK_MeshDownloader_Configure(
+                IntPtr nsdkHandle,
+                ref NsdkMeshDownloaderConfiguration configuration) =>
+                NativeApi.ARDK_MeshDownloader_Configure(nsdkHandle, ref configuration);
 
             public NsdkStatus NSDK_MeshDownloader_RequestLocationMesh(
                 IntPtr nsdkHandle,
@@ -599,6 +980,26 @@ namespace NianticSpatial.NSDK.AR.Subsystems
                 ulong requestId,
                 out NsdkMeshDownloaderResults resultsOut) =>
                 NativeApi.ARDK_MeshDownloader_GetLocationMeshResults(nsdkHandle, requestId, out resultsOut);
+
+            public NsdkStatus NSDK_MeshDownloader_RequestLocationMeshByAsset(
+                IntPtr nsdkHandle,
+                NsdkString vpsMapAssetId,
+                double latitude,
+                double longitude,
+                bool getTexture,
+                uint maxChunks,
+                uint maxSizeKb,
+                uint maxDecodedSizeKb,
+                out ulong requestIdOut) =>
+                NativeApi.ARDK_MeshDownloader_RequestLocationMeshByAsset(
+                    nsdkHandle, vpsMapAssetId, latitude, longitude, getTexture, maxChunks, maxSizeKb,
+                    maxDecodedSizeKb, out requestIdOut);
+
+            public NsdkStatus NSDK_MeshDownloader_GetNextMeshChunk(
+                IntPtr nsdkHandle,
+                ulong requestId,
+                out NsdkMeshDownloaderChunk chunkOut) =>
+                NativeApi.ARDK_MeshDownloader_GetNextMeshChunk(nsdkHandle, requestId, out chunkOut);
 
             public void NSDK_Release_Resource(IntPtr resource)
             {
@@ -619,6 +1020,11 @@ namespace NianticSpatial.NSDK.AR.Subsystems
             public static extern NsdkStatus ARDK_MeshDownloader_Destroy(IntPtr nsdkHandle);
 
             [DllImport(NsdkPlugin.Name)]
+            public static extern NsdkStatus ARDK_MeshDownloader_Configure(
+                IntPtr nsdkHandle,
+                ref NsdkMeshDownloaderConfiguration configuration);
+
+            [DllImport(NsdkPlugin.Name)]
             public static extern NsdkStatus ARDK_MeshDownloader_RequestLocationMesh(
                 IntPtr nsdkHandle,
                 NsdkString payload,
@@ -631,6 +1037,24 @@ namespace NianticSpatial.NSDK.AR.Subsystems
                 IntPtr nsdkHandle,
                 ulong requestId,
                 out NsdkMeshDownloaderResults resultsOut);
+
+            [DllImport(NsdkPlugin.Name)]
+            public static extern NsdkStatus ARDK_MeshDownloader_RequestLocationMeshByAsset(
+                IntPtr nsdkHandle,
+                NsdkString vpsMapAssetId,
+                double latitude,
+                double longitude,
+                bool getTexture,
+                uint maxChunks,
+                uint maxSizeKb,
+                uint maxDecodedSizeKb,
+                out ulong requestIdOut);
+
+            [DllImport(NsdkPlugin.Name)]
+            public static extern NsdkStatus ARDK_MeshDownloader_GetNextMeshChunk(
+                IntPtr nsdkHandle,
+                ulong requestId,
+                out NsdkMeshDownloaderChunk chunkOut);
         }
     }
 }

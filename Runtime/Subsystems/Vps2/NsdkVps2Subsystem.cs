@@ -10,10 +10,8 @@ using NianticSpatial.NSDK.AR.Core;
 using NianticSpatial.NSDK.AR.Utilities;
 using NianticSpatial.NSDK.AR.Utilities.Logging;
 using NianticSpatial.NSDK.AR.XRSubsystems;
-using Unity.Collections;
 using UnityEngine;
 using UnityEngine.Scripting;
-using UnityEngine.XR.ARSubsystems;
 using IApi = NianticSpatial.NSDK.AR.Subsystems.Vps2.Api.IApi;
 using NativeApi = NianticSpatial.NSDK.AR.Subsystems.Vps2.Api.NativeApi;
 
@@ -53,15 +51,26 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
             private bool _deviceMapLocalizationEnabled = false;
             private int _deviceMapLocalizationFramerate = 0;
             private bool _vpsDebuggerEnabled = false;
+            private bool _vpsDebuggerSavingFrameImageEnabled = false;
             private int _universalLocalizationRequestTimeoutMs = 0;
             private uint _maxRequestsInTransitPerTarget = 0;
             private float _anchorDistanceGateMeters = 0;
+            private bool _blurDetectionEnabled = false;
+            private float _minSharpnessScore = 0;
+            private float _areaTargetingEnterMarginMeters = 0;
+            private float _areaTargetingExitMarginMeters = 0;
+            private bool _aerialLocalizationEnabled = false;
+
+            // Not zero-defaulted like the fields above: temporal fusion is on natively, and
+            // passing false disables it rather than falling back to the native default.
+            private bool _temporalFusionEnabled = true;
 
             private bool _configDirty;
 
-            // Trackable changes
-            private Dictionary<TrackableId, string> _trackedAnchorIds = new Dictionary<TrackableId, string>();
-            private HashSet<TrackableId> _seenAnchorIds = new HashSet<TrackableId>();
+            // Set by Start and cleared by Stop. Not SubsystemProvider.running: only the
+            // subsystem wrapper sets that, so a provider driven directly, as in tests,
+            // would never be running.
+            private bool _started;
 
             public override bool UniversalLocalizationEnabled
             {
@@ -186,6 +195,18 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 }
             }
 
+            public override bool VpsDebuggerSavingFrameImageEnabled
+            {
+                set
+                {
+                    if (_vpsDebuggerSavingFrameImageEnabled != value)
+                    {
+                        _vpsDebuggerSavingFrameImageEnabled = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
             public override int UniversalLocalizationRequestTimeoutMs
             {
                 set
@@ -217,6 +238,78 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     if (!Mathf.Approximately(_anchorDistanceGateMeters, value))
                     {
                         _anchorDistanceGateMeters = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override bool BlurDetectionEnabled
+            {
+                set
+                {
+                    if (_blurDetectionEnabled != value)
+                    {
+                        _blurDetectionEnabled = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override float MinSharpnessScore
+            {
+                set
+                {
+                    if (!Mathf.Approximately(_minSharpnessScore, value))
+                    {
+                        _minSharpnessScore = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override float AreaTargetingEnterMarginMeters
+            {
+                set
+                {
+                    if (!Mathf.Approximately(_areaTargetingEnterMarginMeters, value))
+                    {
+                        _areaTargetingEnterMarginMeters = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override float AreaTargetingExitMarginMeters
+            {
+                set
+                {
+                    if (!Mathf.Approximately(_areaTargetingExitMarginMeters, value))
+                    {
+                        _areaTargetingExitMarginMeters = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override bool TemporalFusionEnabled
+            {
+                set
+                {
+                    if (_temporalFusionEnabled != value)
+                    {
+                        _temporalFusionEnabled = value;
+                        MarkConfigurationDirty();
+                    }
+                }
+            }
+
+            public override bool AerialLocalizationEnabled
+            {
+                set
+                {
+                    if (_aerialLocalizationEnabled != value)
+                    {
+                        _aerialLocalizationEnabled = value;
                         MarkConfigurationDirty();
                     }
                 }
@@ -259,6 +352,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 MonoBehaviourEventDispatcher.LateUpdating.AddListener(ConfigureIfDirty);
 
                 _api.Start(_nativeProviderHandle).ThrowExceptionIfNeeded();
+                _started = true;
             }
 
             public override void Stop()
@@ -268,8 +362,8 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     return;
                 }
 
-                _trackedAnchorIds.Clear();
-                _seenAnchorIds.Clear();
+                _started = false;
+                MonoBehaviourEventDispatcher.LateUpdating.RemoveListener(ConfigureIfDirty);
 
                 _api.Stop(_nativeProviderHandle).ThrowExceptionIfNeeded();
             }
@@ -305,10 +399,10 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     return;
                 }
 
-                if (running)
+                if (_started)
                 {
-                    Log.Warning("Configuration changed while running, stop and restart the " +
-                        "subsystem to use the new configuration");
+                    Log.Warning("VPS2 configuration changed while running. Request-rate changes " +
+                        "apply live; other changes briefly interrupt tracking.");
                 }
 
                 _configDirty = false;
@@ -326,7 +420,14 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     vpsDebuggerEnabled = _vpsDebuggerEnabled,
                     universalLocalizationRequestTimeoutMs = _universalLocalizationRequestTimeoutMs,
                     maxRequestsInTransitPerTarget = _maxRequestsInTransitPerTarget,
-                    anchorDistanceGateMeters = _anchorDistanceGateMeters
+                    anchorDistanceGateMeters = _anchorDistanceGateMeters,
+                    blurDetectionEnabled = _blurDetectionEnabled,
+                    minSharpnessScore = _minSharpnessScore,
+                    vpsDebuggerSavingFrameImageEnabled = _vpsDebuggerSavingFrameImageEnabled,
+                    areaTargetingEnterMarginMeters = _areaTargetingEnterMarginMeters,
+                    areaTargetingExitMarginMeters = _areaTargetingExitMarginMeters,
+                    vpsTemporalFusionEnabled = _temporalFusionEnabled,
+                    aerialLocalizationEnabled = _aerialLocalizationEnabled
                 };
 
                 _api.Configure(_nativeProviderHandle, config).ThrowExceptionIfNeeded();
@@ -348,11 +449,158 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 return new XRVps2Localization
                 {
                     TrackingState = (Vps2TrackingState)localizationOut.trackingState,
+                    LocalizedAsset = DecodeLocalizedAsset(localizationOut.localizedAsset),
                     ReferenceLatitude = localizationOut.referenceLatitudeDegrees,
                     ReferenceLongitude = localizationOut.referenceLongitudeDegrees,
                     ReferenceAltitude = localizationOut.referenceAltitudeMeters,
                     TrackingToEdn = localizationOut.trackingToRelativeLonNegAltLat.FromColumnMajorArray()
                 };
+            }
+
+            public override bool TryLocalize(string siteId)
+            {
+                return TryLocalize(siteId, string.Empty);
+            }
+
+            public override bool TryLocalize(string siteId, string assetId)
+            {
+                if (!_nativeProviderHandle.IsValidHandle())
+                {
+                    return false;
+                }
+
+                // The subsystem's lifecycle decides when VPS2 runs. Natively, a localize
+                // request starts VPS2 on its own, so it is only forwarded while started.
+                if (!_started)
+                {
+                    Log.Warning("Ignoring TryLocalize: the VPS2 subsystem is not running.");
+                    return false;
+                }
+
+                using var managedSiteId = new ManagedNsdkString(siteId);
+                using var managedAssetId = new ManagedNsdkString(assetId);
+                var nsdkStatus = _api.LocalizeToSite
+                (
+                    _nativeProviderHandle,
+                    managedSiteId.ToNsdkString(),
+                    managedAssetId.ToNsdkString()
+                );
+                if (!nsdkStatus.IsOk())
+                {
+                    Log.Warning($"Failed to localize to site due to error: {nsdkStatus}");
+                    return false;
+                }
+
+                return true;
+            }
+
+            public override bool TryLocalize(double latitude, double longitude, double radiusMeters = 0)
+            {
+                if (!_nativeProviderHandle.IsValidHandle())
+                {
+                    return false;
+                }
+
+                if (!_started)
+                {
+                    Log.Warning("Ignoring TryLocalize: the VPS2 subsystem is not running.");
+                    return false;
+                }
+
+                var nsdkStatus = _api.LocalizeToNearbySites
+                (
+                    _nativeProviderHandle,
+                    latitude,
+                    longitude,
+                    radiusMeters
+                );
+
+                if (!nsdkStatus.IsOk())
+                {
+                    Log.Warning($"Failed to localize to nearby sites due to error: {nsdkStatus}");
+                    return false;
+                }
+
+                return true;
+            }
+
+            public override bool TryStopLocalize(string siteId = null)
+            {
+                if (!_nativeProviderHandle.IsValidHandle())
+                {
+                    return false;
+                }
+
+                // A null site id marshals to the empty "every requested site" form.
+                using var managedSiteId = new ManagedNsdkString(siteId);
+                var nsdkStatus = _api.StopLocalize(_nativeProviderHandle, managedSiteId.ToNsdkString());
+                if (!nsdkStatus.IsOk())
+                {
+                    Log.Warning($"Failed to stop localizing due to error: {nsdkStatus}");
+                    return false;
+                }
+
+                return true;
+            }
+
+            public override bool TryGetAssetTrackingData(out XRVps2AssetTrackingData trackingData, string assetId = null)
+            {
+                trackingData = default;
+                if (!_nativeProviderHandle.IsValidHandle())
+                {
+                    return false;
+                }
+
+                // Only null selects the currently localized asset: an empty id never
+                // names an asset, so it can never have tracking data.
+                if (assetId == string.Empty)
+                {
+                    return false;
+                }
+
+                NsdkStatus nsdkStatus;
+                IApi.NsdkVps2AssetTrackingData dataOut;
+                if (assetId == null)
+                {
+                    nsdkStatus = _api.GetAssetTrackingData(_nativeProviderHandle, null, out dataOut);
+                }
+                else
+                {
+                    using var managedAssetId = new ManagedNsdkString(assetId);
+                    nsdkStatus = _api.GetAssetTrackingData
+                    (
+                        _nativeProviderHandle,
+                        new[] { managedAssetId.ToNsdkString() },
+                        out dataOut
+                    );
+                }
+
+                // Both return false. InvalidOperation is the keep-polling state: the asset
+                // is not fully tracked (spin-up after the first poll, a lapse in tracking,
+                // or a TryLocalize for its site still in flight). InvalidArgument means the
+                // id is wrong or names an asset no request this session has fetched.
+                // Polling does not change that.
+                if (nsdkStatus is NsdkStatus.InvalidOperation or NsdkStatus.InvalidArgument)
+                {
+                    return false;
+                }
+
+                nsdkStatus.ThrowExceptionIfNeeded();
+
+                var pose = dataOut.assetToLocalTrackingTransform.FromColumnMajorArray().FromNsdkToUnity();
+                trackingData = new XRVps2AssetTrackingData
+                {
+                    SiteId = DecodeFixedSizeCString(dataOut.asset.siteId),
+                    AssetId = DecodeFixedSizeCString(dataOut.asset.assetId),
+                    AreaId = DecodeOptionalFixedSizeCString(dataOut.asset.areaId),
+                    Pose = new Pose(pose.GetPosition(), pose.rotation),
+                    Confidence = dataOut.trackingConfidence,
+                    TimestampMs = dataOut.timestampMs,
+                    Geolocation = dataOut.hasGeolocation != 0
+                        ? ToXRGeolocation(dataOut.geolocationData)
+                        : null
+                };
+                return true;
             }
 
             public override XRVps2Geolocation GetDeviceGeolocation(
@@ -365,31 +613,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     out IApi.NsdkVps2GeolocationData locationOut
                 ).ThrowExceptionIfNeeded();
 
-                var orientation = new Quaternion
-                (
-                    locationOut.geolocationData.orientation_edn_x,
-                    locationOut.geolocationData.orientation_edn_y,
-                    locationOut.geolocationData.orientation_edn_z,
-                    locationOut.geolocationData.orientation_edn_w
-                );
-
-                var geolocation = new XRGeolocation
-                {
-                    Latitude = locationOut.geolocationData.latitude,
-                    Longitude = locationOut.geolocationData.longitude,
-                    Altitude = locationOut.geolocationData.altitude,
-                    Heading = locationOut.geolocationData.heading_edn,
-                    OrientationEdn = orientation
-                };
-
-                return new XRVps2Geolocation
-                {
-                    TrackingState = (Vps2TrackingState)locationOut.trackingState,
-                    Geolocation = geolocation,
-                    HorizontalAccuracy = locationOut.horizontalAccuracyMeters,
-                    VerticalAccuracy = locationOut.verticalAccuracyMeters,
-                    HeadingAccuracy = locationOut.rotationAccuracyDegrees
-                };
+                return ConvertToXR(locationOut);
             }
 
             public override XRVps2Pose GetPose
@@ -424,226 +648,96 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     Pose = poseOut.pose.FromNsdkToUnity(),
                     HorizontalAccuracy = poseOut.horizontalAccuracyMeters,
                     VerticalAccuracy = poseOut.verticalAccuracyMeters,
-                    HeadingAccuracy = poseOut.rotationAccuracyDegrees
+                    HeadingAccuracy = poseOut.rotationAccuracyDegrees,
+                    TrackingState = (Vps2TrackingState)poseOut.trackingState
                 };
             }
 
-            public override bool TryCreateAnchor(Pose pose, out XRVps2Anchor anchor)
+            public override bool TryGetPose
+            (
+                double latitude,
+                double longitude,
+                double altitude,
+                Quaternion orientationEdn,
+                out XRVps2Pose poseOut
+            )
             {
-                if (!_nativeProviderHandle.IsValidHandle())
-                {
-                    anchor = new XRVps2Anchor();
-                    return false;
-                }
-
-                var transform = pose.FromUnityToNsdk();
-                var anchorIdOut = new byte[IApi.NSDK_VPS2_ANCHOR_ID_SIZE];
-                var nsdkStatus = _api.CreateAnchor(_nativeProviderHandle, transform, ref anchorIdOut);
-                if (!nsdkStatus.IsOk())
-                {
-                    Log.Warning($"Failed to create anchor due to error: {nsdkStatus}");
-                    anchor = new XRVps2Anchor();
-                    return false;
-                }
-
-                anchor = CreateXRVps2Anchor(anchorIdOut);
-                return true;
-            }
-
-            public override bool TryTrackAnchor(string anchorPayload, out XRVps2Anchor anchor)
-            {
-                if (!_nativeProviderHandle.IsValidHandle())
-                {
-                    anchor = new XRVps2Anchor();
-                    return false;
-                }
-
-                var anchorIdOut = new byte[IApi.NSDK_VPS2_ANCHOR_ID_SIZE];
-                using var managedStr = new ManagedNsdkString(anchorPayload);
-                var nsdkStr = managedStr.ToNsdkString();
-
-                var nsdkStatus =
-                    _api.TrackAnchor(_nativeProviderHandle, nsdkStr, ref anchorIdOut);
-
-                if (!nsdkStatus.IsOk())
-                {
-                    Log.Warning($"Failed to track anchor due to error: {nsdkStatus}");
-                    anchor = new XRVps2Anchor();
-                    return false;
-                }
-
-                anchor = CreateXRVps2Anchor(anchorIdOut);
-                return true;
-            }
-
-            private XRVps2Anchor CreateXRVps2Anchor(byte[] anchorIdBuffer)
-            {
-                string anchorId = Encoding.UTF8.GetString(anchorIdBuffer, 0, IApi.NSDK_VPS2_ANCHOR_ID_SIZE);
-                TrackableId trackableId = TrackableIdExtension.FromNativeUuid(anchorId);
-                _trackedAnchorIds.Add(trackableId, anchorId);
-
-                return new XRVps2Anchor(trackableId);
-            }
-
-            public override bool TryRemoveAnchor(TrackableId trackableId)
-            {
+                poseOut = new XRVps2Pose();
                 if (!_nativeProviderHandle.IsValidHandle())
                 {
                     return false;
                 }
 
-                string anchorId = trackableId.ToNsdkHexString();
-                var anchorIdBuffer = Encoding.UTF8.GetBytes(anchorId, 0, IApi.NSDK_VPS2_ANCHOR_ID_SIZE);
-                var nsdkStatus = _api.RemoveAnchor(_nativeProviderHandle, anchorIdBuffer);
-                if (nsdkStatus.IsOk())
+                var nsdkGeolocation = new NsdkGeolocationData
                 {
-                    return true;
-                }
+                    latitude = latitude,
+                    longitude = longitude,
+                    altitude = altitude,
+                    orientation_edn_x = orientationEdn.x,
+                    orientation_edn_y = orientationEdn.y,
+                    orientation_edn_z = orientationEdn.z,
+                    orientation_edn_w = orientationEdn.w
+                };
 
-                Log.Warning($"Failed to remove anchor with id {anchorId} due to error: {nsdkStatus}");
-                return false;
-            }
-
-            public override TrackableChanges<XRVps2Anchor> GetChanges(Allocator allocator)
-            {
-                var added = new List<XRVps2Anchor>();
-                var updated = new List<XRVps2Anchor>();
-                var removed = new List<TrackableId>();
-
-                var currentAnchorIds = new HashSet<TrackableId>();
-
-                foreach (var anchorId in _trackedAnchorIds)
-                {
-                    var anchorIdBuffer = Encoding.UTF8.GetBytes(anchorId.Value, 0, IApi.NSDK_VPS2_ANCHOR_ID_SIZE);
-                    var status = _api.GetAnchorUpdate(_nativeProviderHandle, anchorIdBuffer, out var updateOut);
-                    if (status == NsdkStatus.InvalidArgument)
-                    {
-                        // anchor has not yet been added by native module
-                        continue;
-                    }
-
-                    var pose = updateOut.pose.FromColumnMajorArray().FromNsdkToUnity();
-
-                    XRGeolocation? geolocation = null;
-                    if (updateOut.hasGeolocation != 0)
-                    {
-                        var orientation = new Quaternion
-                        (
-                            updateOut.geolocationData.orientation_edn_x,
-                            updateOut.geolocationData.orientation_edn_y,
-                            updateOut.geolocationData.orientation_edn_z,
-                            updateOut.geolocationData.orientation_edn_w
-                        );
-
-                        geolocation = new XRGeolocation
-                        {
-                            Latitude = updateOut.geolocationData.latitude,
-                            Longitude = updateOut.geolocationData.longitude,
-                            Altitude = updateOut.geolocationData.altitude,
-                            Heading = updateOut.geolocationData.heading_edn,
-                            OrientationEdn = orientation
-                        };
-                    }
-
-                    var anchor = new XRVps2Anchor(
-                        anchorId.Key,
-                        new Pose(pose.GetPosition(), pose.rotation),
-                        _api.ConvertTrackingStateToUnity(updateOut.trackingState),
-                        _api.ConvertTrackingStateReasonToUnity(updateOut.trackingStateReason),
-                        new XRVps2AnchorPayload(),
-                        updateOut.timestamp,
-                        updateOut.confidence,
-                        geolocation
-                    );
-
-                    if (anchor.trackingStateReason == Vps2AnchorTrackingStateReason.Removed)
-                    {
-                        removed.Add(anchorId.Key);
-                    }
-                    else if (_seenAnchorIds.Contains(anchorId.Key))
-                    {
-                        // Anchor was seen before, so it's an update
-                        updated.Add(anchor);
-                        currentAnchorIds.Add(anchorId.Key);
-                    }
-                    else
-                    {
-                        // Anchor is new, so it's an addition
-                        added.Add(anchor);
-                        currentAnchorIds.Add(anchorId.Key);
-                    }
-                }
-
-                // Now that removed change has been surfaced, forget from tracked anchors
-                // so the update isn't fetched again
-                foreach (var removedAnchor in removed)
-                {
-                    _trackedAnchorIds.Remove(removedAnchor);
-                }
-
-                // Update seen anchor IDs for next call
-                _seenAnchorIds = currentAnchorIds;
-
-                var addedChanges = new NativeArray<XRVps2Anchor>(added.Count, Allocator.Temp);
-                var updatedChanges = new NativeArray<XRVps2Anchor>(updated.Count, Allocator.Temp);
-                var removedChanges = new NativeArray<TrackableId>(removed.Count, Allocator.Temp);
-
-                for (int i = 0; i < added.Count; i++)
-                {
-                    addedChanges[i] = added[i];
-                }
-
-                for (int i = 0; i < updated.Count; i++)
-                {
-                    updatedChanges[i] = updated[i];
-                }
-
-                for (int i = 0; i < removed.Count; i++)
-                {
-                    removedChanges[i] = removed[i];
-                }
-
-                return TrackableChanges<XRVps2Anchor>.CopyFrom
+                var nsdkStatus = _api.GetPoseFromLatestLocalization
                 (
-                    addedChanges,
-                    updatedChanges,
-                    removedChanges,
-                    allocator
+                    _nativeProviderHandle,
+                    nsdkGeolocation,
+                    out IApi.NsdkVps2Pose nsdkPose
                 );
+
+                if (nsdkStatus == NsdkStatus.InvalidOperation)
+                {
+                    // Unlogged: this is what a poll sees every frame until VPS2 localizes.
+                    return false;
+                }
+
+                if (!nsdkStatus.IsOk())
+                {
+                    Log.Warning($"Failed to get pose due to error: {nsdkStatus}");
+                    return false;
+                }
+
+                poseOut = new XRVps2Pose
+                {
+                    Pose = nsdkPose.pose.FromNsdkToUnity(),
+                    HorizontalAccuracy = nsdkPose.horizontalAccuracyMeters,
+                    VerticalAccuracy = nsdkPose.verticalAccuracyMeters,
+                    HeadingAccuracy = nsdkPose.rotationAccuracyDegrees,
+                    TrackingState = (Vps2TrackingState)nsdkPose.trackingState
+                };
+                return true;
             }
 
-            public override bool GetAnchorPayload(TrackableId trackableId, out string payload)
+            public override bool TryGetGeolocation(Pose pose, out XRVps2Geolocation geolocationOut)
             {
-                payload = null;
-
+                geolocationOut = new XRVps2Geolocation();
                 if (!_nativeProviderHandle.IsValidHandle())
                 {
                     return false;
                 }
 
-                string anchorId = trackableId.ToNsdkHexString();
-                var anchorIdBuffer = Encoding.UTF8.GetBytes(anchorId, 0, IApi.NSDK_VPS2_ANCHOR_ID_SIZE);
-                var nsdkStatus =
-                    _api.GetAnchorPayload(_nativeProviderHandle, anchorIdBuffer, out var ptr, out var size, out var handle);
+                var nsdkStatus = _api.GetGeolocationFromLatestLocalization
+                (
+                    _nativeProviderHandle,
+                    pose.FromUnityToNsdk(),
+                    out IApi.NsdkVps2GeolocationData nsdkGeolocation
+                );
 
-                if (nsdkStatus.IsOk())
+                if (nsdkStatus == NsdkStatus.InvalidOperation)
                 {
-                    NativeArray<byte> bytes;
-                    unsafe
-                    {
-                        bytes = NativeCopyUtility.PtrToNativeArrayWithDefault<byte>
-                            (0, (void*)ptr, sizeof(byte), size, Allocator.Temp);
-                    }
-
-                    payload = Encoding.UTF8.GetString(bytes);
+                    // Unlogged: this is what a poll sees every frame until VPS2 localizes.
+                    return false;
                 }
 
-                if (handle.IsValidHandle())
+                if (!nsdkStatus.IsOk())
                 {
-                    NsdkExternUtils.ReleaseResource(handle);
+                    Log.Warning($"Failed to get geolocation due to error: {nsdkStatus}");
+                    return false;
                 }
 
-                return payload != null;
+                geolocationOut = ConvertToXR(nsdkGeolocation);
+                return true;
             }
 
             public override List<XRVps2LocalizationRequestRecord> GetLatestLocalizationRequestRecords()
@@ -752,6 +846,90 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                 return true;
             }
 
+            private static Vps2LocalizedAsset? DecodeLocalizedAsset(IApi.NsdkVps2AssetIdentifier asset)
+            {
+                // The buffers hold empty strings until a visual localization succeeds
+                // against a submitted asset.
+                var siteId = DecodeFixedSizeCString(asset.siteId);
+                var assetId = DecodeFixedSizeCString(asset.assetId);
+                if (string.IsNullOrEmpty(siteId) || string.IsNullOrEmpty(assetId))
+                {
+                    return null;
+                }
+
+                return new Vps2LocalizedAsset
+                {
+                    SiteId = siteId,
+                    AssetId = assetId,
+                    AreaId = DecodeOptionalFixedSizeCString(asset.areaId)
+                };
+            }
+
+            // An empty buffer is an id the native side left unset; the public structs carry that
+            // as null.
+            private static string DecodeOptionalFixedSizeCString(byte[] buffer)
+            {
+                var value = DecodeFixedSizeCString(buffer);
+                return string.IsNullOrEmpty(value) ? null : value;
+            }
+
+            internal static string DecodeFixedSizeCString(byte[] buffer)
+            {
+                if (buffer == null)
+                {
+                    return string.Empty;
+                }
+
+                var nulIndex = Array.IndexOf(buffer, (byte)0);
+                var length = nulIndex < 0 ? buffer.Length : nulIndex;
+                return Encoding.UTF8.GetString(buffer, 0, length);
+            }
+
+            private static XRGeolocation ToXRGeolocation(NsdkGeolocationData geolocation)
+            {
+                return new XRGeolocation
+                {
+                    Latitude = geolocation.latitude,
+                    Longitude = geolocation.longitude,
+                    Altitude = geolocation.altitude,
+                    Heading = geolocation.heading_edn,
+                    OrientationEdn = new Quaternion
+                    (
+                        geolocation.orientation_edn_x,
+                        geolocation.orientation_edn_y,
+                        geolocation.orientation_edn_z,
+                        geolocation.orientation_edn_w
+                    )
+                };
+            }
+
+            private static XRVps2Geolocation ConvertToXR(IApi.NsdkVps2GeolocationData data)
+            {
+                var geolocation = new XRGeolocation
+                {
+                    Latitude = data.geolocationData.latitude,
+                    Longitude = data.geolocationData.longitude,
+                    Altitude = data.geolocationData.altitude,
+                    Heading = data.geolocationData.heading_edn,
+                    OrientationEdn = new Quaternion
+                    (
+                        data.geolocationData.orientation_edn_x,
+                        data.geolocationData.orientation_edn_y,
+                        data.geolocationData.orientation_edn_z,
+                        data.geolocationData.orientation_edn_w
+                    )
+                };
+
+                return new XRVps2Geolocation
+                {
+                    TrackingState = (Vps2TrackingState)data.trackingState,
+                    Geolocation = geolocation,
+                    HorizontalAccuracy = data.horizontalAccuracyMeters,
+                    VerticalAccuracy = data.verticalAccuracyMeters,
+                    HeadingAccuracy = data.rotationAccuracyDegrees
+                };
+            }
+
             private static IApi.NsdkVps2Localization ConvertToNsdk(XRVps2Localization localization)
             {
                 return new IApi.NsdkVps2Localization
@@ -760,7 +938,16 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2
                     referenceLatitudeDegrees = localization.ReferenceLatitude,
                     referenceLongitudeDegrees = localization.ReferenceLongitude,
                     referenceAltitudeMeters = localization.ReferenceAltitude,
-                    trackingToRelativeLonNegAltLat = localization.TrackingToEdn.ToColumnMajorArray()
+                    trackingToRelativeLonNegAltLat = localization.TrackingToEdn.ToColumnMajorArray(),
+                    // The fixed-size buffers must be allocated for the struct to marshal.
+                    // They stay zeroed: the only consumer of this conversion (GetPose)
+                    // does not read the localized asset.
+                    localizedAsset = new IApi.NsdkVps2AssetIdentifier
+                    {
+                        siteId = new byte[IApi.NSDK_VPS2_ASSET_ID_BUFFER_SIZE],
+                        assetId = new byte[IApi.NSDK_VPS2_ASSET_ID_BUFFER_SIZE],
+                        areaId = new byte[IApi.NSDK_VPS2_ASSET_ID_BUFFER_SIZE]
+                    }
                 };
             }
         }

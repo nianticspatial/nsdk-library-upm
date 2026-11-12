@@ -201,6 +201,10 @@ namespace NianticSpatial.NSDK.AR.Editor
         //  - AdditionalMesh2.zip
         //      ...
         //
+        // An export may have no top level files and hold every node as a nested zip, for example
+        // when the root node has no mesh. The root node then takes the place of the default mesh,
+        // or the first nested mesh when the root is not among them.
+        //
         // The default mesh is not necessarily the origin mesh, so we need to apply the inverse transform
         // to place it at the origin. This information can be found within Default.json, which contains
         // a LocalToSpace field if there is a transform to apply.
@@ -215,7 +219,6 @@ namespace NianticSpatial.NSDK.AR.Editor
             out Vector3 originToDefaultTranslation
         )
         {
-            Texture2D tex = null;
             locationData = new GsbFileRepresentation.LocationData();
             meshData = new List<GsbFileRepresentation.MeshData>();
             originToDefaultRotation = Quaternion.identity;
@@ -226,41 +229,35 @@ namespace NianticSpatial.NSDK.AR.Editor
             {
                 using (var zip = new ZipArchive(file, ZipArchiveMode.Read))
                 {
-                    var validEntries = zip.Entries.Where(e => !e.Name.StartsWith("._"));
-                    var meshEntries = validEntries.Where
-                        (e => Path.GetExtension(e.Name).Equals(".fbx"));
+                    var additionalMeshes = ValidEntries(zip)
+                        .Where(e => Path.GetExtension(e.Name).Equals(".zip"))
+                        .ToList();
 
-                    var texEntries = validEntries.Where
-                        (e => Path.GetExtension(e.Name).Equals(".jpeg"));
-
-                    var locationEntries = validEntries.Where
-                        (e => Path.GetExtension(e.Name).Equals(".json"));
-
-                    var additionalMeshes = validEntries.Where
-                        (e => Path.GetExtension(e.Name).Equals(".zip"));
-
-                    if (!(meshEntries.Any() && locationEntries.Any()))
-                        return false;
-
-                    var mesh = ImportMesh(meshEntries.First(), "ARLocationMesh.fbx", assetTargetDir);
-                    locationData = ParseLocationData(locationEntries.First());
-
-                    // Some nodes do not have textures
-                    if (texEntries.Any())
+                    Mesh mesh;
+                    Texture2D tex;
+                    if (TryFindNodeEntries(zip, out var defaultNode))
                     {
-                        var buildTarget = EditorUserBuildSettings.activeBuildTarget;
-                        if (buildTarget != BuildTarget.Android && buildTarget != BuildTarget.iOS)
+                        mesh = ImportDefaultNode(defaultNode, assetTargetDir, out locationData, out tex);
+                    }
+                    else
+                    {
+                        using (var promotedZip =
+                            OpenDefaultNodeArchive(additionalMeshes, out var promotedEntry, out defaultNode))
                         {
-                            Debug.LogError
-                            (
-                                "The current editor build target is not Android or iOS. " +
-                                "Textures may be compressed in a manner that cannot be built to Android or iOS devices. " +
-                                "Change the build target to iOS or Android and reimport the zip if you intend to " +
-                                "include ARLocationManifest meshes on these platforms"
-                            );
-                        }
+                            if (promotedZip == null)
+                            {
+                                return false;
+                            }
 
-                        tex = ImportTexture(texEntries.First(), assetTargetDir);
+                            additionalMeshes.Remove(promotedEntry);
+                            Log.Info
+                            (
+                                $"{zipPath} has no default mesh at the top level, " +
+                                $"using {promotedEntry.Name} as the default mesh"
+                            );
+
+                            mesh = ImportDefaultNode(defaultNode, assetTargetDir, out locationData, out tex);
+                        }
                     }
 
                     var initialMeshData = new GsbFileRepresentation.MeshData()
@@ -286,10 +283,127 @@ namespace NianticSpatial.NSDK.AR.Editor
                     meshData = UnpackAdditionalMeshes(additionalMeshes, assetTargetDir);
                     meshData.Insert(0, initialMeshData);
 
-                    return !(meshData.Count == 0 ||
-                        string.IsNullOrEmpty(locationData.DefaultAnchorPayload));
+                    if (string.IsNullOrEmpty(locationData.DefaultAnchorPayload))
+                    {
+                        Log.Error
+                        (
+                            $"Cannot import {zipPath}: the default mesh's JSON has neither a " +
+                            "DefaultAnchorPayload nor an AnchorPayload"
+                        );
+                        return false;
+                    }
+
+                    return true;
                 }
             }
+        }
+
+        // A node's mesh, texture and location JSON within one archive. Textures are optional.
+        private struct NodeEntries
+        {
+            public ZipArchiveEntry Mesh;
+            public ZipArchiveEntry Texture;
+            public ZipArchiveEntry Location;
+        }
+
+        private static bool TryFindNodeEntries(ZipArchive archive, out NodeEntries node)
+        {
+            var validEntries = ValidEntries(archive);
+            node = new NodeEntries()
+            {
+                Mesh = validEntries.FirstOrDefault(e => Path.GetExtension(e.Name).Equals(".fbx")),
+                Texture = validEntries.FirstOrDefault(e => Path.GetExtension(e.Name).Equals(".jpeg")),
+                Location = validEntries.FirstOrDefault(e => Path.GetExtension(e.Name).Equals(".json"))
+            };
+
+            return node.Mesh != null && node.Location != null;
+        }
+
+        // Opens the nested zip holding the node that takes the place of the default mesh. The root
+        // node is preferred and is recognisable by having no LocalToSpace edge, since the other
+        // nodes are placed relative to it. Otherwise the first node with a mesh and location JSON
+        // is used. The caller owns the returned archive.
+        private static ZipArchive OpenDefaultNodeArchive
+        (
+            IEnumerable<ZipArchiveEntry> zippedEntries,
+            out ZipArchiveEntry promotedEntry,
+            out NodeEntries node
+        )
+        {
+            ZipArchive firstArchive = null;
+            promotedEntry = null;
+            node = new NodeEntries();
+
+            foreach (var entry in zippedEntries)
+            {
+                var archive = new ZipArchive(entry.Open(), ZipArchiveMode.Read);
+                if (!TryFindNodeEntries(archive, out var candidate))
+                {
+                    archive.Dispose();
+                    continue;
+                }
+
+                var edge = ParseLocationData(candidate.Location).LocalToSpace;
+                if (string.IsNullOrEmpty(edge.destination))
+                {
+                    firstArchive?.Dispose();
+                    promotedEntry = entry;
+                    node = candidate;
+                    return archive;
+                }
+
+                if (firstArchive == null)
+                {
+                    firstArchive = archive;
+                    promotedEntry = entry;
+                    node = candidate;
+                }
+                else
+                {
+                    archive.Dispose();
+                }
+            }
+
+            return firstArchive;
+        }
+
+        // Skips the resource fork entries macOS adds when compressing a folder
+        private static IEnumerable<ZipArchiveEntry> ValidEntries(ZipArchive archive)
+        {
+            return archive.Entries.Where(e => !e.Name.StartsWith("._"));
+        }
+
+        private static Mesh ImportDefaultNode
+        (
+            NodeEntries node,
+            string assetTargetDir,
+            out GsbFileRepresentation.LocationData locationData,
+            out Texture2D texture
+        )
+        {
+            var mesh = ImportMesh(node.Mesh, "ARLocationMesh.fbx", assetTargetDir);
+            locationData = ParseLocationData(node.Location);
+            texture = null;
+
+            // Some nodes do not have textures
+            if (node.Texture != null)
+            {
+                var buildTarget = EditorUserBuildSettings.activeBuildTarget;
+                if (buildTarget != BuildTarget.Android && buildTarget != BuildTarget.iOS)
+                {
+                    Debug.LogError
+                    (
+                        "The current editor build target is not Android or iOS. " +
+                        "Textures may be compressed in a manner that cannot be built to Android or iOS devices. " +
+                        "Change the build target to iOS or Android and reimport the zip if you intend to " +
+                        "include ARLocationManifest meshes on these platforms"
+                    );
+                }
+
+                texture = ImportTexture(node.Texture, assetTargetDir);
+            }
+
+            return mesh;
         }
 
         private static List<GsbFileRepresentation.MeshData> UnpackAdditionalMeshes(IEnumerable<ZipArchiveEntry> zippedEntries, string targetDir)
@@ -472,6 +586,12 @@ namespace NianticSpatial.NSDK.AR.Editor
                         !string.IsNullOrEmpty(locationData.AnchorPayload))
                     {
                         locationData.DefaultAnchorPayload = locationData.AnchorPayload;
+                    }
+
+                    if (string.IsNullOrEmpty(locationData.LocalizationTargetID) &&
+                        !string.IsNullOrEmpty(locationData.LocalizationTargetId))
+                    {
+                        locationData.LocalizationTargetID = locationData.LocalizationTargetId;
                     }
 
                     return locationData;

@@ -3,8 +3,6 @@
 using System;
 using System.Runtime.InteropServices;
 using NianticSpatial.NSDK.AR.API;
-using NianticSpatial.NSDK.AR.XRSubsystems;
-using UnityEngine.XR.ARSubsystems;
 
 namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
 {
@@ -12,6 +10,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
     {
         public const int NSDK_VPS2_ANCHOR_ID_SIZE = 32;
         public const int NSDK_VPS2_SESSION_ID_SIZE = 32;
+        public const int NSDK_VPS2_ASSET_ID_BUFFER_SIZE = 64;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct NsdkVps2Config
@@ -41,16 +40,94 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
 
             public int deviceMapLocalizationFramerate;
 
-            // Layout padding: keeps this struct in sync with ARDK_VPS2_Config which has
-            // aerial_localization_enabled at this position. Always false from Unity.
             [MarshalAs(UnmanagedType.U1)]
-            private bool aerialLocalizationEnabled;
+            public bool aerialLocalizationEnabled;
 
             public int universalLocalizationRequestTimeoutMs;
 
             public uint maxRequestsInTransitPerTarget;
 
             public float anchorDistanceGateMeters;
+
+            [MarshalAs(UnmanagedType.U1)]
+            public bool blurDetectionEnabled;
+
+            public float minSharpnessScore;
+
+            [MarshalAs(UnmanagedType.U1)]
+            public bool vpsDebuggerSavingFrameImageEnabled;
+
+            public float areaTargetingEnterMarginMeters;
+
+            public float areaTargetingExitMarginMeters;
+
+            [MarshalAs(UnmanagedType.U1)]
+            public bool vpsTemporalFusionEnabled;
+
+            // Layout padding: keeps this struct in sync with ARDK_VPS2_Config's nested
+            // ARDK_VPS2_InternalConfig sub-struct. Not exposed to Unity callers — those
+            // fields are intentionally internal and only the Python and ROS2 SDKs mirror
+            // them. Always zero-initialized from Unity.
+            private NsdkVps2InternalConfig _internal;
+        }
+
+        // Layout mirror of ARDK_VPS2_InternalConfig.
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NsdkVps2InternalConfig
+        {
+            private int _wpsPriorMode;
+            private float _wpsPriorDistanceThreshold;
+            private float _wpsGnssFramerate;
+            private float _wpsPoseFramerate;
+            private float _bevConfidenceThreshold;
+
+            [MarshalAs(UnmanagedType.U1)]
+            private bool _janusMultiviewEnabled;
+
+            [MarshalAs(UnmanagedType.U1)]
+            private bool _rejectUpsideDown;
+
+            [MarshalAs(UnmanagedType.U1)]
+            private bool _bevFullResolutionEnabled;
+
+            private float _vpsGeoreferenceHoldConfidence;
+        }
+
+        // Defined in ardk_vps2_asset_identifier.h
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NsdkVps2AssetIdentifier
+        {
+            // NUL-terminated id strings in fixed buffers.
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = NSDK_VPS2_ASSET_ID_BUFFER_SIZE)]
+            public byte[] siteId;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = NSDK_VPS2_ASSET_ID_BUFFER_SIZE)]
+            public byte[] assetId;
+
+            // Identifier of subarea in the site localized, or an empty string when the asset has
+            // no subareas.
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = NSDK_VPS2_ASSET_ID_BUFFER_SIZE)]
+            public byte[] areaId;
+        }
+
+        // Defined in ardk_vps2_asset_tracking_data.h
+        [StructLayout(LayoutKind.Sequential)]
+        public struct NsdkVps2AssetTrackingData
+        {
+            public NsdkVps2AssetIdentifier asset;
+
+            // Transform from the asset's coordinate space to the device's local AR
+            // tracking space, as a column-major 4x4 matrix.
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
+            public float[] assetToLocalTrackingTransform;
+
+            public float trackingConfidence;
+
+            public UInt64 timestampMs;
+
+            public NsdkGeolocationData geolocationData;
+
+            public byte hasGeolocation;
         }
 
         // Defined in ardk_vps2_localization.h
@@ -68,6 +145,9 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             public float horizontalAccuracyMeters;
             public float verticalAccuracyMeters;
             public float rotationAccuracyDegrees;
+
+            // Ids are empty until a visual localization succeeds against a submitted asset.
+            public NsdkVps2AssetIdentifier localizedAsset;
         }
 
         // Defined in ardk_vps2_geolocation.h
@@ -89,6 +169,7 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
             public float horizontalAccuracyMeters;
             public float verticalAccuracyMeters;
             public float rotationAccuracyDegrees;
+            public Int32 trackingState;
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -140,31 +221,35 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
 
         NsdkStatus GetLatestLocalization(IntPtr providerHandle, out NsdkVps2Localization localization);
 
+        NsdkStatus LocalizeToSite(IntPtr providerHandle, NsdkString siteId, NsdkString assetId);
+
+        NsdkStatus LocalizeToNearbySites
+        (
+            IntPtr providerHandle,
+            double latitude,
+            double longitude,
+            double radiusMeters
+        );
+
+        // An empty siteId stops localizing against every requested site.
+        NsdkStatus StopLocalize(IntPtr providerHandle, NsdkString siteId);
+
+        // assetId is null for the asset the device is currently localized to, or a
+        // single-element array naming an asset (marshalled as an optional pointer).
+        NsdkStatus GetAssetTrackingData
+        (
+            IntPtr providerHandle,
+            NsdkString[] assetId,
+            out NsdkVps2AssetTrackingData trackingData
+        );
+
         NsdkStatus GetDeviceGeolocation(IntPtr providerHandle, HeadingMode headingMode, out NsdkVps2GeolocationData location);
 
         NsdkStatus GetPose(NsdkVps2Localization localization, NsdkGeolocationData location, out NsdkVps2Pose pose);
 
-        NsdkStatus CreateAnchor(IntPtr providerHandle, NsdkTransform pose, ref byte[] anchorId);
+        NsdkStatus GetPoseFromLatestLocalization(IntPtr providerHandle, NsdkGeolocationData location, out NsdkVps2Pose pose);
 
-        NsdkStatus TrackAnchor(IntPtr providerHandle, NsdkString anchorPayload, ref byte[] anchorId);
-
-        NsdkStatus RemoveAnchor(IntPtr providerHandle, byte[] anchorId);
-
-        NsdkStatus GetAnchorUpdate
-        (
-            IntPtr providerHandle,
-            byte[] anchorId,
-            out NsdkVpsAnchorUpdate updateOut
-        );
-
-        NsdkStatus GetAnchorPayload
-        (
-            IntPtr providerHandle,
-            byte[] anchorId,
-            out IntPtr anchorPayloadPtr,
-            out int anchorPayloadSize,
-            out IntPtr resourceHandle
-        );
+        NsdkStatus GetGeolocationFromLatestLocalization(IntPtr providerHandle, NsdkTransform pose, out NsdkVps2GeolocationData geolocation);
 
         NsdkStatus GetLatestLocalizationRequestRecords(
             IntPtr providerHandle,
@@ -181,9 +266,5 @@ namespace NianticSpatial.NSDK.AR.Subsystems.Vps2.Api
         );
 
         NsdkStatus GetSessionId(IntPtr providerHandle, ref byte[] sessionId);
-
-        TrackingState ConvertTrackingStateToUnity(int nativeTrackingState);
-
-        Vps2AnchorTrackingStateReason ConvertTrackingStateReasonToUnity(int nativeReason);
     }
 }

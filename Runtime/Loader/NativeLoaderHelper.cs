@@ -25,6 +25,8 @@ namespace NianticSpatial.NSDK.AR.Loader
         protected readonly List<XRMeshSubsystemDescriptor> MeshingSubsystemDescriptors = new();
 
 protected readonly List<XRVps2SubsystemDescriptor> Vps2SubsystemDescriptors = new ();
+        protected readonly List<XRVps2AnchorSubsystemDescriptor> Vps2AnchorSubsystemDescriptors = new();
+        protected readonly List<XRVps2AssetSubsystemDescriptor> Vps2AssetSubsystemDescriptors = new();
         protected readonly List<XRDeviceMappingSubsystemDescriptor> DeviceMappingSubsystemDescriptors = new();
 
         internal virtual bool Initialize(INsdkInternalLoaderSupport loader, bool isLidarSupported)
@@ -58,6 +60,20 @@ protected readonly List<XRVps2SubsystemDescriptor> Vps2SubsystemDescriptors = ne
                 (
                     Vps2SubsystemDescriptors,
                     "NSDK-VPS2"
+                );
+
+                Log.Info("Creating " + nameof(NsdkVps2AnchorSubsystem));
+                loader.CreateSubsystem<XRVps2AnchorSubsystemDescriptor, XRVps2AnchorSubsystem>
+                (
+                    Vps2AnchorSubsystemDescriptors,
+                    "NSDK-VPS2-Anchor"
+                );
+
+                Log.Info("Creating " + nameof(NsdkVps2AssetSubsystem));
+                loader.CreateSubsystem<XRVps2AssetSubsystemDescriptor, XRVps2AssetSubsystem>
+                (
+                    Vps2AssetSubsystemDescriptors,
+                    "NSDK-VPS2-Asset"
                 );
             }
 
@@ -128,6 +144,8 @@ protected readonly List<XRVps2SubsystemDescriptor> Vps2SubsystemDescriptors = ne
             loader.DestroySubsystem<XRScanningSubsystem>();
             loader.DestroySubsystem<XRMeshSubsystem>();
             NsdkMeshingProvider.Reset();
+            loader.DestroySubsystem<XRVps2AssetSubsystem>();
+            loader.DestroySubsystem<XRVps2AnchorSubsystem>();
             loader.DestroySubsystem<XRVps2Subsystem>();
             loader.DestroySubsystem<XRDeviceMappingSubsystem>();
 
